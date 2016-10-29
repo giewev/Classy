@@ -197,3 +197,102 @@
 	"Danger.h"
 	"Move.h"
 
+1430952071 source:/home/ian/repos/Classy/src/bitWise.cpp
+	"Bitwise.h"
+	<iostream>
+
+1430947808 /home/ian/repos/Classy/src/Bitwise.h
+	<inttypes.h>
+
+1477702120 source:/home/ian/repos/Classy/src/Classy.cpp
+	<iostream>
+	<string>
+	<iomanip>
+	"Board.h"
+	"Engine.h"
+	"Danger.h"
+	"Move.h"
+
+1430853364 /home/ian/repos/Classy/src/Board.h
+	<iostream>
+	<vector>
+	<inttypes.h>
+
+1477705129 /home/ian/repos/Classy/src/Engine.h
+	<inttypes.h>
+	<time.h>
+	<iostream>
+
+1430853374 /home/ian/repos/Classy/src/Danger.h
+	<vector>
+
+1431214238 /home/ian/repos/Classy/src/Move.h
+	<string>
+
+1431010157 source:/home/ian/repos/Classy/src/Danger.cpp
+	"Piece.h"
+	"Board.h"
+	"Move.h"
+	"Danger.h"
+	"Engine.h"
+	"Bitwise.h"
+	<vector>
+	<math.h>
+	<iostream>
+	<string.h>
+	<strings.h>
+	<algorithm>
+
+1430853390 /home/ian/repos/Classy/src/Piece.h
+	<string>
+	<vector>
+
+1477705315 source:/home/ian/repos/Classy/src/Engine.cpp
+	"Board.h"
+	"Danger.h"
+	"Engine.h"
+	"Evaluation Constants.h"
+	"Move.h"
+	"Piece.h"
+	"Bitwise.h"
+	<iostream>
+	<math.h>
+	<random>
+	<time.h>
+	<unordered_map>
+	<vector>
+	<algorithm>
+	<string.h>
+	<strings.h>
+
+1430853381 /home/ian/repos/Classy/src/Evaluation Constants.h
+	<inttypes.h>
+
+1431213676 source:/home/ian/repos/Classy/src/Move.cpp
+	"Move.h"
+	"Danger.h"
+	"Board.h"
+	"Piece.h"
+	"Engine.h"
+	<iostream>
+	<sstream>
+	<math.h>
+
+1430853388 source:/home/ian/repos/Classy/src/Piece.cpp
+	"Piece.h"
+	"Move.h"
+	<iostream>
+	<string>
+	"Board.h"
+
+1477705056 source:/home/ian/repos/Classy/src/Board.cpp
+	<vector>
+	<iostream>
+	<inttypes.h>
+	"Piece.h"
+	"Board.h"
+	"Move.h"
+	"Danger.h"
+	"Engine.h"
+	<math.h>
+

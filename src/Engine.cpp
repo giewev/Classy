@@ -43,7 +43,7 @@ Engine::Engine(Board* loadBoard){
 	killersIndex = new int[1];
 }
 Engine::~Engine(){
-	
+
 	//if (killers){
 		//delete[] killers;
 	//}
@@ -69,7 +69,7 @@ Board* Engine::getBoard(){
 int Engine::getScore(){
 	return score;
 }
- 
+
 void Engine::setBoard(Board* loadBoard){
 	gameBoard = loadBoard;
 }
@@ -95,14 +95,10 @@ double Engine::evaluate(Board* evalBoard){
 
 	double localScore = 0;
 	int pieceCount = 0;
-	
+
 	double materialScore = 0;
 	double kingLocationScore = 0;
 	Piece target = Piece(EMPTY);
-	int modifier = 1;
-	if(evalBoard->turn){
-		modifier = -1;
-	}
 		//CheckMate or staleMate
 	/*
 	switch(evalBoard->gameOverCheck()){
@@ -150,7 +146,7 @@ double Engine::evaluate(Board* evalBoard){
 	bitBoard doubled = evalBoard->pieces[PAWN] & ((evalBoard->pieces[PAWN] << 1) | ((evalBoard->pieces[PAWN] & ~firstRank) << 2));
 	localScore += doubledPawnValue * bitwise::countBits(doubled & evalBoard->pieces[0]);
 	localScore -= doubledPawnValue * bitwise::countBits(doubled & (~evalBoard->pieces[0]));
-	
+
 		//Material scoring
 	materialScore += pawnValue * pieceCounts[PAWN][WHITE];
 	materialScore -= pawnValue * pieceCounts[PAWN][BLACK];
@@ -162,7 +158,7 @@ double Engine::evaluate(Board* evalBoard){
 	materialScore -= rookValue * pieceCounts[ROOK][BLACK];
 	materialScore += queenValue * pieceCounts[QUEEN][WHITE];
 	materialScore -= queenValue * pieceCounts[QUEEN][BLACK];
-	
+
 		//Pawn Files Loading
 	char whitePawnFiles[8] = { 0 };
 	char blackPawnFiles[8] = { 0 };
@@ -212,7 +208,7 @@ double Engine::evaluate(Board* evalBoard){
 			}
 		}
 	}
-	
+
 		//Center Pawns
 	bitBoard centerPawns = evalBoard->pieces[PAWN] & centerBoard;
 	localScore += centerPawnValue * bitwise::countBits(centerPawns & evalBoard->pieces[0]);
@@ -231,7 +227,7 @@ double Engine::evaluate(Board* evalBoard){
 	bitBoard blackUndeveloped = knightsAndBishops & (firstRank << 7) & (~evalBoard->pieces[0]);
 	localScore -= developmentValue * bitwise::countBits(whiteUndeveloped);
 	localScore += developmentValue * bitwise::countBits(blackUndeveloped);
-	
+
 		//Rooks on Open and Semi-Open files
 	bitBoard whiteRooks = evalBoard->pieces[ROOK] & evalBoard->pieces[0];
 	bitBoard blackRooks = evalBoard->pieces[ROOK] & (~evalBoard->pieces[0]);
@@ -249,8 +245,8 @@ double Engine::evaluate(Board* evalBoard){
 		//Kings far from center
 	kingLocationScore += kingCornerValue * manhattenDistance(evalBoard->getKingX(true), evalBoard->getKingY(true), 4.5, 4.5);
 	kingLocationScore -= kingCornerValue * manhattenDistance(evalBoard->getKingX(false), evalBoard->getKingY(false), 4.5, 4.5);
-	
-	
+
+
 		//Isolated Pawns
 	for (int i = 1; i < 7; i++){
 		if (!whitePawnFiles[i-1] && whitePawnFiles[i] && !whitePawnFiles[i+1]){
@@ -337,7 +333,7 @@ Move Engine::minMax(int depth, Board* searchBoard){
 	int moveCount = 0;
 	Move moveList[220];
 	searchBoard->generateMoveArray(moveList, moveCount);
-	
+
 	Board* newBoard;
 	double moveScore;
 	double bestScore;
@@ -346,7 +342,7 @@ Move Engine::minMax(int depth, Board* searchBoard){
 	if(searchBoard->turn){
 		bestScore = -999;
 	}
-	for(unsigned int i=0; i<moveCount; i++){
+	for(int i=0; i<moveCount; i++){
 		newBoard = searchBoard->newCopy();
 		newBoard->makeMove(moveList[i]);
 		if(depth == 1){
@@ -463,14 +459,14 @@ Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
 		returnedMove = Move();
 		returnedMove.setGameOverDepth(0);
 		returnedMove.setScore(0);
-		
+
 		return returnedMove;
 	}
 
 	for(int i=0; i<moveCount; i++){
 		newBoard = searchBoard->newCopy();
 		newBoard->makeMove(moveList[i]);
-		
+
 		if(depth == 1){
 			moveScore = evaluate(newBoard);
 
@@ -568,18 +564,17 @@ Move Engine::alphaBeta(int depth, double bound){
 
 Move Engine::iterDeepSearch(float runTime){
 	doneTime = (clock_t) (clock() + runTime * CLOCKS_PER_SEC);
-	
+
 	Move tempMove = Move();
 
 	int searchDepth = 1;
 	//delete[] principal;
 	principal = new Move[2];
 	while(doneTime > clock()){
-		int startTime = clock();
 		searchDepth++;
 		delete[] killers;
 		delete[] killersIndex;
-		
+
 		killers = new short[searchDepth+1][killTableSize];
 		killersIndex = new int[searchDepth + 1];
 		for(int i=0; i<searchDepth; i++){
@@ -593,7 +588,7 @@ Move Engine::iterDeepSearch(float runTime){
 		//std::cout << "info depth " << searchDepth << " score cp " << 0 << std::endl;
 
 		tempMove = alphaBeta(searchDepth);
-		
+
 		if(tempMove != Move()){
 		}
 		else{
@@ -614,7 +609,7 @@ Move Engine::iterDeepSearch(float runTime){
 	}
 	*/
 	return principal[0];
-} 
+}
 
 std::string Engine::toAlg(int val){
 	if(val < 0 || val > 8){
@@ -659,7 +654,7 @@ void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard){
 	int nonCaptures = 0;
 	Move* captureList = new Move[230];
 	Move* nonCaptureList = new Move[230];
-	
+
 	for(int i = 0; i < moveCount; i++){
 		if(rawList[i].isCapture(sortBoard)){
 			captureList[captures] = rawList[i];
@@ -670,11 +665,11 @@ void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard){
 			nonCaptures++;
 		}
 	}
-	
+
 	for(int i = 0; i < captures; i++){
 		rawList[i] = captureList[i];
 	}
-	
+
 	for(int i = 0; i < nonCaptures; i++){
 		rawList[i + captures] = nonCaptureList[i];
 	}
@@ -725,7 +720,7 @@ double Engine::manhattenDistance(int x1, int y1, double x2, double y2){
 }
 
 void Engine::printMove(Move toPrint){
-	std::cout << Engine::toAlg(toPrint.startX) << toPrint.startY 
+	std::cout << Engine::toAlg(toPrint.startX) << toPrint.startY
 		<< Engine::toAlg(toPrint.endX) << toPrint.endY << std::endl;
 }
 

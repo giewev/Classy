@@ -53,7 +53,7 @@ public:
 	bool inKillers(Move, int);
 
 	double manhattenDistance(int, int, double, double);
-	
+
 	static void printMove(Move);
 	static std::string toAlg(int);
 	static int fromAlg(char);
@@ -63,19 +63,3 @@ public:
 	static void trimRight(bitBoard&, int);
 	static void trimLeft(bitBoard&, int);
 };
-
-static double diffClock(clock_t clock1,clock_t clock2)
-{
-    double diffticks=clock1-clock2;
-    double diffms=(diffticks)/(CLOCKS_PER_SEC/1000);
-    return diffms / 1000.0;
-}
-
-static double sumClock(clock_t clock1, float clock2)
-{
-	clock2*=CLOCKS_PER_SEC;
-    double sumTicks=clock1+clock2;
-    double sumS=(sumTicks)/(CLOCKS_PER_SEC);
-    return sumS;
-}
-

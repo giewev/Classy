@@ -29,6 +29,6 @@
 *.app
 
 *eclipse*
-bin/*
-obj/*
+*/bin/*
+*/obj/*
 *.metadata*

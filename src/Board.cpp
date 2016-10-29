@@ -37,18 +37,18 @@ Board::~Board(){
 }
 
 void Board::loadFEN(std::string fenFile){
-	int bookmark = 0;
+	unsigned int bookmark = 0;
 
 		//Blanking out the Board
 	for(int i=0; i<7; i++){
 		pieces[i] = 0ull;
 	}
-	
+
 	int x = 1;
 	int y = 8;
-	
+
 	for(unsigned int i=0; i<fenFile.length(); i++){
-		
+
 			//checking for every value that represents a piece
 		if     (fenFile[i] == 'r'){
 			setSquare(Piece(ROOK, x, y, false), x, y);
@@ -88,7 +88,7 @@ void Board::loadFEN(std::string fenFile){
 		else if(fenFile[i] == 'P'){
 			setSquare(Piece(PAWN, x, y, true), x, y);
 		}
-		
+
 			//Checking if the value was a number
 		if(fenFile[i] != '/'){
 			if(fenFile[i] >= 49 && fenFile[i] <= 56){
@@ -106,7 +106,7 @@ void Board::loadFEN(std::string fenFile){
 			x=1;
 			y-=1;
 		}
-		
+
 			//Done setting pieces up
 		if(y==0){
 			bookmark = i+1;
@@ -194,13 +194,13 @@ void Board::loadFEN(std::string fenFile){
 		bookmark += 2;
 	}
 
-	//setting halfmove clock 
+	//setting halfmove clock
 	while (bookmark < fenFile.length()){
 		if (fenFile[bookmark] >= 48 && fenFile[bookmark] <= 57){
 			if (bookmark + 1 < fenFile.length() &&
 				fenFile[bookmark + 1] >= 48 && fenFile[bookmark + 1] <= 57){
 				halfMoveCounter = 10 * (fenFile[bookmark] - 48) + fenFile[bookmark + 1] - 48;
-				bookmark += 2; 
+				bookmark += 2;
 				break;
 			}
 			else{
@@ -214,7 +214,7 @@ void Board::loadFEN(std::string fenFile){
 		}
 	}
 
-	//setting fullMove clock 
+	//setting fullMove clock
 	while (bookmark < fenFile.length()){
 		if (fenFile[bookmark] >= 48 && fenFile[bookmark] <= 57){
 			if (bookmark + 1 < fenFile.length() &&
@@ -333,7 +333,7 @@ Board* Board::newCopy(){
 	}
 	newBoard->movedBoard = movedBoard;
 	newBoard->EPdata = EPdata;
-	
+
 	newBoard->setCastlingRights(true,  true,  getCastlingRights(true, true));
 	newBoard->setCastlingRights(true,  false, getCastlingRights(true, false));
 	newBoard->setCastlingRights(false, true,  getCastlingRights(false, true));
@@ -343,7 +343,7 @@ Board* Board::newCopy(){
 	newBoard->kingCoordinates = kingCoordinates;
 	newBoard->moveCounter = moveCounter;
 	newBoard->halfMoveCounter = halfMoveCounter;
-	
+
 	return(newBoard);
 }
 
@@ -353,7 +353,7 @@ Piece Board::getSquare(int x, int y){
 	int type = 0;
 	bool color = (pieces[0] >> (8 * x + y)) & 1;
 	//Empty SquareCheck
-	if (false && !(((pieces[PAWN] | pieces[BISHOP] | pieces[KNIGHT] | 
+	if (false && !(((pieces[PAWN] | pieces[BISHOP] | pieces[KNIGHT] |
 		pieces[QUEEN] | pieces[ROOK] | pieces[KING]) >> (8 * x + y)) & 1)) {
 		return Piece(EMPTY, x + 1, y + 1, color);
 	}
@@ -445,7 +445,7 @@ void Board::setKingLocation(bool setColor, int x, int y){
 }
 
 std::vector<Move> Board::generateMoves(){
-	
+
 	std::vector<Move> rawMoveList;
 		//for every set of coordinates
 	for(int y=1; y<=8; y++){
@@ -461,7 +461,7 @@ std::vector<Move> Board::generateMoves(){
 			}
 		}
 	}
-	
+
 	std::vector<Move> finalMoveList;
 	Danger safetyData = Danger(this);
 	for(unsigned int i=0; i<rawMoveList.size(); i++){
@@ -469,7 +469,7 @@ std::vector<Move> Board::generateMoves(){
 			finalMoveList.push_back(rawMoveList[i]);
 		}
 	}
-	
+
 	return finalMoveList;
 }
 
@@ -519,7 +519,7 @@ int Board::gameOverCheck(){
 void Board::generateMoveArray(Move* finalMoveList, int& moveCounter){
 	Move rawMoveList[230];
 	int rawMoveCounter = 0;
-	
+
 	for(int y=1; y<=8; y++){
 		for(int x=1; x<=8; x++){
 			bool targetColor = getSquareColor(x, y);
@@ -655,7 +655,7 @@ void Board::makeMove(Move data){
 	movingPiece.xPos = data.endX;
 	movingPiece.yPos = data.endY;
 	setSquare(movingPiece, data.endX, data.endY);
-	
+
 	turn = !turn;
 }
 
@@ -672,15 +672,15 @@ double Board::perft(int depth){
 	int moveGenCount = 0;
 	Move moveList[220];
 	generateMoveArray(moveList, moveGenCount);
-	
+
 	//Engine player = new Engine(this);
 	//player.sortMoveList(moveList, moveGenCount, this);
-	
+
 	if(depth == 1) {
 		//std::cout << moveGenCount << std::endl;
 		return(moveGenCount);//How many moves can we make RIGHT NOW
 	}
-	
+
 	Board* newBoard;
 	double moveCounter = 0;
 
@@ -703,7 +703,7 @@ double Board::dividePerft(int depth){
 	//std::cout << moveGenCount << std::endl;
 	if(depth == 1) {
 		for(int i=0; i<moveGenCount; i++){
-			std::cout << Engine::toAlg(moveList[i].startX) << moveList[i].startY << " " 
+			std::cout << Engine::toAlg(moveList[i].startX) << moveList[i].startY << " "
 				<< Engine::toAlg(moveList[i].endX) << moveList[i].endY << " " << std::endl;
 		}
 		return(moveGenCount);//How many moves can we make RIGHT NOW
@@ -792,7 +792,7 @@ Piece Board::getEP(){
 	y = copyData & 7;
 	copyData >>= 3;
 	color = copyData & 1;
-	
+
 	Piece ePiece = Piece(PAWN);
 	ePiece.xPos = x+1;
 	ePiece.yPos = y+1;
@@ -838,7 +838,7 @@ void Board::countPieces(){
 		for(int y=1; y<=8; y++){
 			targetType = getSquareType(x, y);
 			targetColor = getSquareColor(x, y);
-			
+
 			if(targetColor){
 				whitePieces[targetType]++;
 				whiteCount++;
@@ -868,8 +868,8 @@ void Board::countPieces(){
 
 int Board::pieceCount(){
 	int count = 0;
-	
-	for (bitBoard pieceSet = pieces[PAWN] | pieces[ROOK] | pieces[KNIGHT] 
+
+	for (bitBoard pieceSet = pieces[PAWN] | pieces[ROOK] | pieces[KNIGHT]
 		| pieces[BISHOP] | pieces[QUEEN] | pieces[KING]; pieceSet; count++){
 		pieceSet &= pieceSet - 1;
 	}
