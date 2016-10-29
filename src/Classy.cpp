@@ -6,20 +6,14 @@
 #include "Danger.h"
 #include "Move.h"
 
-int main(int argc, char *argv[]){
-	std::string startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
+void runAllTests();
 
-    Board* testBoard = new Board();
-    testBoard->loadFEN(startingFEN);
-    Engine player = Engine(testBoard);
-
-    std::cout << std::fixed << std::setprecision(0);
-
-    double expectedPerfts[10] = { 1, 20, 400, 8902, 197281, 4865609, 119060324};
-
-    for(int i=0; i<6; i++)
+int main(int argc, char *argv[])
+{
+    if (argc > 1 && argv[1][0] == '-' && argv[1][1] == 't')
     {
-        std::cout << testBoard->perft(i) << std::endl;
+        runAllTests();
+        return 0;
     }
 
     return 0;
