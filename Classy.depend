@@ -1,0 +1,100 @@
+# depslib dependency file v1.0
+1430952071 source:/home/ian/repos/Classy/Classy/bitWise.cpp
+	"Bitwise.h"
+	<iostream>
+
+1430947808 /home/ian/repos/Classy/Classy/Bitwise.h
+	<inttypes.h>
+
+1431277645 source:/home/ian/repos/Classy/Classy/Board.cpp
+	<vector>
+	<iostream>
+	<inttypes.h>
+	"Piece.h"
+	"Board.h"
+	"Move.h"
+	"Danger.h"
+	"Engine.h"
+	<math.h>
+
+1430853390 /home/ian/repos/Classy/Classy/Piece.h
+	<string>
+	<vector>
+
+1430853364 /home/ian/repos/Classy/Classy/Board.h
+	<iostream>
+	<vector>
+	<inttypes.h>
+
+1431214238 /home/ian/repos/Classy/Classy/Move.h
+	<string>
+
+1430853374 /home/ian/repos/Classy/Classy/Danger.h
+	<vector>
+
+1431214921 /home/ian/repos/Classy/Classy/Engine.h
+	<inttypes.h>
+	<time.h>
+	<iostream>
+
+1477699405 source:/home/ian/repos/Classy/Classy/Classy.cpp
+	<iostream>
+	<string>
+	<iomanip>
+	"Board.h"
+	"Engine.h"
+	"Danger.h"
+	"Move.h"
+
+1431010157 source:/home/ian/repos/Classy/Classy/Danger.cpp
+	"Piece.h"
+	"Board.h"
+	"Move.h"
+	"Danger.h"
+	"Engine.h"
+	"Bitwise.h"
+	<vector>
+	<math.h>
+	<iostream>
+	<string.h>
+	<strings.h>
+	<algorithm>
+
+1431276795 source:/home/ian/repos/Classy/Classy/Engine.cpp
+	"Board.h"
+	"Danger.h"
+	"Engine.h"
+	"Evaluation Constants.h"
+	"Move.h"
+	"Piece.h"
+	"Bitwise.h"
+	<iostream>
+	<math.h>
+	<random>
+	<time.h>
+	<unordered_map>
+	<vector>
+	<algorithm>
+	<string.h>
+	<strings.h>
+
+1430853381 /home/ian/repos/Classy/Classy/Evaluation Constants.h
+	<inttypes.h>
+
+1431213676 source:/home/ian/repos/Classy/Classy/Move.cpp
+	"Move.h"
+	"Danger.h"
+	"Board.h"
+	"Piece.h"
+	"Engine.h"
+	<iostream>
+	<sstream>
+	<math.h>
+
+1430853388 source:/home/ian/repos/Classy/Classy/Piece.cpp
+	"Piece.h"
+	"Move.h"
+	<iostream>
+	<string>
+	"Board.h"
+
