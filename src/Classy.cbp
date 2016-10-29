@@ -47,6 +47,7 @@
 		<Unit filename="Piece.cpp" />
 		<Unit filename="Piece.h" />
 		<Unit filename="StandAlones.h" />
+		<Unit filename="Tests.cpp" />
 		<Unit filename="bitWise.cpp" />
 		<Extensions>
 			<code_completion />
