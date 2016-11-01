@@ -16,14 +16,14 @@ const int KNIGHT = 5;
 const int ROOK   = 6;
 
 Piece::Piece(){
-	xPos = -1; 
+	xPos = -1;
 	yPos = -1;
 	color = false;
 	type = 0;
 	setMoved(false);
 }
 Piece::Piece(bool newColor){
-	xPos = -1; 
+	xPos = -1;
 	yPos = -1;
 	color = newColor;
 	type = 0;
@@ -44,7 +44,7 @@ Piece::Piece(int name, int newX, int newY, bool newColor){
 	setMoved(false);
 }
 Piece::Piece(int throwaway){
-	xPos = -1; 
+	xPos = -1;
 	yPos = -1;
 	color = true;
 	type = 0;
@@ -82,36 +82,38 @@ void Piece::setMoved(bool x){
 	return;
 }
 
-void Piece::generateMoves(std::vector<Move>& moveList, Board& gameBoard){
-	//std::cout << "wrapping around the generator internally  " << type << std::endl;
+void Piece::generateMoves(std::vector<Move>& moveList, int x, int y, Board& gameBoard){
+	int type = gameBoard.getSquareType(x, y);
+
 	if(type == EMPTY){
 	}
 	else if(type == KING){
-		kingMoves(moveList, gameBoard);
+		kingMoves(moveList, x, y, gameBoard);
 	}
 	else if(type == QUEEN){
-		queenMoves(moveList, gameBoard);
+		queenMoves(moveList, x, y, gameBoard);
 	}
 	else if(type == PAWN){
-		pawnMoves(moveList, gameBoard);
+		pawnMoves(moveList, x, y, gameBoard);
 	}
 	else if(type == BISHOP){
-		bishopMoves(moveList, gameBoard);
+		bishopMoves(moveList, x, y, gameBoard);
 	}
 	else if(type == KNIGHT){
-		knightMoves(moveList, gameBoard);
+		knightMoves(moveList, x, y, gameBoard);
 	}
 	else if(type == ROOK){
-		rookMoves(moveList, gameBoard);
+		rookMoves(moveList, x, y, gameBoard);
 	}
 	else{
 		std::cout << "No matching piece type in move generator  " << type << std::endl;
 	}
-	//std::cout << "Ending gen wrapper" << std::endl;
+
 	return;
 }
-void Piece::kingMoves(std::vector<Move>& moveList, Board& gameBoard){
-	Piece onTargetSquare;
+
+ void Piece::kingMoves(std::vector<Move>& moveList, int xPos, int yPos, Board& gameBoard){
+	bool ownColor = gameBoard.getSquareColor(xPos, yPos);
 	for (int j=-1; j<=1; j++){
 		for (int k=-1; k<=1; k++){
 			if(j==0 && k==0){//if not moving
@@ -126,36 +128,34 @@ void Piece::kingMoves(std::vector<Move>& moveList, Board& gameBoard){
 			}
 
 			//Check to see if Friendly Piece is there
-			onTargetSquare = gameBoard.getSquare(xPos+j, yPos+k);
-			if(!(onTargetSquare.isNull())){
-				if(onTargetSquare.getColor() == getColor()){
-					//std::cout<< "This is the issue\n";
+			if(gameBoard.getSquareType(xPos + j, yPos + k) != EMPTY){
+				if(gameBoard.getSquareType(xPos + j, yPos + k) == ownColor){
 					continue;
 				}
 			}
 			//Everything is good, so make a move and add it to the moveList
-			//std::cout << "Found something" << yPos+k << "\n";
 			moveList.push_back(Move(xPos, yPos, xPos+j, yPos+k, 0));
 		}
 	}
 
 		//CastlingMoves
 	for(int i=0; i<=1; i++){
-		if(gameBoard.getCastlingRights(getColor(), i==1)){
+		if(gameBoard.getCastlingRights(ownColor, i==1)){
 			if(i){
-				if(!gameBoard.getSquare(xPos+1, yPos).isNull()){
+				if(gameBoard.getSquareType(xPos+1, yPos) != EMPTY){
 					continue;
 				}
-				if(!gameBoard.getSquare(xPos+2, yPos).isNull()){
+				if(gameBoard.getSquareType(xPos+2, yPos) != EMPTY){
 					continue;
 				}
+
 				moveList.push_back(Move(xPos, yPos, xPos + 2, yPos));
 			}
 			else{
-				if(!gameBoard.getSquare(xPos-1, yPos).isNull()){
+				if(gameBoard.getSquareType(xPos-1, yPos) != EMPTY){
 					continue;
 				}
-				if(!gameBoard.getSquare(xPos-2, yPos).isNull()){
+				if(gameBoard.getSquareType(xPos-2, yPos) != EMPTY){
 					continue;
 				}
 				moveList.push_back(Move(xPos, yPos, xPos - 2, yPos));
@@ -163,86 +163,27 @@ void Piece::kingMoves(std::vector<Move>& moveList, Board& gameBoard){
 		}
 	}
 }
-void Piece::queenMoves(std::vector<Move>& moveList, Board& gameBoard){
-	Piece target = Piece(EMPTY);
-	//Diagonal
-	for(int i=-1; i<=1; i+=2){
-		for(int j=-1; j<=1; j+=2){
-			if(i==0 || j==0){
-				continue;
-			}
-			for(int k=1; k<=7; k++){
-				
-				if(xPos+(k*i)<1 || xPos+(k*i)>8 || yPos+(k*j)<1 || yPos+(k*j)>8){//Too Far
-					break;
-				}
 
-				target = gameBoard.getSquare(xPos+(k*i), yPos+(k*j));
-				if(!target.isNull()){
-
-					if(target.getColor() == getColor()){
-						break;
-					}
-					else{
-						moveList.push_back(Move(xPos, yPos, xPos+(k*i), yPos+(k*j)));
-						break;
-					}
-				}
-
-				moveList.push_back(Move(xPos, yPos, xPos+(k*i), yPos+(k*j)));
-
-			}
-		}
-	}
-
-	//Linear
-
-	for(int i=-1; i<=1; i++){
-		for(int j=-1; j<=1; j++){
-			if(!i == !j){// diagonal or no motion
-				continue;
-			}
-			for(int k=1; k<8; k++){
-
-				if(xPos+(i*k) < 1 || xPos+(i*k) > 8){//out of bounds X
-					continue;
-				}
-				if(yPos+(j*k) < 1 || yPos+(j*k) > 8){//out of Bounds Y
-					continue;
-				}
-
-				target = gameBoard.getSquare(xPos+(i*k), yPos+(j*k));
-				if(!target.isNull()){
-					if(target.getColor() == getColor()){
-						break;
-					}
-					else{
-						moveList.push_back(Move(xPos, yPos, xPos+(k*i), yPos+(k*j)));
-						break;
-					}
-				}
-				moveList.push_back(Move(xPos, yPos, xPos+(k*i), yPos+(k*j)));
-			}
-		}
-	}
+void Piece::queenMoves(std::vector<Move>& moveList, int xPos, int yPos, Board& gameBoard){
+    rookMoves(moveList, xPos, yPos, gameBoard);
+    bishopMoves(moveList, xPos, yPos, gameBoard);
 }
-void Piece::bishopMoves(std::vector<Move>& moveList, Board& gameBoard){
-	Piece target = Piece(EMPTY);
+
+void Piece::bishopMoves(std::vector<Move>& moveList, int xPos, int yPos, Board& gameBoard){
+	bool ownColor = gameBoard.getSquareColor(xPos, yPos);
 	for(int i=-1; i<=1; i+=2){
 		for(int j=-1; j<=1; j+=2){
 			if(i==0 || j==0){
 				continue;
 			}
 			for(int k=1; k<=7; k++){
-				
+
 				if(xPos+(k*i)<1 || xPos+(k*i)>8 || yPos+(k*j)<1 || yPos+(k*j)>8){//Too Far
 					break;
 				}
 
-				target = gameBoard.getSquare(xPos+(k*i), yPos+(k*j));
-				if(!target.isNull()){
-
-					if(target.getColor() == getColor()){
+				if(gameBoard.getSquareType(xPos+(k*i), yPos+(k*j)) != EMPTY){
+					if(gameBoard.getSquareColor(xPos+(k*i), yPos+(k*j)) == ownColor){
 						break;
 					}
 					else{
@@ -257,8 +198,9 @@ void Piece::bishopMoves(std::vector<Move>& moveList, Board& gameBoard){
 		}
 	}
 }
-void Piece::knightMoves(std::vector<Move>& moveList, Board& gameBoard){
-	Piece target = Piece(EMPTY);
+
+void Piece::knightMoves(std::vector<Move>& moveList, int xPos, int yPos, Board& gameBoard){
+	bool ownColor = gameBoard.getSquareColor(xPos, yPos);
 	for(int j=-2; j<=2; j++){
 		for(int k=-2; k<=2; k++){
 			if(j==0 || k==0){//Polar movement
@@ -270,18 +212,20 @@ void Piece::knightMoves(std::vector<Move>& moveList, Board& gameBoard){
 			if(xPos+j>8 || xPos+j<1 || yPos+k>8 || yPos+k<1){//trying to move outside board
 				continue;
 			}
-			target = gameBoard.getSquare(xPos+j, yPos+k);
-			if(!target.isNull()){
-				if(target.getColor() == getColor()){
+
+			if(gameBoard.getSquareType(xPos + j, yPos + k) != EMPTY){
+				if(gameBoard.getSquareColor(xPos + j, yPos + k) == ownColor){
 					continue;
 				}
 			}
+
 			moveList.push_back(Move(xPos, yPos, xPos+j, yPos+k, 0));
 		}
 	}
 }
-void Piece::rookMoves(std::vector<Move>& moveList, Board& gameBoard){
-	Piece target = Piece(EMPTY);
+
+void Piece::rookMoves(std::vector<Move>& moveList, int xPos, int yPos, Board& gameBoard){
+	bool ownColor = gameBoard.getSquareColor(xPos, yPos);
 	for(int i=-1; i<=1; i++){
 		for(int j=-1; j<=1; j++){
 			if(!i == !j){// diagonal or no motion
@@ -296,9 +240,8 @@ void Piece::rookMoves(std::vector<Move>& moveList, Board& gameBoard){
 					continue;
 				}
 
-				target = gameBoard.getSquare(xPos+(i*k), yPos+(j*k));
-				if(!target.isNull()){
-					if(target.getColor() == getColor()){
+				if(gameBoard.getSquareType(xPos+(i*k), yPos+(j*k)) != EMPTY){
+					if(gameBoard.getSquareColor(xPos+(i*k), yPos+(j*k)) == ownColor){
 						break;
 					}
 					else{
@@ -311,28 +254,25 @@ void Piece::rookMoves(std::vector<Move>& moveList, Board& gameBoard){
 		}
 	}
 }
-void Piece::pawnMoves(std::vector<Move>& moveList, Board& gameBoard){
+void Piece::pawnMoves(std::vector<Move>& moveList, int xPos, int yPos, Board& gameBoard){
+    bool ownColor = gameBoard.getSquareColor(xPos, yPos);
 	int direction = -1;
-	if(getColor()){
+	if(ownColor){
 		direction = 1;
 	}
 
-	Piece targetOne = gameBoard.getSquare(xPos, yPos+direction);
-	if(targetOne.isNull()){//Normal Moves
-		//std::cout << "it acknowledges null" << std::endl;
+	if(gameBoard.getSquareType(xPos, yPos + direction) == EMPTY){//Normal Moves
 		if(yPos+direction == 8 || yPos+direction == 1){
 			for(int i=1; i<=4; i++){
 				moveList.push_back(Move(xPos, yPos, xPos, yPos+1, i));
 			}
 		}
 		else{
-			//std::cout << "Wait it's doing it right" << std::endl;
 			moveList.push_back(Move(xPos, yPos, xPos, yPos+direction));
 		}
 
-		if(!hasMoved()){//Double Moves
-			Piece targetTwo = gameBoard.getSquare(xPos, yPos+2*direction);
-			if(targetTwo.isNull()){
+		if(!gameBoard.getSquareMoved(xPos, yPos)){//Double Moves
+			if(gameBoard.getSquareType(xPos, yPos + 2 * direction) == EMPTY){
 				moveList.push_back(Move(xPos, yPos, xPos, yPos+2*direction));
 			}
 		}
@@ -343,20 +283,22 @@ void Piece::pawnMoves(std::vector<Move>& moveList, Board& gameBoard){
 		if(xPos+i > 8 || xPos+i < 1){
 			continue;
 		}
-		Piece target = gameBoard.getSquare(xPos+i, yPos+direction);
-		if(target.isNull()){
+
+		if(gameBoard.getSquareType(xPos + i, yPos + direction) == EMPTY){
 			if(yPos == gameBoard.getEP().getY()){
 				if(xPos + i == gameBoard.getEP().getX()){
-					if(gameBoard.getEP().getColor() != getColor()){
+					if(gameBoard.getEP().getColor() != ownColor){
 						moveList.push_back(Move(xPos, yPos, xPos+i, yPos+direction));
 					}
 				}
 			}
 			continue;
 		}
-		if(target.getColor() == getColor()){
+
+		if(gameBoard.getSquareColor(xPos + i, yPos + direction) == ownColor){
 			continue;
 		}
+
 		if(yPos+direction == 8 || yPos+direction == 1){
 			for(int j=1; j<=4; j++){
 				moveList.push_back(Move(xPos, yPos, xPos+i, yPos+direction, j));
@@ -426,20 +368,20 @@ void Piece::kingMoveArray(Move* moveList, int& moveCounter, Board& gameBoard){
 	for(int i=0; i<=1; i++){
 		if(gameBoard.getCastlingRights(getColor(), i==1)){
 			if(i){
-				if (!gameBoard.getSquare(xPos + 1, yPos).isNull()){ 
+				if (!gameBoard.getSquare(xPos + 1, yPos).isNull()){
 					continue;
 				}
-				if (!gameBoard.getSquare(xPos + 2, yPos).isNull()){ 
+				if (!gameBoard.getSquare(xPos + 2, yPos).isNull()){
 					continue;
 				}
 				moveList[moveCounter] = Move(xPos, yPos, xPos + 2, yPos);
 				moveCounter++;
 			}
 			else{
-				if (!gameBoard.getSquare(xPos - 1, yPos).isNull()){ 
+				if (!gameBoard.getSquare(xPos - 1, yPos).isNull()){
 					continue;
 				}
-				if (!gameBoard.getSquare(xPos - 2, yPos).isNull()){ 
+				if (!gameBoard.getSquare(xPos - 2, yPos).isNull()){
 					continue;
 				}
 				if (!gameBoard.getSquare(xPos - 3, yPos).isNull()){
@@ -461,7 +403,7 @@ void Piece::queenMoveArray(Move* moveList, int& moveCounter, Board& gameBoard){
 				continue;
 			}
 			for(int k=1; k<=7; k++){
-				
+
 				if(xPos+(k*i)<1 || xPos+(k*i)>8 || yPos+(k*j)<1 || yPos+(k*j)>8){//Too Far
 					break;
 				}
@@ -528,7 +470,7 @@ void Piece::bishopMoveArray(Move* moveList, int& moveCounter, Board& gameBoard){
 				continue;
 			}
 			for(int k=1; k<=7; k++){
-				
+
 				if(xPos+(k*i)<1 || xPos+(k*i)>8 || yPos+(k*j)<1 || yPos+(k*j)>8){//Too Far
 					break;
 				}
@@ -644,11 +586,11 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, Board& gameBoard){
 		}
 		int targetType = gameBoard.getSquareType(xPos + i, yPos + direction);
 		bool targetColor = gameBoard.getSquareColor(xPos + i, yPos + direction);
-		
+
 		if(!targetType){
 			if(yPos == gameBoard.getEP().getY()){
 				if(xPos + i == gameBoard.getEP().getX()){
-					
+
 					if(gameBoard.getEP().getColor() != getColor()){
 						moveList[moveCounter] = Move(xPos, yPos, xPos+i, yPos+direction);
 						moveCounter++;

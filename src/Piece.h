@@ -12,7 +12,7 @@ public:
 	int type;
 	int xPos, yPos;//coordinates
 	bool color;//True is White, False is Black
-	
+
 	Piece();//Simple constructor
 	Piece(bool);//Also sets color
 	Piece(int, int, bool);//sets coordinates and Color
@@ -31,19 +31,20 @@ public:
 		return(color);
 	}
 
+	static void generateMoves(std::vector<Move>&, int x, int y, Board&);
+	static void kingMoves(std::vector<Move>&, int x, int y, Board&);
+	static void queenMoves(std::vector<Move>&, int x, int y, Board&);
+	static void pawnMoves(std::vector<Move>&, int x, int y, Board&);
+	static void bishopMoves(std::vector<Move>&, int x, int y, Board&);
+	static void knightMoves(std::vector<Move>&, int x, int y, Board&);
+	static void rookMoves(std::vector<Move>&, int x, int y, Board&);
+
 	bool isSafe(Board*);
 	bool operator!=(Piece);
 
 	virtual bool hasMoved();
 	virtual void setMoved(bool);
 	virtual const bool isNull();
-	void generateMoves(std::vector<Move>&, Board&);
-	void kingMoves(std::vector<Move>&, Board&);
-	void queenMoves(std::vector<Move>&, Board&);
-	void pawnMoves(std::vector<Move>&, Board&);
-	void bishopMoves(std::vector<Move>&, Board&);
-	void knightMoves(std::vector<Move>&, Board&);
-	void rookMoves(std::vector<Move>&, Board&);
 
 	void appendMoveArray(Move*, int&, Board&);
 	void kingMoveArray(Move*, int&, Board&);

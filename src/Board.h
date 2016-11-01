@@ -30,7 +30,7 @@ public:
 	int pieceCount(bool);
 	int pieceCount(int);
 	int pieceCount(int, bool);
-	
+
 	Piece findKing(bool);
 
 	Piece getEP();
@@ -40,13 +40,14 @@ public:
 	int getKingY(bool);
 	int getSquareType(int, int);
 	bool getSquareColor(int, int);
+	bool getSquareMoved(int, int);
 	void setSquare(Piece, int, int);
 	void setSquare(Piece, int);
 	void setSquare(int type, bool color, int x, int y);
 	void setEP(Piece);
 	void setEP(int, int, bool);
 	void setKingLocation(bool, int, int);
-	
+
 	void loadFEN(std::string);
 	std::string outputFEN();
 	double perft(int);
@@ -55,7 +56,7 @@ public:
 	int gameOverCheck();
 	void makeMove(Move);
 	void countPieces();
-	
+
 	bool operator==(const Board);
 
 	bool nullSquare(int, int);

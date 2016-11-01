@@ -380,6 +380,14 @@ bool Board::getSquareColor(int x, int y){
 	y--;
 	return (pieces[0] >> (8*x + y)) & 1;
 }
+
+bool Board::getSquareMoved(int x, int y)
+{
+    x--;
+	y--;
+	return (movedBoard >> (8*x + y)) & 1;
+}
+
 int Board::getKingX(bool getColor){
 	if(getColor){
 		return((kingCoordinates & 7) +1);
@@ -457,7 +465,7 @@ std::vector<Move> Board::generateMoves(){
 			}
 				//If the piece is the right color, add its moves to the list
 			if(target.getColor() == turn){
-				target.generateMoves(rawMoveList, *this);
+				Piece::generateMoves(rawMoveList, x, y, *this);
 			}
 		}
 	}
