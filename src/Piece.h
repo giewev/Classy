@@ -39,20 +39,19 @@ public:
 	static void knightMoves(std::vector<Move>&, int x, int y, Board&);
 	static void rookMoves(std::vector<Move>&, int x, int y, Board&);
 
+	static void appendMoveArray(Move*, int&, int x, int y, Board&);
+	static void kingMoveArray(Move*, int&, int x, int y, Board&);
+	static void queenMoveArray(Move*, int&, int x, int y, Board&);
+	static void pawnMoveArray(Move*, int&, int x, int y, Board&);
+	static void bishopMoveArray(Move*, int&, int x, int y, Board&);
+	static void knightMoveArray(Move*, int&, int x, int y, Board&);
+	static void rookMoveArray(Move*, int&, int x, int y, Board&);
+
 	bool isSafe(Board*);
 	bool operator!=(Piece);
 
 	virtual bool hasMoved();
 	virtual void setMoved(bool);
 	virtual const bool isNull();
-
-	void appendMoveArray(Move*, int&, Board&);
-	void kingMoveArray(Move*, int&, Board&);
-	void queenMoveArray(Move*, int&, Board&);
-	void pawnMoveArray(Move*, int&, Board&);
-	void bishopMoveArray(Move*, int&, Board&);
-	void knightMoveArray(Move*, int&, Board&);
-	void rookMoveArray(Move*, int&, Board&);
-
 };
 

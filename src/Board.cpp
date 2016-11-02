@@ -504,7 +504,7 @@ int Board::gameOverCheck(){
 			if ((rightColor >> (x * 8 + y - 9)) & 1){
 				Piece target = getSquare(x, y);
 				moveCounter = 0;
-				target.appendMoveArray(rawMoveList, moveCounter, *this);
+				target.appendMoveArray(rawMoveList, moveCounter, x, y, *this);
 				for(int i=0; i<moveCounter; i++){
 					if(rawMoveList[i].isSafe(safetyData)){
 						return 0;
@@ -534,7 +534,7 @@ void Board::generateMoveArray(Move* finalMoveList, int& moveCounter){
 			if(targetColor == turn){
 				Piece target = getSquare(x, y);
 				//std::cout << target.type << std::endl;
-				target.appendMoveArray(rawMoveList, rawMoveCounter, *this);
+				target.appendMoveArray(rawMoveList, rawMoveCounter, x, y, *this);
 			}
 		}
 	}
