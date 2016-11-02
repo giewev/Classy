@@ -32,12 +32,6 @@ public:
 	}
 
 	static void generateMoves(std::vector<Move>&, int x, int y, Board&);
-	static void kingMoves(std::vector<Move>&, int x, int y, Board&);
-	static void queenMoves(std::vector<Move>&, int x, int y, Board&);
-	static void pawnMoves(std::vector<Move>&, int x, int y, Board&);
-	static void bishopMoves(std::vector<Move>&, int x, int y, Board&);
-	static void knightMoves(std::vector<Move>&, int x, int y, Board&);
-	static void rookMoves(std::vector<Move>&, int x, int y, Board&);
 
 	static void appendMoveArray(Move*, int&, int x, int y, Board&);
 	static void kingMoveArray(Move*, int&, int x, int y, Board&);
