@@ -325,73 +325,6 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
 
 //Returns false if the Piece is in check, true otherwise
 bool Piece::isSafe(Board* gameBoard){
-		//Check if next to a king
-	for(int x=-1; x<=1; x++){
-		for(int y=-1; y<=1; y++){
-
-			if(!x && !y){//No motion
-				continue;
-			}
-			if(xPos+x > 8 || xPos+x<1){//if checking horizontally off the board
-				continue;
-			}
-			if(yPos+y > 8 || yPos+y<1){//if checking vertically off the board
-				continue;
-			}
-
-			if(gameBoard->getSquareType(xPos+x, yPos+y) == KING){
-                if (gameBoard->getSquareColor(xPos+x, yPos+y) != color)
-                {
-                    return(false);
-				}
-			}
-		}
-	}
-
-		//Check if Pawn ahead
-	int direction = -1;
-	if(color) direction = 1;
-
-	for(int x=-1; x<=1; x+=2){
-		if(xPos + x > 8 || xPos + x <1){
-			continue;
-		}
-
-		if(gameBoard->getSquareType(xPos+x, yPos+direction) == PAWN){
-			if(gameBoard->getSquareColor(xPos+x, yPos+direction) != color){
-				return(false);
-			}
-		}
-	}
-		//Check for Rook or Queen
-	for(int i=-1; i<=1; i++){
-		for(int j=-1; j<=1; j++){
-			if(!i == !j){
-				continue;
-			}
-
-			for(int k=1; k<=7; k++){
-					//Out of bounds
-				if((xPos+(i*k)>8) || (xPos+(i*k)<1) || (yPos+(j*k)>8) || (yPos+(j*k)<1)){
-					break;
-				}
-
-					//Found a piece
-                int targetType = gameBoard->getSquareType(xPos+(i*k), yPos+(j*k));
-                int targetColor = gameBoard->getSquareColor(xPos+(i*k), yPos+(j*k));
-				if(targetType != EMPTY){
-					if(targetColor != color){
-						if(targetType == ROOK || targetType == QUEEN){
-							return(false);
-						}
-						break;
-					}
-					break;
-				}
-			}
-		}
-	}
-
 		//Check for Bishop or Queen
 	for(int i=-1; i<=1; i++){
 		for(int j=-1; j<=1; j++){
@@ -411,6 +344,35 @@ bool Piece::isSafe(Board* gameBoard){
 				if(targetType != EMPTY){
 					if(targetColor != color){
 						if(targetType == BISHOP || targetType == QUEEN){
+							return(false);
+						}
+						break;
+					}
+					break;
+				}
+			}
+		}
+	}
+
+		//Check for Rook or Queen
+	for(int i=-1; i<=1; i++){
+		for(int j=-1; j<=1; j++){
+			if(!i == !j){
+				continue;
+			}
+
+			for(int k=1; k<=7; k++){
+					//Out of bounds
+				if((xPos+(i*k)>8) || (xPos+(i*k)<1) || (yPos+(j*k)>8) || (yPos+(j*k)<1)){
+					break;
+				}
+
+					//Found a piece
+                int targetType = gameBoard->getSquareType(xPos+(i*k), yPos+(j*k));
+                int targetColor = gameBoard->getSquareColor(xPos+(i*k), yPos+(j*k));
+				if(targetType != EMPTY){
+					if(targetColor != color){
+						if(targetType == ROOK || targetType == QUEEN){
 							return(false);
 						}
 						break;
@@ -442,6 +404,45 @@ bool Piece::isSafe(Board* gameBoard){
 					if(targetType == KNIGHT){
 						return false;
 					}
+				}
+			}
+		}
+	}
+
+		//Check if Pawn ahead
+	int direction = -1;
+	if(color) direction = 1;
+
+	for(int x=-1; x<=1; x+=2){
+		if(xPos + x > 8 || xPos + x <1){
+			continue;
+		}
+
+		if(gameBoard->getSquareType(xPos+x, yPos+direction) == PAWN){
+			if(gameBoard->getSquareColor(xPos+x, yPos+direction) != color){
+				return(false);
+			}
+		}
+	}
+
+		//Check if next to a king
+	for(int x=-1; x<=1; x++){
+		for(int y=-1; y<=1; y++){
+
+			if(!x && !y){//No motion
+				continue;
+			}
+			if(xPos+x > 8 || xPos+x<1){//if checking horizontally off the board
+				continue;
+			}
+			if(yPos+y > 8 || yPos+y<1){//if checking vertically off the board
+				continue;
+			}
+
+			if(gameBoard->getSquareType(xPos+x, yPos+y) == KING){
+                if (gameBoard->getSquareColor(xPos+x, yPos+y) != color)
+                {
+                    return(false);
 				}
 			}
 		}
