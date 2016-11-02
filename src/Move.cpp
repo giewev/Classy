@@ -76,9 +76,6 @@ int Move::getGameOverDepth(){
 
 bool Move::isSafe(Danger safetyData){
 	if(safetyData.movePinned(*this)){
-		if(endX == 7 && endY == 2){
-			//std::cout << "pin" << std::endl;
-		}
 		return false;
 	}
 	if (startY == 4 || startY == 5){
@@ -103,7 +100,7 @@ bool Move::isSafe(Danger safetyData){
 		//std::cout << "caught" << std::endl;
 	}
 	//std::cout << "caught" << std::endl;
-	
+
 	//The king is moving, need a manual check
 	if(startX == safetyData.defenderX && startY == safetyData.defenderY){
 		Board* newBoard;

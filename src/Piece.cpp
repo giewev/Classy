@@ -325,7 +325,6 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
 
 //Returns false if the Piece is in check, true otherwise
 bool Piece::isSafe(Board* gameBoard){
-	Piece targetSquare;
 		//Check if next to a king
 	for(int x=-1; x<=1; x++){
 		for(int y=-1; y<=1; y++){
@@ -340,8 +339,11 @@ bool Piece::isSafe(Board* gameBoard){
 				continue;
 			}
 
-			if(gameBoard->getSquare(xPos+x, yPos+y).type == KING){
-				return(false);
+			if(gameBoard->getSquareType(xPos+x, yPos+y) == KING){
+                if (gameBoard->getSquareColor(xPos+x, yPos+y) != color)
+                {
+                    return(false);
+				}
 			}
 		}
 	}
@@ -354,9 +356,9 @@ bool Piece::isSafe(Board* gameBoard){
 		if(xPos + x > 8 || xPos + x <1){
 			continue;
 		}
-		targetSquare = gameBoard->getSquare(xPos+x, yPos+direction);
-		if(targetSquare.type == PAWN){
-			if(targetSquare.color != color){
+
+		if(gameBoard->getSquareType(xPos+x, yPos+direction) == PAWN){
+			if(gameBoard->getSquareColor(xPos+x, yPos+direction) != color){
 				return(false);
 			}
 		}
@@ -374,12 +376,12 @@ bool Piece::isSafe(Board* gameBoard){
 					break;
 				}
 
-				targetSquare = gameBoard->getSquare(xPos+(i*k), yPos+(j*k));
-
 					//Found a piece
-				if(!targetSquare.isNull()){
-					if(targetSquare.color != color){
-						if(targetSquare.type == ROOK || targetSquare.type == QUEEN){
+                int targetType = gameBoard->getSquareType(xPos+(i*k), yPos+(j*k));
+                int targetColor = gameBoard->getSquareColor(xPos+(i*k), yPos+(j*k));
+				if(targetType != EMPTY){
+					if(targetColor != color){
+						if(targetType == ROOK || targetType == QUEEN){
 							return(false);
 						}
 						break;
@@ -403,11 +405,12 @@ bool Piece::isSafe(Board* gameBoard){
 					break;
 				}
 
-				targetSquare = gameBoard->getSquare(xPos+(i*k), yPos+(j*k));
 					//Found a piece
-				if(!targetSquare.isNull()){
-					if(targetSquare.color != color){
-						if(targetSquare.type == BISHOP || targetSquare.type == QUEEN){
+                int targetType = gameBoard->getSquareType(xPos+(i*k), yPos+(j*k));
+                bool targetColor = gameBoard->getSquareColor(xPos+(i*k), yPos+(j*k));
+				if(targetType != EMPTY){
+					if(targetColor != color){
+						if(targetType == BISHOP || targetType == QUEEN){
 							return(false);
 						}
 						break;
@@ -432,10 +435,11 @@ bool Piece::isSafe(Board* gameBoard){
 				continue;
 			}
 
-			targetSquare = gameBoard->getSquare(xPos+i, yPos+j);
-			if(!targetSquare.isNull()){
-				if(targetSquare.color != color){
-					if(targetSquare.type == KNIGHT){
+			int targetType = gameBoard->getSquareType(xPos+i, yPos+j);
+			bool targetColor =gameBoard->getSquareColor(xPos+i, yPos+j);
+			if(targetType != EMPTY){
+				if(targetColor != color){
+					if(targetType == KNIGHT){
 						return false;
 					}
 				}
@@ -443,8 +447,6 @@ bool Piece::isSafe(Board* gameBoard){
 		}
 	}
 
-
-	//delete targetSquare;
 	return true;
 }
 

@@ -453,32 +453,39 @@ void Board::setKingLocation(bool setColor, int x, int y){
 }
 
 std::vector<Move> Board::generateMoves(){
+    std::vector<Move> moveList;
+    Move rawMoveList[220];
+    int moveCounter = 0;
+    generateMoveArray(rawMoveList, moveCounter);
 
-	std::vector<Move> rawMoveList;
-		//for every set of coordinates
+    for (int i = 0; i < moveCounter; i++)
+    {
+        moveList.push_back(rawMoveList[i]);
+    }
+
+    return moveList;
+}
+
+void Board::generateMoveArray(Move* finalMoveList, int& moveCounter){
+	Move rawMoveList[230];
+	int rawMoveCounter = 0;
+
 	for(int y=1; y<=8; y++){
 		for(int x=1; x<=8; x++){
-				//What Piece is there
-			Piece target = getSquare(x, y);
-			if(target.isNull()){
-				continue;
-			}
-				//If the piece is the right color, add its moves to the list
-			if(target.getColor() == turn){
-				Piece::generateMoves(rawMoveList, x, y, *this);
+			bool targetColor = getSquareColor(x, y);
+			if(targetColor == turn){
+				Piece::appendMoveArray(rawMoveList, rawMoveCounter, x, y, *this);
 			}
 		}
 	}
 
-	std::vector<Move> finalMoveList;
 	Danger safetyData = Danger(this);
-	for(unsigned int i=0; i<rawMoveList.size(); i++){
+	for(int i=moveCounter; i<rawMoveCounter; i++){
 		if(rawMoveList[i].isSafe(safetyData)){
-			finalMoveList.push_back(rawMoveList[i]);
+			finalMoveList[moveCounter] = rawMoveList[i];
+			moveCounter++;
 		}
 	}
-
-	return finalMoveList;
 }
 
 int Board::gameOverCheck(){
@@ -522,35 +529,6 @@ int Board::gameOverCheck(){
 		return 2;
 	}
 	return 0;
-}
-
-void Board::generateMoveArray(Move* finalMoveList, int& moveCounter){
-	Move rawMoveList[230];
-	int rawMoveCounter = 0;
-
-	for(int y=1; y<=8; y++){
-		for(int x=1; x<=8; x++){
-			bool targetColor = getSquareColor(x, y);
-			if(targetColor == turn){
-				Piece target = getSquare(x, y);
-				//std::cout << target.type << std::endl;
-				target.appendMoveArray(rawMoveList, rawMoveCounter, x, y, *this);
-			}
-		}
-	}
-	//std::cout << rawMoveCounter << std::endl;
-
-	Danger safetyData = Danger(this);
-	for(int i=moveCounter; i<rawMoveCounter; i++){
-		if(rawMoveList[i].endX == 7 && rawMoveList[i].endY == 2){
-			//std::cout << "yes" << std::endl;
-		}
-		if(rawMoveList[i].isSafe(safetyData)){
-			finalMoveList[moveCounter] = rawMoveList[i];
-			moveCounter++;
-		}
-	}
-	//std::cout << moveCounter << std::endl;
 }
 
 void Board::makeMove(Move data){
