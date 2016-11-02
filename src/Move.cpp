@@ -78,6 +78,8 @@ bool Move::isSafe(Danger safetyData){
 	if(safetyData.movePinned(*this)){
 		return false;
 	}
+
+    // Check for en passant capture, as this needs a manual check
 	if (startY == 4 || startY == 5){
 		if (fabs(startX - endX) == 1 && fabs(startY - endY) == 1){
 			if (safetyData.getBoard()->squareIsType(endX, endY, EMPTY)){
@@ -96,10 +98,6 @@ bool Move::isSafe(Danger safetyData){
 			}
 		}
 	}
-	if(endX == 7 && endY == 2){
-		//std::cout << "caught" << std::endl;
-	}
-	//std::cout << "caught" << std::endl;
 
 	//The king is moving, need a manual check
 	if(startX == safetyData.defenderX && startY == safetyData.defenderY){
@@ -142,16 +140,10 @@ bool Move::isSafe(Danger safetyData){
 		return false;
 	}
 	else if(safetyData.getCheck()){
-		if(endX == 7 && endY == 2){
-			//std::cout << "caught" << std::endl;
-		}
 		if(safetyData.inSafeSquares(endX, endY)){
 			return true;
 		}
 		else{
-			if(endX == 4 && endY == 2){
-				//std::cout << "info string " << Engine::toAlg(startX) << startY << std::endl;
-			}
 			return false;
 		}
 	}
