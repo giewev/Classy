@@ -368,6 +368,11 @@ Piece Board::getSquare(int x, int y){
 	return Piece(type, x + 1, y + 1, color);
 }
 int Board::getSquareType(int x, int y){
+    if (!squareIsPopulated(x, y))
+    {
+        return EMPTY;
+    }
+
 	x--;
 	y--;
 	for(int i=1; i<7; i++){
@@ -375,7 +380,8 @@ int Board::getSquareType(int x, int y){
 			return i;
 		}
 	}
-	return 0;
+
+	return EMPTY;
 }
 bool Board::getSquareColor(int x, int y){
 	x--;

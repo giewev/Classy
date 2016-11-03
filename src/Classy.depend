@@ -278,14 +278,14 @@
 	<sstream>
 	<math.h>
 
-1478133898 source:/home/ian/repos/Classy/src/Piece.cpp
+1478134497 source:/home/ian/repos/Classy/src/Piece.cpp
 	"Piece.h"
 	"Move.h"
 	<iostream>
 	<string>
 	"Board.h"
 
-1478133355 source:/home/ian/repos/Classy/src/Board.cpp
+1478144325 source:/home/ian/repos/Classy/src/Board.cpp
 	<vector>
 	<iostream>
 	<inttypes.h>

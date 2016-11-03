@@ -337,7 +337,7 @@ Move Engine::minMax(int depth, Board* searchBoard){
 	Board* newBoard;
 	double moveScore;
 	double bestScore;
-	unsigned int bestIndex;
+	unsigned int bestIndex = 0;
 	bestScore = 999;
 	if(searchBoard->turn){
 		bestScore = -999;
