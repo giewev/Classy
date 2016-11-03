@@ -482,23 +482,19 @@ std::vector<Move> Board::generateMoves(){
 }
 
 void Board::generateMoveArray(Move* finalMoveList, int& moveCounter){
-	Move rawMoveList[230];
-	int rawMoveCounter = 0;
-
 	for(int y=1; y<=8; y++){
 		for(int x=1; x<=8; x++){
-			bool targetColor = getSquareColor(x, y);
-			if(targetColor == turn){
-				Piece::appendMoveArray(rawMoveList, rawMoveCounter, x, y, *this);
+			if(getSquareColor(x, y) == turn){
+				Piece::appendMoveArray(finalMoveList, moveCounter, x, y, *this);
 			}
 		}
 	}
 
 	Danger safetyData = Danger(this);
-	for(int i=moveCounter; i<rawMoveCounter; i++){
-		if(rawMoveList[i].isSafe(safetyData)){
-			finalMoveList[moveCounter] = rawMoveList[i];
-			moveCounter++;
+	for(int i = moveCounter - 1; i >= 0; i--){
+		if(!finalMoveList[i].isSafe(safetyData)){
+            finalMoveList[i] = finalMoveList[moveCounter - 1];
+            moveCounter--;
 		}
 	}
 }

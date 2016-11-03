@@ -384,29 +384,35 @@ bool Piece::isSafe(Board* gameBoard){
 	}
 
 		//Check for Knight
-	for(int i=-2; i<=2; i++){
-		for(int j=-2; j<=2; j++){
-			if(i == 0 || j == 0){//Linear Motion
-				continue;
-			}
-			if(i == j || i==-j){//Diagonal Motion
-				continue;
-			}
+	for(int i=-2; i<=2; i+= 4){
 
+		for(int j=-1; j<=1; j+=2){
 			int targetX = xPos+i;
 			int targetY = yPos+j;
-			if(targetX < 1 || targetX > 8 || targetY < 1 || targetY > 8){//out of bounds
-				continue;
+			if(targetX > 0 && targetX < 9 && targetY > 0 && targetY < 9){//out of bounds
+                if(gameBoard->squareIsPopulated(targetX, targetY)){
+                    bool targetColor =gameBoard->getSquareColor(targetX, targetY);
+                    if(targetColor != color){
+                        int targetType = gameBoard->getSquareType(targetX, targetY);
+                        if(targetType == KNIGHT){
+                            return false;
+                        }
+                    }
+                }
 			}
 
-			if(gameBoard->squareIsPopulated(targetX, targetY)){
-                bool targetColor =gameBoard->getSquareColor(targetX, targetY);
-				if(targetColor != color){
-                    int targetType = gameBoard->getSquareType(targetX, targetY);
-					if(targetType == KNIGHT){
-						return false;
-					}
-				}
+			targetX = xPos+j;
+			targetY = yPos+i;
+			if(targetX > 0 && targetX < 9 && targetY > 0 && targetY < 9){//out of bounds
+                if(gameBoard->squareIsPopulated(targetX, targetY)){
+                    bool targetColor =gameBoard->getSquareColor(targetX, targetY);
+                    if(targetColor != color){
+                        int targetType = gameBoard->getSquareType(targetX, targetY);
+                        if(targetType == KNIGHT){
+                            return false;
+                        }
+                    }
+                }
 			}
 		}
 	}
