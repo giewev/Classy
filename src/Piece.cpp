@@ -326,23 +326,21 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
 //Returns false if the Piece is in check, true otherwise
 bool Piece::isSafe(Board* gameBoard){
 		//Check for Bishop or Queen
-	for(int i=-1; i<=1; i++){
-		for(int j=-1; j<=1; j++){
-			if(i*j == 0){//Linear or no Motion
-				continue;
-			}
-
+	for(int i=-1; i<=1; i+=2){
+		for(int j=-1; j<=1; j+=2){
 			for(int k=1; k<=7; k++){
+                int targetX = xPos+(i*k);
+                int targetY = yPos+(j*k);
 					//Out of bounds
-				if(xPos+(i*k)>8 || xPos+(i*k)<1 || yPos+(j*k)>8 || yPos+(j*k)<1){
+				if(targetX > 8 || targetX < 1 || targetY > 8 || targetY < 1){
 					break;
 				}
 
 					//Found a piece
-                int targetType = gameBoard->getSquareType(xPos+(i*k), yPos+(j*k));
-                bool targetColor = gameBoard->getSquareColor(xPos+(i*k), yPos+(j*k));
-				if(targetType != EMPTY){
+				if(gameBoard->squareIsPopulated(targetX, targetY)){
+                    bool targetColor = gameBoard->getSquareColor(targetX, targetY);
 					if(targetColor != color){
+                        int targetType = gameBoard->getSquareType(targetX, targetY);
 						if(targetType == BISHOP || targetType == QUEEN){
 							return(false);
 						}
@@ -362,16 +360,18 @@ bool Piece::isSafe(Board* gameBoard){
 			}
 
 			for(int k=1; k<=7; k++){
+                int targetX = xPos+(i*k);
+                int targetY = yPos+(j*k);
 					//Out of bounds
-				if((xPos+(i*k)>8) || (xPos+(i*k)<1) || (yPos+(j*k)>8) || (yPos+(j*k)<1)){
+				if(targetX > 8 || targetX < 1 || targetY > 8 || targetY < 1){
 					break;
 				}
 
 					//Found a piece
-                int targetType = gameBoard->getSquareType(xPos+(i*k), yPos+(j*k));
-                int targetColor = gameBoard->getSquareColor(xPos+(i*k), yPos+(j*k));
-				if(targetType != EMPTY){
+				if(gameBoard->squareIsPopulated(targetX, targetY)){
+                    int targetColor = gameBoard->getSquareColor(targetX, targetY);
 					if(targetColor != color){
+                        int targetType = gameBoard->getSquareType(targetX, targetY);
 						if(targetType == ROOK || targetType == QUEEN){
 							return(false);
 						}
@@ -393,14 +393,16 @@ bool Piece::isSafe(Board* gameBoard){
 				continue;
 			}
 
-			if(xPos+i<1 || xPos+i>8 || yPos+j<1 || yPos+j>8){//out of bounds
+			int targetX = xPos+i;
+			int targetY = yPos+j;
+			if(targetX < 1 || targetX > 8 || targetY < 1 || targetY > 8){//out of bounds
 				continue;
 			}
 
-			int targetType = gameBoard->getSquareType(xPos+i, yPos+j);
-			bool targetColor =gameBoard->getSquareColor(xPos+i, yPos+j);
-			if(targetType != EMPTY){
+			if(gameBoard->squareIsPopulated(targetX, targetY)){
+                bool targetColor =gameBoard->getSquareColor(targetX, targetY);
 				if(targetColor != color){
+                    int targetType = gameBoard->getSquareType(targetX, targetY);
 					if(targetType == KNIGHT){
 						return false;
 					}
@@ -414,14 +416,17 @@ bool Piece::isSafe(Board* gameBoard){
 	if(color) direction = 1;
 
 	for(int x=-1; x<=1; x+=2){
-		if(xPos + x > 8 || xPos + x <1){
+        int targetX = xPos + x;
+        int targetY = yPos+direction;
+		if(targetX > 8 || targetX <1){
 			continue;
 		}
-
-		if(gameBoard->getSquareType(xPos+x, yPos+direction) == PAWN){
-			if(gameBoard->getSquareColor(xPos+x, yPos+direction) != color){
-				return(false);
-			}
+        if (gameBoard->squareIsPopulated(targetX, targetY)){
+            if(gameBoard->getSquareType(targetX, targetY) == PAWN){
+                if(gameBoard->getSquareColor(targetX, targetY) != color){
+                    return(false);
+                }
+            }
 		}
 	}
 
@@ -432,18 +437,23 @@ bool Piece::isSafe(Board* gameBoard){
 			if(!x && !y){//No motion
 				continue;
 			}
-			if(xPos+x > 8 || xPos+x<1){//if checking horizontally off the board
+
+			int targetX = xPos + x;
+			int targetY = yPos + y;
+			if(targetX > 8 || targetX < 1){//if checking horizontally off the board
 				continue;
 			}
-			if(yPos+y > 8 || yPos+y<1){//if checking vertically off the board
+			if(targetY > 8 || targetY < 1){//if checking vertically off the board
 				continue;
 			}
 
-			if(gameBoard->getSquareType(xPos+x, yPos+y) == KING){
-                if (gameBoard->getSquareColor(xPos+x, yPos+y) != color)
-                {
-                    return(false);
-				}
+            if (gameBoard->squareIsPopulated(targetX, targetY)){
+                if(gameBoard->getSquareType(targetX, targetY) == KING){
+                    if (gameBoard->getSquareColor(targetX, targetY) != color)
+                    {
+                        return(false);
+                    }
+                }
 			}
 		}
 	}

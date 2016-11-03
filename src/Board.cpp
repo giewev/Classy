@@ -29,6 +29,7 @@ Board::Board(){
 		pieces[i] = 0ull;
 	}
 	movedBoard = 0;
+	allPieces = 0;
 	EPdata = -1;
 }
 Board::Board(int null){
@@ -332,6 +333,7 @@ Board* Board::newCopy(){
 		newBoard->pieces[i] = pieces[i];
 	}
 	newBoard->movedBoard = movedBoard;
+	newBoard->allPieces = allPieces;
 	newBoard->EPdata = EPdata;
 
 	newBoard->setCastlingRights(true,  true,  getCastlingRights(true, true));
@@ -416,15 +418,21 @@ void Board::setSquare(Piece setPiece, int x, int y){
 	}
 	setSquare(setPiece.type, setPiece.color, x+1, y+1);
 }
+
 void Board::setSquare(int type, bool color, int x, int y){
 	x--;
 	y--;
-	for(int i=0; i<7; i++){
+	for(int i=1; i<7; i++){
 		pieces[i] &= ~(1ull << (8*x + y));
 	}
 	if(type > 0){
 		pieces[type] |= (1ull << (8*x + y));
+		allPieces |= (1ull << (8*x + y));
 	}
+	else{
+        allPieces &= ~(1ull << (8*x + y));
+	}
+
 	if(color){
 		pieces[0] |= (1ull << (8*x + y));
 	}
@@ -432,6 +440,7 @@ void Board::setSquare(int type, bool color, int x, int y){
 		pieces[0] &= ~(1ull << (8*x + y));
 	}
 }
+
 void Board::setKingLocation(bool setColor, int x, int y){
 	if(x>8 || x<1){
 		std::cout << "info string King X is being set as " << x << std::endl;
@@ -902,6 +911,14 @@ bool Board::nullSquare(int x, int y){
 	return  !(((pieces[1] | pieces[2] | pieces[3] | pieces[4] | pieces[5] | pieces[6])
 		>> (8*x + y)) & 1);
 }
+
+bool Board::squareIsPopulated(int x, int y)
+{
+    x--;
+	y--;
+	return (allPieces >> (8*x + y)) & 1;
+}
+
 bool Board::squareIsType(int x, int y, int type){
 	x--;
 	y--;

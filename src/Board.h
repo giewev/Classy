@@ -18,6 +18,7 @@ public:
 	int halfMoveCounter;
 	bitBoard pieces[7];
 	bitBoard movedBoard;
+	bitBoard allPieces;
 
 	Board();
 	Board(int);
@@ -60,6 +61,7 @@ public:
 	bool operator==(const Board);
 
 	bool nullSquare(int, int);
+	bool squareIsPopulated(int, int);
 	bool squareIsType(int, int, int);
 	void deleteSquare(int, int);
 	double dividePerft(int);
