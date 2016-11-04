@@ -277,7 +277,7 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
 	if(gameBoard.getSquareType(xPos, yPos + direction) == EMPTY){//Normal Moves
 		if(yPos+direction == 8 || yPos+direction == 1){
 			for(int i=1; i<=4; i++){
-				moveList[moveCounter++] = Move(xPos, yPos, xPos, yPos+1, i);
+				moveList[moveCounter++] = Move(xPos, yPos, xPos, yPos+direction, i);
 			}
 		}
 		else{

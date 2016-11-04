@@ -3,6 +3,7 @@
 #include "Board.h"
 #include "Piece.h"
 #include "Engine.h"
+#include "Move.h"
 
 const int EMPTY  = 0;
 const int PAWN   = 1;
@@ -20,7 +21,7 @@ void startingPerft_test()
 
     double expectedPerfts[10] = { 1, 20, 400, 8902, 197281, 4865609, 119060324};
 
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i < 6; i++)
     {
         assert(testBoard.perft(i) == expectedPerfts[i]);
     }
@@ -34,9 +35,9 @@ void kiwipetePerft_test()
 
     double expectedPerfts[10] = { 1, 48, 2039, 97862, 4085603, 193690690 };
 
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i < 6; i++)
     {
-        assert(testBoard.perft(i) == expectedPerfts[i]);
+        assert(testBoard.dividePerft(i) == expectedPerfts[i]);
     }
 }
 
