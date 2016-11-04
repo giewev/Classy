@@ -19,7 +19,7 @@ void startingPerft_test()
     Board testBoard = Board();
     testBoard.loadFEN(startingFEN);
 
-    double expectedPerfts[10] = { 1, 20, 400, 8902, 197281, 4865609, 119060324};
+    double expectedPerfts[10] = { 1, 20, 400, 8902, 197281, 4865609, 119060324, 3195901860 };
 
     for(int i = 0; i < 6; i++)
     {
@@ -33,7 +33,7 @@ void kiwipetePerft_test()
     Board testBoard = Board();
     testBoard.loadFEN(kiwipeteFEN);
 
-    double expectedPerfts[10] = { 1, 48, 2039, 97862, 4085603, 193690690 };
+    double expectedPerfts[10] = { 1, 48, 2039, 97862, 4085603, 193690690, 8031647685 };
 
     for(int i = 0; i < 6; i++)
     {
