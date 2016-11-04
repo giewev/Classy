@@ -37,7 +37,21 @@ void kiwipetePerft_test()
 
     for(int i = 0; i < 6; i++)
     {
-        assert(testBoard.dividePerft(i) == expectedPerfts[i]);
+        assert(testBoard.perft(i) == expectedPerfts[i]);
+    }
+}
+
+void endgamePerft_test()
+{
+    std::string endgameFEN = "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -";
+    Board testBoard = Board();
+    testBoard.loadFEN(endgameFEN);
+
+    double expectedPerfts[10] = { 1, 14, 191, 2812, 43238, 674624, 11030083, 178633661};
+
+    for(int i = 0; i < 7; i++)
+    {
+        assert(testBoard.perft(i) == expectedPerfts[i]);
     }
 }
 
@@ -83,4 +97,5 @@ void runAllTests()
     loadStartingPosition_test();
     startingPerft_test();
     kiwipetePerft_test();
+    endgamePerft_test();
 }

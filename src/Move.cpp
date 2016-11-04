@@ -82,7 +82,7 @@ bool Move::isSafe(Danger safetyData){
     // Check for en passant capture, as this needs a manual check
 	if (startY == 4 || startY == 5){
 		if (fabs(startX - endX) == 1 && fabs(startY - endY) == 1){
-			if (safetyData.getBoard()->squareIsType(endX, endY, EMPTY)){
+			if (!safetyData.getBoard()->squareIsPopulated(endX, endY)){
 				if (safetyData.getBoard()->squareIsType(endX, startY, PAWN)){
 					Board* newBoard = safetyData.getBoard()->newCopy();
 					newBoard->makeMove(*this);
