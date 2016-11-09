@@ -156,9 +156,24 @@ void promotionMateInOnePuzzle_test_1()
         assert(bestMove.startY == 7);
         assert(bestMove.endX == 1);
         assert(bestMove.endY == 8);
-        std::cout << bestMove.promotion << std::endl;
         assert(bestMove.promotion == 1 || bestMove.promotion == 3);
     }
+}
+
+void mateInThreePuzzle_test_1()
+{
+    std::string matePuzzleFEN = "1K3Q2/8/8/4k3/8/N7/N7/7B w - - 0 1";
+
+    Board testBoard = Board();
+    testBoard.loadFEN(matePuzzleFEN);
+    Engine engine = Engine(&testBoard);
+
+    // Solution requires 3 white moves (5 ply)
+    Move bestMove = engine.alphaBeta(5);
+    assert(bestMove.startX == 1);
+    assert(bestMove.startY == 2);
+    assert(bestMove.endX == 3);
+    assert(bestMove.endY == 1);
 }
 
 void runAllTests()
@@ -171,4 +186,5 @@ void runAllTests()
     basicMateInOnePuzzle_test_1();
     basicMateInOnePuzzle_test_2();
     promotionMateInOnePuzzle_test_1();
+    mateInThreePuzzle_test_1();
 }
