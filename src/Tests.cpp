@@ -176,6 +176,24 @@ void mateInThreePuzzle_test_1()
     assert(bestMove.endY == 1);
 }
 
+void avoidMatePuzzle_test_1()
+{
+    std::string avoidMatePuzzleFEN = "8/2k5/K7/8/1r6/8/8/8 w - - 0 1";
+
+    Board testBoard = Board();
+    testBoard.loadFEN(avoidMatePuzzleFEN);
+    Engine engine = Engine(&testBoard);
+
+    for (int depth = 2; depth < 5; depth++)
+    {
+        Move bestMove = engine.alphaBeta(depth);
+        assert(bestMove.startX == 1);
+        assert(bestMove.startY == 6);
+        assert(bestMove.endX == 1);
+        assert(bestMove.endY == 5);
+    }
+}
+
 void runAllTests()
 {
     loadStartingPosition_test();
@@ -187,4 +205,5 @@ void runAllTests()
     basicMateInOnePuzzle_test_2();
     promotionMateInOnePuzzle_test_1();
     mateInThreePuzzle_test_1();
+    avoidMatePuzzle_test_1();
 }
