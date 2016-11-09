@@ -21,7 +21,7 @@ void startingPerft_test()
 
     double expectedPerfts[10] = { 1, 20, 400, 8902, 197281, 4865609, 119060324, 3195901860 };
 
-    for(int i = 0; i < 6; i++)
+    for(int i = 0; i < 5; i++)
     {
         assert(testBoard.perft(i) == expectedPerfts[i]);
     }
@@ -35,7 +35,7 @@ void kiwipetePerft_test()
 
     double expectedPerfts[10] = { 1, 48, 2039, 97862, 4085603, 193690690, 8031647685 };
 
-    for(int i = 0; i < 6; i++)
+    for(int i = 0; i < 5; i++)
     {
         assert(testBoard.perft(i) == expectedPerfts[i]);
     }
@@ -49,7 +49,7 @@ void endgamePerft_test()
 
     double expectedPerfts[10] = { 1, 14, 191, 2812, 43238, 674624, 11030083, 178633661};
 
-    for(int i = 0; i < 7; i++)
+    for(int i = 0; i < 5; i++)
     {
         assert(testBoard.perft(i) == expectedPerfts[i]);
     }
@@ -92,10 +92,83 @@ void loadStartingPosition_test()
     }
 }
 
+void noMovesInMate_test()
+{
+    std::string mateFEN = "4k3/4Q3/5K2/8/8/8/8/8 b - - 0 0";
+
+    Board testBoard = Board();
+    testBoard.loadFEN(mateFEN);
+
+    int moveCount = 0;
+    Move moveList[220];
+    testBoard.generateMoveArray(moveList, moveCount);
+    assert(moveCount == 0);
+}
+
+void basicMateInOnePuzzle_test_1()
+{
+    std::string matePuzzleFEN = "4k3/Q7/5K2/8/8/8/8/8 w - - 0 1";
+
+    Board testBoard = Board();
+    testBoard.loadFEN(matePuzzleFEN);
+    Engine engine = Engine(&testBoard);
+
+    for (int depth = 1; depth < 5; depth++)
+    {
+        Move bestMove = engine.alphaBeta(depth);
+        assert(bestMove.startX == 1);
+        assert(bestMove.startY == 7);
+        assert(bestMove.endX == 5);
+        assert(bestMove.endY == 7);
+    }
+}
+
+void basicMateInOnePuzzle_test_2()
+{
+    std::string matePuzzleFEN = "4k3/R7/5K2/8/8/8/8/7R w - - 0 1";
+
+    Board testBoard = Board();
+    testBoard.loadFEN(matePuzzleFEN);
+    Engine engine = Engine(&testBoard);
+
+    for (int depth = 1; depth < 5; depth++)
+    {
+        Move bestMove = engine.alphaBeta(depth);
+        assert(bestMove.startX == 8);
+        assert(bestMove.startY == 1);
+        assert(bestMove.endX == 8);
+        assert(bestMove.endY == 8);
+    }
+}
+
+void promotionMateInOnePuzzle_test_1()
+{
+    std::string promotionMatePuzzleFEN = "8/P7/1B6/8/8/6K1/8/7k w - - 0 1";
+
+    Board testBoard = Board();
+    testBoard.loadFEN(promotionMatePuzzleFEN);
+    Engine engine = Engine(&testBoard);
+
+    for (int depth = 1; depth < 5; depth++)
+    {
+        Move bestMove = engine.alphaBeta(depth);
+        assert(bestMove.startX == 1);
+        assert(bestMove.startY == 7);
+        assert(bestMove.endX == 1);
+        assert(bestMove.endY == 8);
+        std::cout << bestMove.promotion << std::endl;
+        assert(bestMove.promotion == 1 || bestMove.promotion == 3);
+    }
+}
+
 void runAllTests()
 {
     loadStartingPosition_test();
     startingPerft_test();
     kiwipetePerft_test();
     endgamePerft_test();
+    noMovesInMate_test();
+    basicMateInOnePuzzle_test_1();
+    basicMateInOnePuzzle_test_2();
+    promotionMateInOnePuzzle_test_1();
 }

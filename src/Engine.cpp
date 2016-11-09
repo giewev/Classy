@@ -100,7 +100,12 @@ double Engine::evaluate(Board* evalBoard){
 	double kingLocationScore = 0;
 	Piece target = Piece(EMPTY);
 		//CheckMate or staleMate
-	/*
+
+    int modifier = 1;
+    if (evalBoard->turn)
+    {
+        modifier = -1;
+    }
 	switch(evalBoard->gameOverCheck()){
 	case(1):
 		//CheckMate
@@ -108,13 +113,12 @@ double Engine::evaluate(Board* evalBoard){
 		break;
 	case(2):
 		//StaleMate
-		return 1000;
+		return 0;
 		break;
 	default:
 		//Neither. Move along.
 		break;
 	}
-	*/
 
 		//Get a count of the pieces
 	pieceCount = evalBoard->pieceCount();
@@ -458,7 +462,7 @@ Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
 	if(moveCount == 0){
 		returnedMove = Move();
 		returnedMove.setGameOverDepth(0);
-		returnedMove.setScore(0);
+		returnedMove.setScore(evaluate(searchBoard));
 
 		return returnedMove;
 	}
@@ -488,6 +492,14 @@ Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
 			moveScore = returnedMove.getScore();
 			if(returnedMove.getGameOverDepth() != -1){
 				moveList[i].setGameOverDepth(returnedMove.getGameOverDepth() + 1);
+				if (moveScore > 0)
+				{
+                    moveScore--;
+				}
+				else
+				{
+                    moveScore++;
+				}
 			}
 			moveList[i].setScore(moveScore);
 		}
