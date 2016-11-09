@@ -33,3 +33,6 @@
 */obj/*
 *.metadata*
 *.layout
+
+# Code Blocks
+*.depend
