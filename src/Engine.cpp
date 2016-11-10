@@ -18,9 +18,6 @@
 
 using namespace std;
 
-#define WHITE 1
-#define BLACK 0
-
 Engine::Engine(){
 	gameBoard = new Board();
 	score = 0;

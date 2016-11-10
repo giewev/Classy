@@ -1,7 +1,5 @@
 #include <inttypes.h>
 #define bitBoard uint64_t
-#define WHITE 1
-#define BLACK 0
 #define EVAL_CONST_COUNT 18
 
 const double pawnValue = 1;

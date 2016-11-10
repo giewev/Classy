@@ -1,6 +1,11 @@
+#ifndef BITWISE_H
+#define BITWISE_H
 
 #include <inttypes.h>
 #define bitBoard uint64_t
+
+#define WHITE true
+#define BLACK false
 
 extern const int EMPTY;
 extern const int PAWN;
@@ -65,3 +70,5 @@ namespace bitwise{
 	int getX(int raw);
 	int getY(int raw);
 }
+
+#endif // BITWISE_H
