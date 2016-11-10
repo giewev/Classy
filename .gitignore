@@ -30,6 +30,7 @@
 
 *eclipse*
 */bin/*
+bin/**
 */obj/*
 *.metadata*
 *.layout
