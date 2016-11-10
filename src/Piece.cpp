@@ -1,19 +1,10 @@
 
 #include "Piece.h"
 #include "Move.h"
+#include "Bitwise.h"
 #include <iostream>
 #include <string>
 #include "Board.h"
-
-
-
-const int EMPTY  = 0;
-const int PAWN   = 1;
-const int QUEEN  = 2;
-const int KING   = 3;
-const int BISHOP = 4;
-const int KNIGHT = 5;
-const int ROOK   = 6;
 
 Piece::Piece(){
 	xPos = -1;

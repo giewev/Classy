@@ -2,6 +2,14 @@
 #include <inttypes.h>
 #define bitBoard uint64_t
 
+extern const int EMPTY;
+extern const int PAWN;
+extern const int QUEEN;
+extern const int KING;
+extern const int BISHOP;
+extern const int KNIGHT;
+extern const int ROOK;
+
 const bitBoard firstFile = 0x0000000000000000FF;
 const bitBoard centerBoard = 0x0000001818000000;
 const bitBoard outsideRim = 0xFF818181818181FF;

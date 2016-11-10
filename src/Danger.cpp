@@ -11,14 +11,6 @@
 #include <strings.h>
 #include <algorithm>
 
-const int EMPTY  = 0;
-const int PAWN   = 1;
-const int QUEEN  = 2;
-const int KING   = 3;
-const int BISHOP = 4;
-const int KNIGHT = 5;
-const int ROOK   = 6;
-
 Danger::Danger(){
 	for(int i=0; i<8; i++){
 		pinCoordinates[i] = -1;
@@ -52,7 +44,7 @@ Danger::Danger(Board* gameBoard){
 	Piece King = gameBoard->findKing(gameBoard->turn);
 	defenderX = King.getX();
 	defenderY = King.getY();
-	
+
 	loadData(gameBoard, gameBoard->findKing(gameBoard->turn));
 }
 Danger::Danger(Board* gameBoard, Piece defender){
@@ -182,8 +174,8 @@ void Danger::addAttacker(int x, int y){
 	}
 	Piece target;
 
-	
-	
+
+
 		//Vertical
 	if(x == defenderX){
 		if(y < defenderY){//Down
@@ -205,7 +197,7 @@ void Danger::addAttacker(int x, int y){
 
 		//Horizontal
 	else if(y == defenderY){
-		
+
 		//std::cout << "hor" << std::endl;
 		if(x < defenderX){//Left
 			modifier = - 1;
@@ -275,7 +267,7 @@ void Danger::loadData(Board* gameBoard, Piece defender){
 	}
 	int x = defender.getX();
 	int y = defender.getY();
-	
+
 	//UP
 	bool trace = false;
 	int traceX = 0;
@@ -310,7 +302,7 @@ void Danger::loadData(Board* gameBoard, Piece defender){
 			}
 		}
 	}
-	
+
 	//DOWN
 	trace = false;
 	traceX = 0;
@@ -345,7 +337,7 @@ void Danger::loadData(Board* gameBoard, Piece defender){
 			}
 		}
 	}
-	
+
 	//LEFT
 	trace = false;
 	traceX = 0;
@@ -380,7 +372,7 @@ void Danger::loadData(Board* gameBoard, Piece defender){
 			}
 		}
 	}
-	
+
 	//RIGHT
 	trace = false;
 	traceX = 0;
@@ -415,7 +407,7 @@ void Danger::loadData(Board* gameBoard, Piece defender){
 			}
 		}
 	}
-	
+
 	//NE
 	trace = false;
 	traceX = 0;
@@ -450,7 +442,7 @@ void Danger::loadData(Board* gameBoard, Piece defender){
 			}
 		}
 	}
-	
+
 	//SW
 	trace = false;
 	traceX = 0;
@@ -485,7 +477,7 @@ void Danger::loadData(Board* gameBoard, Piece defender){
 			}
 		}
 	}
-	
+
 	//NW
 	trace = false;
 	traceX = 0;
@@ -520,7 +512,7 @@ void Danger::loadData(Board* gameBoard, Piece defender){
 			}
 		}
 	}
-	
+
 	//SE
 	trace = false;
 	traceX = 0;
@@ -565,14 +557,14 @@ void Danger::loadData(Board* gameBoard, Piece defender){
 			if(x + i <= 8 && x + i >= 1){
 				int targetType = gameBoard->getSquareType(x + i, y + direction);
 				int targetColor = gameBoard->getSquareColor(x + i, y + direction);
-				
+
 				if(targetType == PAWN && targetColor != color){
 					addAttacker(x + i, y + direction);
 				}
 			}
 		}
 	}
-	
+
 	//KNIGHT
 	int targetType;
 	bool targetColor;
@@ -581,12 +573,12 @@ void Danger::loadData(Board* gameBoard, Piece defender){
 			if(fabs(i) == fabs(j) || i == 0 || j == 0){
 				continue;
 			}
-			
+
 			if(x + i <= 8 && x + i >= 1){
 				if(y + j <= 8 && y + j >= 1){
 					targetType = gameBoard->getSquareType(x+i, y+j);
 					targetColor = gameBoard->getSquareColor(x+i, y+j);
-					
+
 					if(targetType == KNIGHT && targetColor != color){
 						addAttacker(x+i, y+j);
 					}

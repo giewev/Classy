@@ -18,13 +18,6 @@
 
 using namespace std;
 
-const int EMPTY  = 0;
-const int PAWN   = 1;
-const int QUEEN  = 2;
-const int KING   = 3;
-const int BISHOP = 4;
-const int KNIGHT = 5;
-const int ROOK   = 6;
 #define WHITE 1
 #define BLACK 0
 

@@ -7,19 +7,12 @@
 #include "Move.h"
 #include "Danger.h"
 #include "Engine.h"
+#include "Bitwise.h"
 #include <math.h>
 
 using namespace std;
 
 #define bitBoard uint64_t
-
-const int EMPTY  = 0;
-const int PAWN   = 1;
-const int QUEEN  = 2;
-const int KING   = 3;
-const int BISHOP = 4;
-const int KNIGHT = 5;
-const int ROOK   = 6;
 
 Board::Board(){
 	turn = true;
@@ -249,32 +242,40 @@ string Board::outputFEN(){
 					count += 1;
 				}
 				else{
-					if(count){
+					if (count)
+					{
 						FEN += char(48 + count);
 						count = 0;
 					}
-					switch(pieceType){
-					case(PAWN):
-						FEN += "P";
-						break;
-					case(ROOK):
-						FEN += "R";
-						break;
-					case(KNIGHT):
-						FEN += "N";
-						break;
-					case(BISHOP):
-						FEN += "B";
-						break;
-					case(QUEEN):
-						FEN += "Q";
-						break;
-					case(KING):
-						FEN += "K";
-						break;
-					default:
-						count = 1;
+
+					if (pieceType == PAWN)
+					{
+                        FEN += "P";
 					}
+					else if (pieceType == ROOK)
+					{
+                        FEN += "R";
+					}
+					else if (pieceType == KNIGHT)
+					{
+                        FEN += "N";
+					}
+					else if (pieceType == BISHOP)
+					{
+                        FEN += "B";
+					}
+					else if (pieceType == QUEEN)
+					{
+                        FEN += "Q";
+					}
+					else if (pieceType == KING)
+					{
+                        FEN += "K";
+					}
+                    else
+                    {
+                        count = 1;
+                    }
 				}
 			}
 			else{
@@ -282,32 +283,40 @@ string Board::outputFEN(){
 					count += 1;
 				}
 				else{
-					if(count){
+					if (count)
+					{
 						FEN += char(48 + count);
 						count = 0;
 					}
-					switch(pieceType){
-					case(PAWN):
-						FEN += "p";
-						break;
-					case(ROOK):
-						FEN += "r";
-						break;
-					case(KNIGHT):
-						FEN += "n";
-						break;
-					case(BISHOP):
-						FEN += "b";
-						break;
-					case(QUEEN):
-						FEN += "q";
-						break;
-					case(KING):
-						FEN += "k";
-						break;
-					default:
-						count = 1;
+
+					if (pieceType == PAWN)
+					{
+                        FEN += "p";
 					}
+					else if (pieceType == ROOK)
+					{
+                        FEN += "r";
+					}
+					else if (pieceType == KNIGHT)
+					{
+                        FEN += "n";
+					}
+					else if (pieceType == BISHOP)
+					{
+                        FEN += "b";
+					}
+					else if (pieceType == QUEEN)
+					{
+                        FEN += "q";
+					}
+					else if (pieceType == KING)
+					{
+                        FEN += "k";
+					}
+                    else
+                    {
+                        count = 1;
+                    }
 				}
 			}
 		}

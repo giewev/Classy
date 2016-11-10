@@ -3,6 +3,7 @@
 #include "Board.h"
 #include "Piece.h"
 #include "Engine.h"
+#include "Bitwise.h"
 #include <iostream>
 #include <sstream>
 #include <math.h>
@@ -16,14 +17,6 @@ namespace patch
         return stm.str() ;
     }
 }
-
-const int EMPTY = 0;
-const int PAWN = 1;
-const int QUEEN = 2;
-const int KING = 3;
-const int BISHOP = 4;
-const int KNIGHT = 5;
-const int ROOK = 6;
 
 Move::Move(int x1, int y1, int x2, int y2){
 	startX = x1;
