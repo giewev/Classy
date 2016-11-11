@@ -52,7 +52,7 @@ public:
 	void addKiller(Move, int);
 	bool inKillers(Move, int);
 
-	double manhattenDistance(int, int, double, double);
+	static double manhattenDistance(int, int, double, double);
 
 	static void printMove(Move);
 	static std::string toAlg(int);

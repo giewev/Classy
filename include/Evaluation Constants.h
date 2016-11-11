@@ -8,8 +8,8 @@ const double bishopValue = 3;
 const double rookValue = 5;
 const double queenValue = 9;
 const double knightBishopWeight = 0.1;
+const double doubledPawnValue = -0.15;
 
-const double doubledPawnValue = -0.239;
 const double centerPawnValue = 0.309;
 const double semiCenterPawnValue = 0.266;
 const double rimKnightValue = -0.221;
