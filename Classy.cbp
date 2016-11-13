@@ -43,18 +43,24 @@
 		<Unit filename="include/Engine.h" />
 		<Unit filename="include/Evaluation Constants.h" />
 		<Unit filename="include/Evaluator.h" />
+		<Unit filename="include/FullEvaluator.h" />
+		<Unit filename="include/GameOverEvaluator.h" />
 		<Unit filename="include/MaterialEvaluator.h" />
 		<Unit filename="include/Move.h" />
 		<Unit filename="include/Piece.h" />
+		<Unit filename="include/PositionalEvaluator.h" />
 		<Unit filename="include/StandAlones.h" />
 		<Unit filename="src/Board.cpp" />
 		<Unit filename="src/Classy.cpp" />
 		<Unit filename="src/Danger.cpp" />
 		<Unit filename="src/Engine.cpp" />
 		<Unit filename="src/Evaluator.cpp" />
+		<Unit filename="src/FullEvaluator.cpp" />
+		<Unit filename="src/GameOverEvaluator.cpp" />
 		<Unit filename="src/MaterialEvaluator.cpp" />
 		<Unit filename="src/Move.cpp" />
 		<Unit filename="src/Piece.cpp" />
+		<Unit filename="src/PositionalEvaluator.cpp" />
 		<Unit filename="src/Tests.cpp" />
 		<Unit filename="src/bitWise.cpp" />
 		<Extensions>
