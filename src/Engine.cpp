@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <string.h>
 #include <strings.h>
+#include "FullEvaluator.h"
 
 using namespace std;
 
@@ -24,14 +25,18 @@ Engine::Engine(){
 	principal = new Move[1];
 	killers = new short[1][killTableSize];
 	killersIndex = new int[1];
+	evaluator = FullEvaluator();
 }
+
 Engine::Engine(Board* loadBoard){
 	gameBoard = loadBoard;
 	score = 0;
 	principal = new Move[1];
 	killers = new short[1][killTableSize];
 	killersIndex = new int[1];
+	evaluator = FullEvaluator();
 }
+
 Engine::~Engine(){
 
 	//if (killers){
@@ -67,24 +72,6 @@ void Engine::setScore(int loadScore){
 	score = loadScore;
 }
 
-double Engine::lazyEval(Board* evalBoard){
-	double materialScore = 0;
-	materialScore += pawnValue * evalBoard->pieceCount(PAWN, true);
-	materialScore -= pawnValue * evalBoard->pieceCount(PAWN, false);
-	materialScore += knightValue * evalBoard->pieceCount(KNIGHT, true);
-	materialScore -= knightValue * evalBoard->pieceCount(KNIGHT, false);
-	materialScore += bishopValue * evalBoard->pieceCount(BISHOP, true);
-	materialScore -= bishopValue * evalBoard->pieceCount(BISHOP, false);
-	materialScore += rookValue * evalBoard->pieceCount(ROOK, true);
-	materialScore -= rookValue * evalBoard->pieceCount(ROOK, false);
-	materialScore += queenValue * evalBoard->pieceCount(QUEEN, true);
-	materialScore -= queenValue * evalBoard->pieceCount(QUEEN, false);
-	return materialScore;
-}
-double Engine::evaluate(Board* evalBoard){
-    return 0;
-}
-
 Move Engine::minMax(int depth, Board* searchBoard){
 	int moveCount = 0;
 	Move moveList[220];
@@ -102,7 +89,7 @@ Move Engine::minMax(int depth, Board* searchBoard){
 		newBoard = searchBoard->newCopy();
 		newBoard->makeMove(moveList[i]);
 		if(depth == 1){
-			moveScore = evaluate(newBoard);
+			moveScore = evaluator.evaluate(*newBoard);
 		}
 		else{
 			moveScore = minMax(depth-1, newBoard).getScore();
@@ -141,7 +128,7 @@ double Engine::extend(Board* extendBoard){
 	for (int i = 0; i < moveCount; i++){
 		Board* newBoard = extendBoard->newCopy();
 		newBoard->makeMove(moveList[i]);
-		double score = evaluate(newBoard);
+		double score = evaluator.evaluate(*newBoard);
 		if (extendBoard->turn){
 			if (score >= bestScore){
 				bestScore = score;
@@ -169,7 +156,7 @@ double Engine::extend(Board* extendBoard, double bound){
 	for (int i = 0; i < moveCount; i++){
 		Board* newBoard = extendBoard->newCopy();
 		newBoard->makeMove(moveList[i]);
-		double score = evaluate(newBoard);
+		double score = evaluator.evaluate(*newBoard);
 		if (extendBoard->turn){
 			if (score >= bestScore){
 				bestScore = score;
@@ -214,7 +201,8 @@ Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
 	if(moveCount == 0){
 		returnedMove = Move();
 		returnedMove.setGameOverDepth(0);
-		returnedMove.setScore(evaluate(searchBoard));
+
+		returnedMove.setScore(evaluator.evaluate(*searchBoard));
 
 		return returnedMove;
 	}
@@ -224,7 +212,7 @@ Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
 		newBoard->makeMove(moveList[i]);
 
 		if(depth == 1){
-			moveScore = evaluate(newBoard);
+			moveScore = evaluator.evaluate(*newBoard);
 
 			returnedMove = Move();
 			if(moveScore != 1000){

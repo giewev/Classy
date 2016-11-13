@@ -1,6 +1,7 @@
 #include <inttypes.h>
 #include <time.h>
 #include <iostream>
+#include "FullEvaluator.h"
 class Board;
 struct Move;
 class HashData;
@@ -12,6 +13,7 @@ class HashTable;
 class Engine{
 	Board* gameBoard;
 	int score;
+	FullEvaluator evaluator;
 public:
 	clock_t doneTime;
 	Move* principal;
@@ -35,8 +37,6 @@ public:
 	void setBoard(Board*);
 	void setScore(int);
 
-	double lazyEval(Board*);
-	double evaluate(Board*);
 	Move minMax(int, Board*);
 	Move minMax(int);
 
