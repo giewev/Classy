@@ -5,12 +5,14 @@
 #include "Engine.h"
 #include "Danger.h"
 #include "Move.h"
+#include "ArgumentParser.h"
 
 void runAllTests();
 
 int main(int argc, char *argv[])
 {
-    if (argc > 1 && argv[1][0] == '-' && argv[1][1] == 't')
+    ArgumentParser argParser = ArgumentParser(argc, argv);
+    if (argParser.flagExists("-t"))
     {
         runAllTests();
         return 0;
