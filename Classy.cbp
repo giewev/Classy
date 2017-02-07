@@ -37,6 +37,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/ArgumentParser.h" />
 		<Unit filename="include/Bitwise.h" />
 		<Unit filename="include/Board.h" />
 		<Unit filename="include/Danger.h" />
@@ -50,6 +51,7 @@
 		<Unit filename="include/Piece.h" />
 		<Unit filename="include/PositionalEvaluator.h" />
 		<Unit filename="include/StandAlones.h" />
+		<Unit filename="src/ArgumentParser.cpp" />
 		<Unit filename="src/Board.cpp" />
 		<Unit filename="src/Classy.cpp" />
 		<Unit filename="src/Danger.cpp" />
