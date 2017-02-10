@@ -17,6 +17,13 @@ int main(int argc, char *argv[])
         runAllTests();
         return 0;
     }
+    else if (argParser.flagExists("-fen"))
+    {
+        Board board = Board();
+        board.loadFEN(argParser.argumentContent("-fen"));
+        Engine engine = Engine(&board);
+        std::cout << engine.alphaBeta(5).basicAlg();
+    }
 
     return 0;
 }
