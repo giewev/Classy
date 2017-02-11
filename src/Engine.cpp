@@ -114,67 +114,6 @@ Move Engine::minMax(int depth){
 	return(minMax(depth, gameBoard));
 }
 
-double Engine::extend(Board* extendBoard){
-	int moveCount = 0;
-	Move moveList[220];
-	extendBoard->generateMoveArray(moveList, moveCount);
-
-	double bestScore = 999;
-	if (extendBoard->turn){
-		bestScore = -999;
-	}
-
-	for (int i = 0; i < moveCount; i++){
-		Board newBoard = extendBoard->newCopy();
-		newBoard.makeMove(moveList[i]);
-		double score = evaluator.evaluate(newBoard);
-		if (extendBoard->turn){
-			if (score >= bestScore){
-				bestScore = score;
-			}
-		}
-		else{
-			if (score <= bestScore){
-				bestScore = score;
-			}
-		}
-	}
-	return bestScore;
-}
-double Engine::extend(Board* extendBoard, double bound){
-	int moveCount = 0;
-	Move moveList[220];
-	extendBoard->generateMoveArray(moveList, moveCount);
-
-	double bestScore = 999;
-	if (extendBoard->turn){
-		bestScore = -999;
-	}
-
-	for (int i = 0; i < moveCount; i++){
-		Board newBoard = extendBoard->newCopy();
-		newBoard.makeMove(moveList[i]);
-		double score = evaluator.evaluate(newBoard);
-		if (extendBoard->turn){
-			if (score >= bestScore){
-				bestScore = score;
-				if (bestScore > bound){
-					return bestScore;
-				}
-			}
-		}
-		else{
-			if (score <= bestScore){
-				bestScore = score;
-				if (bestScore < bound){
-					return bestScore;
-				}
-			}
-		}
-	}
-	return bestScore;
-}
-
 Move Engine::alphaBeta(int depth, Board searchBoard, double bound){
 	int moveCount = 0;
 	Move moveList[220];
