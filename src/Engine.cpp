@@ -20,7 +20,7 @@
 using namespace std;
 
 Engine::Engine(){
-	gameBoard = new Board();
+	gameBoard = Board();
 	score = 0;
 	principal = new Move[1];
 	killers = new short[1][killTableSize];
@@ -28,7 +28,7 @@ Engine::Engine(){
 	evaluator = FullEvaluator();
 }
 
-Engine::Engine(Board* loadBoard){
+Engine::Engine(Board loadBoard){
 	gameBoard = loadBoard;
 	score = 0;
 	principal = new Move[1];
@@ -58,14 +58,14 @@ Engine::~Engine(){
 }
 
 
-Board* Engine::getBoard(){
+Board Engine::getBoard(){
 	return gameBoard;
 }
 int Engine::getScore(){
 	return score;
 }
 
-void Engine::setBoard(Board* loadBoard){
+void Engine::setBoard(Board loadBoard){
 	gameBoard = loadBoard;
 }
 void Engine::setScore(int loadScore){
@@ -111,7 +111,7 @@ Move Engine::minMax(int depth, Board searchBoard){
 	return moveList[bestIndex];
 }
 Move Engine::minMax(int depth){
-	return(minMax(depth, *gameBoard));
+	return(minMax(depth, gameBoard));
 }
 
 double Engine::extend(Board* extendBoard){
@@ -297,15 +297,15 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound){
 }
 
 Move Engine::alphaBeta(int depth){
-	if(gameBoard->turn){
-		return alphaBeta(depth, *gameBoard, 999);
+	if(gameBoard.turn){
+		return alphaBeta(depth, gameBoard, 999);
 	}
 	else{
-		return alphaBeta(depth, *gameBoard, -999);
+		return alphaBeta(depth, gameBoard, -999);
 	}
 }
 Move Engine::alphaBeta(int depth, double bound){
-	return alphaBeta(depth, *gameBoard, bound);
+	return alphaBeta(depth, gameBoard, bound);
 }
 
 Move Engine::iterDeepSearch(float runTime){
@@ -470,6 +470,6 @@ void Engine::printMove(Move toPrint){
 		<< Engine::toAlg(toPrint.endX) << toPrint.endY << std::endl;
 }
 
-void Engine::updateBoard(Board* newBoard){
+void Engine::updateBoard(Board newBoard){
 	gameBoard = newBoard;
 }

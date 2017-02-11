@@ -104,7 +104,7 @@ void basicMateInOnePuzzle_test_1()
 
     Board testBoard = Board();
     testBoard.loadFEN(matePuzzleFEN);
-    Engine engine = Engine(&testBoard);
+    Engine engine = Engine(testBoard);
 
     for (int depth = 1; depth < 5; depth++)
     {
@@ -122,7 +122,7 @@ void basicMateInOnePuzzle_test_2()
 
     Board testBoard = Board();
     testBoard.loadFEN(matePuzzleFEN);
-    Engine engine = Engine(&testBoard);
+    Engine engine = Engine(testBoard);
 
     for (int depth = 1; depth < 5; depth++)
     {
@@ -140,7 +140,7 @@ void promotionMateInOnePuzzle_test_1()
 
     Board testBoard = Board();
     testBoard.loadFEN(promotionMatePuzzleFEN);
-    Engine engine = Engine(&testBoard);
+    Engine engine = Engine(testBoard);
 
     for (int depth = 1; depth < 5; depth++)
     {
@@ -159,7 +159,7 @@ void mateInThreePuzzle_test_1()
 
     Board testBoard = Board();
     testBoard.loadFEN(matePuzzleFEN);
-    Engine engine = Engine(&testBoard);
+    Engine engine = Engine(testBoard);
 
     // Solution requires 3 white moves (5 ply)
     Move bestMove = engine.alphaBeta(5);
@@ -175,7 +175,7 @@ void avoidMatePuzzle_test_1()
 
     Board testBoard = Board();
     testBoard.loadFEN(avoidMatePuzzleFEN);
-    Engine engine = Engine(&testBoard);
+    Engine engine = Engine(testBoard);
 
     for (int depth = 2; depth < 5; depth++)
     {

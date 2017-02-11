@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     {
         Board board = Board();
         board.loadFEN(argParser.argumentContent("-fen"));
-        Engine engine = Engine(&board);
+        Engine engine = Engine(board);
         std::cout << engine.alphaBeta(5).basicAlg() << std::endl;
     }
 

@@ -11,7 +11,7 @@ class HashTable;
 #define bitBoard uint64_t
 
 class Engine{
-	Board* gameBoard;
+	Board gameBoard;
 	int score;
 	FullEvaluator evaluator;
 public:
@@ -23,18 +23,18 @@ public:
 	int* killersIndex;
 
 	Engine();
-	Engine(Board*);
+	Engine(Board);
 	~Engine();
 
-	void updateBoard(Board*);
+	void updateBoard(Board);
 	void hashPosition(Board*, Move);
 	void hashPosition(Board*, Move, int);
 	Move getHash(Board*);
 
-	Board* getBoard();
+	Board getBoard();
 	int getScore();
 
-	void setBoard(Board*);
+	void setBoard(Board);
 	void setScore(int);
 
 	Move minMax(int, Board);
