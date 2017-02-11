@@ -72,34 +72,34 @@ void Engine::setScore(int loadScore){
 	score = loadScore;
 }
 
-Move Engine::minMax(int depth, Board* searchBoard){
+Move Engine::minMax(int depth, Board searchBoard){
 	int moveCount = 0;
 	Move moveList[220];
-	searchBoard->generateMoveArray(moveList, moveCount);
+	searchBoard.generateMoveArray(moveList, moveCount);
 
-	Board* newBoard;
+	Board newBoard;
 	double moveScore;
 	double bestScore;
 	unsigned int bestIndex = 0;
 	bestScore = 999;
-	if(searchBoard->turn){
+	if(searchBoard.turn){
 		bestScore = -999;
 	}
 	for(int i=0; i<moveCount; i++){
-		newBoard = searchBoard->newCopy();
-		newBoard->makeMove(moveList[i]);
+		newBoard = searchBoard.newCopy();
+		newBoard.makeMove(moveList[i]);
 		if(depth == 1){
-			moveScore = evaluator.evaluate(*newBoard);
+			moveScore = evaluator.evaluate(newBoard);
 		}
 		else{
 			moveScore = minMax(depth-1, newBoard).getScore();
 		}
 		moveList[i].setScore(moveScore);
-		if(moveScore > bestScore && searchBoard->turn){
+		if(moveScore > bestScore && searchBoard.turn){
 			bestScore = moveScore;
 			bestIndex = i;
 		}
-		else if(moveScore < bestScore && !searchBoard->turn){
+		else if(moveScore < bestScore && !searchBoard.turn){
 			bestScore = moveScore;
 			bestIndex = i;
 		}
@@ -107,12 +107,11 @@ Move Engine::minMax(int depth, Board* searchBoard){
 			bestScore = moveScore;
 			bestIndex = i;
 		}
-		delete newBoard;
 	}
 	return moveList[bestIndex];
 }
 Move Engine::minMax(int depth){
-	return(minMax(depth, gameBoard));
+	return(minMax(depth, *gameBoard));
 }
 
 double Engine::extend(Board* extendBoard){
@@ -126,9 +125,9 @@ double Engine::extend(Board* extendBoard){
 	}
 
 	for (int i = 0; i < moveCount; i++){
-		Board* newBoard = extendBoard->newCopy();
-		newBoard->makeMove(moveList[i]);
-		double score = evaluator.evaluate(*newBoard);
+		Board newBoard = extendBoard->newCopy();
+		newBoard.makeMove(moveList[i]);
+		double score = evaluator.evaluate(newBoard);
 		if (extendBoard->turn){
 			if (score >= bestScore){
 				bestScore = score;
@@ -139,7 +138,6 @@ double Engine::extend(Board* extendBoard){
 				bestScore = score;
 			}
 		}
-		delete newBoard;
 	}
 	return bestScore;
 }
@@ -154,14 +152,13 @@ double Engine::extend(Board* extendBoard, double bound){
 	}
 
 	for (int i = 0; i < moveCount; i++){
-		Board* newBoard = extendBoard->newCopy();
-		newBoard->makeMove(moveList[i]);
-		double score = evaluator.evaluate(*newBoard);
+		Board newBoard = extendBoard->newCopy();
+		newBoard.makeMove(moveList[i]);
+		double score = evaluator.evaluate(newBoard);
 		if (extendBoard->turn){
 			if (score >= bestScore){
 				bestScore = score;
 				if (bestScore > bound){
-					delete newBoard;
 					return bestScore;
 				}
 			}
@@ -170,23 +167,21 @@ double Engine::extend(Board* extendBoard, double bound){
 			if (score <= bestScore){
 				bestScore = score;
 				if (bestScore < bound){
-					delete newBoard;
 					return bestScore;
 				}
 			}
 		}
-		delete newBoard;
 	}
 	return bestScore;
 }
 
-Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
+Move Engine::alphaBeta(int depth, Board searchBoard, double bound){
 	int moveCount = 0;
 	Move moveList[220];
-	searchBoard->generateMoveArray(moveList, moveCount);
+	searchBoard.generateMoveArray(moveList, moveCount);
 	//sortMoveList(moveList, moveCount, searchBoard);
 
-	Board* newBoard;
+	Board newBoard;
 	double moveScore;
 	double bestScore;
 	int bestDepth = -1;
@@ -194,7 +189,7 @@ Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
 	Move returnedMove;
 
 	bestScore = 999;
-	if(searchBoard->turn){
+	if(searchBoard.turn){
 		bestScore = -999;
 	}
 		//Checkmate or StaleMate
@@ -202,17 +197,17 @@ Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
 		returnedMove = Move();
 		returnedMove.setGameOverDepth(0);
 
-		returnedMove.setScore(evaluator.evaluate(*searchBoard));
+		returnedMove.setScore(evaluator.evaluate(searchBoard));
 
 		return returnedMove;
 	}
 
 	for(int i=0; i<moveCount; i++){
-		newBoard = searchBoard->newCopy();
-		newBoard->makeMove(moveList[i]);
+		newBoard = searchBoard.newCopy();
+		newBoard.makeMove(moveList[i]);
 
 		if(depth == 1){
-			moveScore = evaluator.evaluate(*newBoard);
+			moveScore = evaluator.evaluate(newBoard);
 
 			returnedMove = Move();
 			if(moveScore != 1000){
@@ -243,7 +238,7 @@ Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
 			}
 			moveList[i].setScore(moveScore);
 		}
-		if(searchBoard->turn){
+		if(searchBoard.turn){
 				//Alpha Beta break
 			if(moveScore > bound){
 				return(moveList[i]);
@@ -273,7 +268,7 @@ Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
 
 				//GameOver score handling
 			int modifier = -1;
-			if(searchBoard->turn){
+			if(searchBoard.turn){
 				modifier = 1;
 			}
 				//Good result
@@ -297,21 +292,20 @@ Move Engine::alphaBeta(int depth, Board* searchBoard, double bound){
 				bestDepth = moveList[i].getGameOverDepth();
 			}
 		}
-		delete newBoard;
 	}
 	return moveList[bestIndex];
 }
 
 Move Engine::alphaBeta(int depth){
 	if(gameBoard->turn){
-		return alphaBeta(depth, gameBoard, 999);
+		return alphaBeta(depth, *gameBoard, 999);
 	}
 	else{
-		return alphaBeta(depth, gameBoard, -999);
+		return alphaBeta(depth, *gameBoard, -999);
 	}
 }
 Move Engine::alphaBeta(int depth, double bound){
-	return alphaBeta(depth, gameBoard, bound);
+	return alphaBeta(depth, *gameBoard, bound);
 }
 
 Move Engine::iterDeepSearch(float runTime){

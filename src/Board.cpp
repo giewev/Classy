@@ -336,24 +336,24 @@ string Board::outputFEN(){
 }
 
 //Creates a new copy of the current Board and all of its contents
-Board* Board::newCopy(){
-	Board* newBoard = new Board(0);
+Board Board::newCopy(){
+	Board newBoard = Board(0);
 	for(int i=0; i<7; i++){
-		newBoard->pieces[i] = pieces[i];
+		newBoard.pieces[i] = pieces[i];
 	}
-	newBoard->movedBoard = movedBoard;
-	newBoard->allPieces = allPieces;
-	newBoard->EPdata = EPdata;
+	newBoard.movedBoard = movedBoard;
+	newBoard.allPieces = allPieces;
+	newBoard.EPdata = EPdata;
 
-	newBoard->setCastlingRights(true,  true,  getCastlingRights(true, true));
-	newBoard->setCastlingRights(true,  false, getCastlingRights(true, false));
-	newBoard->setCastlingRights(false, true,  getCastlingRights(false, true));
-	newBoard->setCastlingRights(false, false, getCastlingRights(false, false));
-	newBoard->turn = turn;
-	newBoard->lastMoveCapture = lastMoveCapture;
-	newBoard->kingCoordinates = kingCoordinates;
-	newBoard->moveCounter = moveCounter;
-	newBoard->halfMoveCounter = halfMoveCounter;
+	newBoard.setCastlingRights(true,  true,  getCastlingRights(true, true));
+	newBoard.setCastlingRights(true,  false, getCastlingRights(true, false));
+	newBoard.setCastlingRights(false, true,  getCastlingRights(false, true));
+	newBoard.setCastlingRights(false, false, getCastlingRights(false, false));
+	newBoard.turn = turn;
+	newBoard.lastMoveCapture = lastMoveCapture;
+	newBoard.kingCoordinates = kingCoordinates;
+	newBoard.moveCounter = moveCounter;
+	newBoard.halfMoveCounter = halfMoveCounter;
 
 	return(newBoard);
 }
@@ -687,14 +687,13 @@ double Board::perft(int depth){
 		return(moveGenCount);//How many moves can we make RIGHT NOW
 	}
 
-	Board* newBoard;
+	Board newBoard;
 	double moveCounter = 0;
 
 	for(int i=0; i<moveGenCount; i++){
 		newBoard = this->newCopy();
-		newBoard->makeMove(moveList[i]);
-		moveCounter += newBoard->perft(depth-1);
-		delete newBoard;
+		newBoard.makeMove(moveList[i]);
+		moveCounter += newBoard.perft(depth-1);
 	}
 
 	return moveCounter;
@@ -715,19 +714,18 @@ double Board::dividePerft(int depth){
 		return(moveGenCount);//How many moves can we make RIGHT NOW
 	}
 
-	Board* newBoard;
+	Board newBoard;
 	double moveCounter = 0;
 	double newBoardMoveCount;
 
 	for(int i=0; i < moveGenCount; i++){
 		newBoard = this->newCopy();
-		newBoard->makeMove(moveList[i]);
-		newBoardMoveCount = newBoard->perft(depth-1);
+		newBoard.makeMove(moveList[i]);
+		newBoardMoveCount = newBoard.perft(depth-1);
 		std::cout << Engine::toAlg(moveList[i].startX) << moveList[i].startY << " ";
 		std::cout << Engine::toAlg(moveList[i].endX) << moveList[i].endY << " ";
 		std::cout << std::fixed << newBoardMoveCount << std::endl;
 		moveCounter += newBoardMoveCount;
-		delete newBoard;
 	}
 	return moveCounter;
 }

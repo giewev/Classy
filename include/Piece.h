@@ -41,7 +41,7 @@ public:
 	static void knightMoveArray(Move*, int&, int x, int y, Board&);
 	static void rookMoveArray(Move*, int&, int x, int y, Board&);
 
-	bool isSafe(Board*);
+	bool isSafe(Board);
 	bool operator!=(Piece);
 
 	virtual bool hasMoved();

@@ -315,7 +315,7 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
 }
 
 //Returns false if the Piece is in check, true otherwise
-bool Piece::isSafe(Board* gameBoard){
+bool Piece::isSafe(Board gameBoard){
 		//Check for Bishop or Queen
 	for(int i=-1; i<=1; i+=2){
 		for(int j=-1; j<=1; j+=2){
@@ -328,10 +328,10 @@ bool Piece::isSafe(Board* gameBoard){
 				}
 
 					//Found a piece
-				if(gameBoard->squareIsPopulated(targetX, targetY)){
-                    bool targetColor = gameBoard->getSquareColor(targetX, targetY);
+				if(gameBoard.squareIsPopulated(targetX, targetY)){
+                    bool targetColor = gameBoard.getSquareColor(targetX, targetY);
 					if(targetColor != color){
-                        int targetType = gameBoard->getSquareType(targetX, targetY);
+                        int targetType = gameBoard.getSquareType(targetX, targetY);
 						if(targetType == BISHOP || targetType == QUEEN){
 							return(false);
 						}
@@ -359,10 +359,10 @@ bool Piece::isSafe(Board* gameBoard){
 				}
 
 					//Found a piece
-				if(gameBoard->squareIsPopulated(targetX, targetY)){
-                    int targetColor = gameBoard->getSquareColor(targetX, targetY);
+				if(gameBoard.squareIsPopulated(targetX, targetY)){
+                    int targetColor = gameBoard.getSquareColor(targetX, targetY);
 					if(targetColor != color){
-                        int targetType = gameBoard->getSquareType(targetX, targetY);
+                        int targetType = gameBoard.getSquareType(targetX, targetY);
 						if(targetType == ROOK || targetType == QUEEN){
 							return(false);
 						}
@@ -381,10 +381,10 @@ bool Piece::isSafe(Board* gameBoard){
 			int targetX = xPos+i;
 			int targetY = yPos+j;
 			if(targetX > 0 && targetX < 9 && targetY > 0 && targetY < 9){//out of bounds
-                if(gameBoard->squareIsPopulated(targetX, targetY)){
-                    bool targetColor =gameBoard->getSquareColor(targetX, targetY);
+                if(gameBoard.squareIsPopulated(targetX, targetY)){
+                    bool targetColor =gameBoard.getSquareColor(targetX, targetY);
                     if(targetColor != color){
-                        int targetType = gameBoard->getSquareType(targetX, targetY);
+                        int targetType = gameBoard.getSquareType(targetX, targetY);
                         if(targetType == KNIGHT){
                             return false;
                         }
@@ -395,10 +395,10 @@ bool Piece::isSafe(Board* gameBoard){
 			targetX = xPos+j;
 			targetY = yPos+i;
 			if(targetX > 0 && targetX < 9 && targetY > 0 && targetY < 9){//out of bounds
-                if(gameBoard->squareIsPopulated(targetX, targetY)){
-                    bool targetColor =gameBoard->getSquareColor(targetX, targetY);
+                if(gameBoard.squareIsPopulated(targetX, targetY)){
+                    bool targetColor =gameBoard.getSquareColor(targetX, targetY);
                     if(targetColor != color){
-                        int targetType = gameBoard->getSquareType(targetX, targetY);
+                        int targetType = gameBoard.getSquareType(targetX, targetY);
                         if(targetType == KNIGHT){
                             return false;
                         }
@@ -418,9 +418,9 @@ bool Piece::isSafe(Board* gameBoard){
 		if(targetX > 8 || targetX <1){
 			continue;
 		}
-        if (gameBoard->squareIsPopulated(targetX, targetY)){
-            if(gameBoard->getSquareType(targetX, targetY) == PAWN){
-                if(gameBoard->getSquareColor(targetX, targetY) != color){
+        if (gameBoard.squareIsPopulated(targetX, targetY)){
+            if(gameBoard.getSquareType(targetX, targetY) == PAWN){
+                if(gameBoard.getSquareColor(targetX, targetY) != color){
                     return(false);
                 }
             }
@@ -444,9 +444,9 @@ bool Piece::isSafe(Board* gameBoard){
 				continue;
 			}
 
-            if (gameBoard->squareIsPopulated(targetX, targetY)){
-                if(gameBoard->getSquareType(targetX, targetY) == KING){
-                    if (gameBoard->getSquareColor(targetX, targetY) != color)
+            if (gameBoard.squareIsPopulated(targetX, targetY)){
+                if(gameBoard.getSquareType(targetX, targetY) == KING){
+                    if (gameBoard.getSquareColor(targetX, targetY) != color)
                     {
                         return(false);
                     }

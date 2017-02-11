@@ -37,13 +37,13 @@ public:
 	void setBoard(Board*);
 	void setScore(int);
 
-	Move minMax(int, Board*);
+	Move minMax(int, Board);
 	Move minMax(int);
 
 	double extend(Board*);
 	double extend(Board*, double);
 
-	Move alphaBeta(int, Board*, double);
+	Move alphaBeta(int, Board, double);
 	Move alphaBeta(int);
 	Move alphaBeta(int, double);
 	Move iterDeepSearch(float);

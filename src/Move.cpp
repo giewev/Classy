@@ -77,14 +77,12 @@ bool Move::isSafe(Danger safetyData){
 		if (fabs(startX - endX) == 1 && fabs(startY - endY) == 1){
 			if (!safetyData.getBoard()->squareIsPopulated(endX, endY)){
 				if (safetyData.getBoard()->squareIsType(endX, startY, PAWN)){
-					Board* newBoard = safetyData.getBoard()->newCopy();
-					newBoard->makeMove(*this);
-					if (newBoard->getSquare(newBoard->getKingX(!newBoard->turn), newBoard->getKingY(!newBoard->turn)).isSafe(newBoard)){
-						delete newBoard;
+					Board newBoard = safetyData.getBoard()->newCopy();
+					newBoard.makeMove(*this);
+					if (newBoard.getSquare(newBoard.getKingX(!newBoard.turn), newBoard.getKingY(!newBoard.turn)).isSafe(newBoard)){
 						return true;
 					}
 					else{
-						delete newBoard;
 						return false;
 					}
 				}
@@ -94,7 +92,7 @@ bool Move::isSafe(Danger safetyData){
 
 	//The king is moving, need a manual check
 	if(startX == safetyData.defenderX && startY == safetyData.defenderY){
-		Board* newBoard;
+		Board newBoard;
 			//Castling Moves
 		if(fabs(startX - endX) == 2){
 				//Cant castle out of check
@@ -105,26 +103,21 @@ bool Move::isSafe(Danger safetyData){
 				//The absolute value division thing finds the sign of the direction
 			int direction = -1*fabs(startX-endX)/(startX-endX);
 			for (int i = startX + direction; i <= startX + 2 && i >= startX - 2; i+=direction){
-				newBoard = new Board();
 				newBoard = safetyData.getBoard()->newCopy();
-				newBoard->makeMove(Move(startX, startY, i, startY));
-				if(!newBoard->getSquare(i, endY).isSafe(newBoard)){
-					delete newBoard;
+				newBoard.makeMove(Move(startX, startY, i, startY));
+				if(!newBoard.getSquare(i, endY).isSafe(newBoard)){
 					return false;
 				}
-				delete newBoard;
 			}
 			return true;
 		}
 			//Normal King moves
 		newBoard = safetyData.getBoard()->newCopy();
-		newBoard->makeMove(*this);
-		if(newBoard->getSquare(endX, endY).isSafe(newBoard)){
-			delete newBoard;
+		newBoard.makeMove(*this);
+		if(newBoard.getSquare(endX, endY).isSafe(newBoard)){
 			return true;
 		}
 		else{
-			delete newBoard;
 			return false;
 		}
 	}

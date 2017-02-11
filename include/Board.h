@@ -25,7 +25,7 @@ public:
 	Board(Piece**);
 	~Board();
 
-	Board* newCopy();
+	Board newCopy();
 
 	int pieceCount();
 	int pieceCount(bool);
