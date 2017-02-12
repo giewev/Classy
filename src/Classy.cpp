@@ -15,7 +15,6 @@ int main(int argc, char *argv[])
     if (argParser.flagExists("-t"))
     {
         runAllTests();
-        return 0;
     }
     else if (argParser.flagExists("-fen"))
     {

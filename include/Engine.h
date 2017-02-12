@@ -16,11 +16,8 @@ class Engine{
 	FullEvaluator evaluator;
 public:
 	clock_t doneTime;
-	Move* principal;
 	int maxDepth;
 	double nullBound;
-	short (*killers)[killTableSize];
-	int* killersIndex;
 
 	Engine();
 	Engine(Board);
@@ -43,11 +40,8 @@ public:
 	Move alphaBeta(int, Board, double);
 	Move alphaBeta(int);
 	Move alphaBeta(int, double);
-	Move iterDeepSearch(float);
 
 	void sortMoveList(Move*, int, Board*);
-	void addKiller(Move, int);
-	bool inKillers(Move, int);
 
 	static double manhattenDistance(int, int, double, double);
 

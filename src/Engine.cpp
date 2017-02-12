@@ -22,39 +22,16 @@ using namespace std;
 Engine::Engine(){
 	gameBoard = Board();
 	score = 0;
-	principal = new Move[1];
-	killers = new short[1][killTableSize];
-	killersIndex = new int[1];
 	evaluator = FullEvaluator();
 }
 
 Engine::Engine(Board loadBoard){
 	gameBoard = loadBoard;
 	score = 0;
-	principal = new Move[1];
-	killers = new short[1][killTableSize];
-	killersIndex = new int[1];
 	evaluator = FullEvaluator();
 }
 
 Engine::~Engine(){
-
-	//if (killers){
-		//delete[] killers;
-	//}
-	//if (principal != NULL){
-		//delete[] principal;
-	//}
-	/*
-	if (moveTriangle != NULL){
-		for (int i = 0; i < maxDepth; i++){
-			if (moveTriangle[i] != NULL){
-				delete[] moveTriangle[i];
-			}
-		}
-		delete[] moveTriangle;
-	}
-	*/
 }
 
 
@@ -247,55 +224,6 @@ Move Engine::alphaBeta(int depth, double bound){
 	return alphaBeta(depth, gameBoard, bound);
 }
 
-Move Engine::iterDeepSearch(float runTime){
-	doneTime = (clock_t) (clock() + runTime * CLOCKS_PER_SEC);
-
-	Move tempMove = Move();
-
-	int searchDepth = 1;
-	//delete[] principal;
-	principal = new Move[2];
-	while(doneTime > clock()){
-		searchDepth++;
-		delete[] killers;
-		delete[] killersIndex;
-
-		killers = new short[searchDepth+1][killTableSize];
-		killersIndex = new int[searchDepth + 1];
-		for(int i=0; i<searchDepth; i++){
-			for (int j = 0; j < killTableSize; j++){
-				killers[i+1][j] = -1;
-			}
-			killersIndex[i+1] = 0;
-		}
-
-		maxDepth = searchDepth;
-		//std::cout << "info depth " << searchDepth << " score cp " << 0 << std::endl;
-
-		tempMove = alphaBeta(searchDepth);
-
-		if(tempMove != Move()){
-		}
-		else{
-			searchDepth--;
-		}
-		if (tempMove.getGameOverDepth() != -1){
-			break;
-		}
-	}
-	/*
-	std::cout << "info string searched to a depth of " << searchDepth << std::endl;
-	std::cout << "info depth " << searchDepth;
-	if (gameBoard->turn){
-		std::cout << " score cp " << round(principal[0].getScore() * 100) << std::endl;
-	}
-	else{
-		std::cout << " score cp " << round(principal[0].getScore() * (-100)) << std::endl;
-	}
-	*/
-	return principal[0];
-}
-
 std::string Engine::toAlg(int val){
 	if(val < 0 || val > 8){
 		return "z";
@@ -337,8 +265,8 @@ int Engine::fromAlg(char val){
 void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard){
 	int captures = 0;
 	int nonCaptures = 0;
-	Move* captureList = new Move[230];
-	Move* nonCaptureList = new Move[230];
+	Move captureList[230];
+	Move nonCaptureList[230];
 
 	for(int i = 0; i < moveCount; i++){
 		if(rawList[i].isCapture(sortBoard)){
@@ -358,46 +286,6 @@ void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard){
 	for(int i = 0; i < nonCaptures; i++){
 		rawList[i + captures] = nonCaptureList[i];
 	}
-}
-
-void Engine::addKiller(Move killMove, int depth){
-	killers[depth][killersIndex[depth]] =   killMove.endY-1;
-	killers[depth][killersIndex[depth]] <<= 3;
-	killers[depth][killersIndex[depth]] |=  killMove.endX-1;
-	killers[depth][killersIndex[depth]] <<= 3;
-	killers[depth][killersIndex[depth]] |= killMove.startY-1;
-	killers[depth][killersIndex[depth]] <<= 3;
-	killers[depth][killersIndex[depth]] |= killMove.startX-1;
-	killersIndex[depth]++;
-	killersIndex[depth] %= killTableSize;
-}
-bool Engine::inKillers(Move testMove, int depth){
-	int fromX, fromY, toX, toY;
-	for (int i = 0; i < killTableSize; i++){
-		if (killers[depth][i] == -1){
-			return false;
-		}
-
-		fromX = (killers[depth][i] & 7) + 1;
-		fromY = ((killers[depth][i] >> 3) & 7) + 1;
-		toX = ((killers[depth][i] >> 6) & 7) + 1;
-		toY = ((killers[depth][i] >> 9) & 7) + 1;
-
-		if (fromX != testMove.startX){
-			continue;
-		}
-		if (fromY != testMove.startY){
-			continue;
-		}
-		if (toX != testMove.endX){
-			continue;
-		}
-		if (toY != testMove.endY){
-			continue;
-		}
-		return true;
-	}
-	return false;
 }
 
 double Engine::manhattenDistance(int x1, int y1, double x2, double y2){

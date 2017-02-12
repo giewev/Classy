@@ -679,18 +679,14 @@ double Board::perft(int depth){
 	Move moveList[220];
 	generateMoveArray(moveList, moveGenCount);
 
-	//Engine player = new Engine(this);
-	//player.sortMoveList(moveList, moveGenCount, this);
-
 	if(depth == 1) {
-		//std::cout << moveGenCount << std::endl;
 		return(moveGenCount);//How many moves can we make RIGHT NOW
 	}
 
 	Board newBoard;
 	double moveCounter = 0;
 
-	for(int i=0; i<moveGenCount; i++){
+	for(int i = 0; i < moveGenCount; i++){
 		newBoard = this->newCopy();
 		newBoard.makeMove(moveList[i]);
 		moveCounter += newBoard.perft(depth-1);
@@ -705,7 +701,6 @@ double Board::dividePerft(int depth){
 	int moveGenCount = 0;
 	Move moveList[220];
 	generateMoveArray(moveList, moveGenCount);
-	//std::cout << moveGenCount << std::endl;
 	if(depth == 1) {
 		for(int i=0; i<moveGenCount; i++){
 			std::cout << Engine::toAlg(moveList[i].startX) << moveList[i].startY << " "
@@ -731,13 +726,7 @@ double Board::dividePerft(int depth){
 }
 
 Piece Board::findKing(bool getColor){
-	Piece king = getSquare(getKingX(getColor), getKingY(getColor));
-	if(king.type != KING){
-		//std::cout << "info string find king is " << king.type << std::endl;
-		//std::cout << "info string thinks king is at " << Engine::toAlg(getKingX(getColor)) << getKingY(getColor) << std::endl;
-		//std::cout << "info string " << outputFEN() << std::endl;
-	}
-	return(king);
+	return(getSquare(getKingX(getColor), getKingY(getColor)));
 }
 
 bool Board::getCastlingRights(bool color, bool side){
