@@ -18,10 +18,16 @@ int main(int argc, char *argv[])
     }
     else if (argParser.flagExists("-fen"))
     {
+        int moveDepth = 5;
+        if (argParser.flagExists("-depth"))
+        {
+            moveDepth = std::stoi(argParser.argumentContent("-depth"));
+        }
+
         Board board = Board();
         board.loadFEN(argParser.argumentContent("-fen"));
         Engine engine = Engine(board);
-        std::cout << engine.alphaBeta(5).basicAlg() << std::endl;
+        std::cout << engine.alphaBeta(moveDepth).basicAlg() << std::endl;
     }
 
     return 0;
