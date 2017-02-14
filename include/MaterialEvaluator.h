@@ -5,12 +5,12 @@
 
 class MaterialEvaluator : public Evaluator
 {
-    public:
-        MaterialEvaluator();
-        virtual ~MaterialEvaluator();
-        double evaluate(Board);
-    protected:
-    private:
+public:
+    MaterialEvaluator();
+    virtual ~MaterialEvaluator();
+    double evaluate(Board);
+protected:
+private:
 };
 
 #endif // MATERIALEVALUATOR_H

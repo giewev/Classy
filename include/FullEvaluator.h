@@ -8,15 +8,15 @@
 
 class FullEvaluator : public Evaluator
 {
-    public:
-        FullEvaluator();
-        virtual ~FullEvaluator();
-        double evaluate(Board);
-    protected:
-    private:
-        GameOverEvaluator gameOverEvaluator;
-        MaterialEvaluator materialEvaluator;
-        PositionalEvaluator positionalEvaluator;
+public:
+    FullEvaluator();
+    virtual ~FullEvaluator();
+    double evaluate(Board);
+protected:
+private:
+    GameOverEvaluator gameOverEvaluator;
+    MaterialEvaluator materialEvaluator;
+    PositionalEvaluator positionalEvaluator;
 };
 
 #endif // FULLEVALUATOR_H

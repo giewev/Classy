@@ -8,7 +8,7 @@
 
 void startingPerft_test()
 {
-	std::string startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
+    std::string startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
     Board testBoard = Board();
     testBoard.loadFEN(startingFEN);
 
@@ -50,7 +50,7 @@ void endgamePerft_test()
 
 void loadStartingPosition_test()
 {
-	std::string startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
+    std::string startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
 
     Board testBoard = Board();
     testBoard.loadFEN(startingFEN);

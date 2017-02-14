@@ -5,12 +5,12 @@
 
 class PositionalEvaluator : public Evaluator
 {
-    public:
-        PositionalEvaluator();
-        virtual ~PositionalEvaluator();
-        double evaluate(Board);
-    protected:
-    private:
+public:
+    PositionalEvaluator();
+    virtual ~PositionalEvaluator();
+    double evaluate(Board);
+protected:
+private:
 };
 
 #endif // POSITIONALEVALUATOR_H

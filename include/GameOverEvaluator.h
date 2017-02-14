@@ -5,12 +5,12 @@
 
 class GameOverEvaluator : public Evaluator
 {
-    public:
-        GameOverEvaluator();
-        virtual ~GameOverEvaluator();
-        double evaluate(Board);
-    protected:
-    private:
+public:
+    GameOverEvaluator();
+    virtual ~GameOverEvaluator();
+    double evaluate(Board);
+protected:
+private:
 };
 
 #endif // GAMEOVEREVALUATOR_H

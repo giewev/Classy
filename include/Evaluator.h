@@ -5,12 +5,12 @@ class Board;
 
 class Evaluator
 {
-    public:
-        Evaluator();
-        virtual ~Evaluator();
-        virtual double evaluate(Board) = 0;
-    protected:
-    private:
+public:
+    Evaluator();
+    virtual ~Evaluator();
+    virtual double evaluate(Board) = 0;
+protected:
+private:
 };
 
 #endif // EVALUATOR_H
