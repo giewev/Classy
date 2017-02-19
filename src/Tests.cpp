@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Move.h"
 #include "Bitwise.h"
+#include "ZobristHasher.h"
 
 void startingPerft_test()
 {
@@ -187,6 +188,36 @@ void avoidMatePuzzle_test_1()
     }
 }
 
+void zobristConsistancy_test_helper(std::string originalFEN, Move testMove)
+{
+    Board testBoard = Board();
+    testBoard.loadFEN(originalFEN);
+
+    ZobristHasher updateZobrist = ZobristHasher(testBoard);
+    updateZobrist.update(testBoard, testMove);
+
+    Board moveBoard = testBoard.newCopy();
+    moveBoard.makeMove(testMove);
+
+    ZobristHasher moveZobrist = ZobristHasher(updateZobrist);
+    moveZobrist.load(moveBoard);
+    assert(moveZobrist.hashValue == updateZobrist.hashValue);
+}
+
+void zobristConsistancy_test()
+{
+    std::string zobristTestFEN = "2n1k3/1P6/8/5Pp1/8/8/8/R3K2R w KQ g6 0 2";
+    Move promotionMove = Move(2, 7, 3, 8, 1);
+    Move enPassantCaptureMove = Move(6, 5, 7, 6);
+    Move castingRuinedByKingMove = Move(5, 1, 5, 2);
+    Move castingRuinedByRookMove = Move(1, 1, 2, 1);
+
+    zobristConsistancy_test_helper(zobristTestFEN, promotionMove);
+    zobristConsistancy_test_helper(zobristTestFEN, enPassantCaptureMove);
+    zobristConsistancy_test_helper(zobristTestFEN, castingRuinedByKingMove);
+    zobristConsistancy_test_helper(zobristTestFEN, castingRuinedByRookMove);
+}
+
 void runAllTests()
 {
     loadStartingPosition_test();
@@ -199,4 +230,5 @@ void runAllTests()
     promotionMateInOnePuzzle_test_1();
     mateInThreePuzzle_test_1();
     avoidMatePuzzle_test_1();
+    zobristConsistancy_test();
 }

@@ -37,14 +37,16 @@ Piece::Piece(int name, int newX, int newY, bool newColor)
     type = name;
     setMoved(false);
 }
-Piece::Piece(int throwaway)
+
+Piece::Piece(int newType)
 {
     xPos = -1;
     yPos = -1;
     color = true;
-    type = 0;
+    type = newType;
     setMoved(false);
 }
+
 Piece::~Piece()
 {
 }
