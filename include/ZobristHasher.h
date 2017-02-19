@@ -12,7 +12,7 @@ public:
     ZobristHasher();
     ZobristHasher(Board board);
     void load(Board);
-    void update(Move);
+    void update(Board, Move);
 
 protected:
 private:
@@ -28,6 +28,10 @@ private:
     void loadPieces(Board board);
     void loadEnPassant(Board board);
     void loadCastlingRights(Board board);
+
+    void updateEnPassant(Board prevBoard, Move nextMove);
+    void updateCastling(Board prevBoard, Move nextMove);
+    void updatePieces(Board prevBoard, Move nextMove);
 
     void togglePiece(int x, int y, int pieceType, bool color);
     void toggleTurn();
