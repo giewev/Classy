@@ -10,7 +10,7 @@ Piece::Piece()
     xPos = -1;
     yPos = -1;
     color = false;
-    type = 0;
+    type = PieceType::Empty;
     setMoved(false);
 }
 Piece::Piece(bool newColor)
@@ -18,7 +18,7 @@ Piece::Piece(bool newColor)
     xPos = -1;
     yPos = -1;
     color = newColor;
-    type = 0;
+    type = PieceType::Empty;
     setMoved(false);
 }
 Piece::Piece(int newX, int newY, bool newColor)
@@ -26,19 +26,19 @@ Piece::Piece(int newX, int newY, bool newColor)
     xPos = newX;
     yPos = newY;
     color = newColor;
-    type = 0;
+    type = PieceType::Empty;
     setMoved(false);
 }
-Piece::Piece(int name, int newX, int newY, bool newColor)
+Piece::Piece(PieceType newType, int newX, int newY, bool newColor)
 {
     xPos = newX;
     yPos = newY;
     color = newColor;
-    type = name;
+    type = newType;
     setMoved(false);
 }
 
-Piece::Piece(int newType)
+Piece::Piece(PieceType newType)
 {
     xPos = -1;
     yPos = -1;

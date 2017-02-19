@@ -3,21 +3,22 @@
 
 struct Move;
 class Board;
+enum PieceType : char;
 
 class Piece
 {
 
 public:
     bool moved;
-    int type;
+    PieceType type;
     int xPos, yPos;//coordinates
     bool color;//True is White, False is Black
 
     Piece();//Simple constructor
     Piece(bool);//Also sets color
     Piece(int, int, bool);//sets coordinates and Color
-    Piece(int);
-    Piece(int, int, int, bool);
+    Piece(PieceType);
+    Piece(PieceType, int, int, bool);
 
     virtual ~Piece();
 

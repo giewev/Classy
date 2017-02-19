@@ -439,8 +439,9 @@ Piece Board::getSquare(int x, int y)
             break;
         }
     }
-    return Piece(type, x + 1, y + 1, color);
+    return Piece((PieceType)type, x + 1, y + 1, color);
 }
+
 PieceType Board::getSquareType(int x, int y)
 {
     if (!squareIsPopulated(x, y))
