@@ -11,6 +11,7 @@ public:
 
     ZobristHasher();
     ZobristHasher(Board board);
+    ZobristHasher(const ZobristHasher &original);
     void load(Board);
     void update(Board, Move);
 

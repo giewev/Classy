@@ -35,6 +35,30 @@ ZobristHasher::ZobristHasher(Board board) : ZobristHasher()
     this->load(board);
 }
 
+ZobristHasher::ZobristHasher(const ZobristHasher& original)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        this->enPassantHashCodes[i] = original.enPassantHashCodes[i];
+        for (int j = 0; j < 8; j++)
+        {
+            for (int k = 0; k < 6; k++)
+            {
+                this->whitePieceHashCodes[i][j][k] = original.whitePieceHashCodes[i][j][k];
+                this->blackPieceHashCodes[i][j][k] = original.blackPieceHashCodes[i][j][k];
+            }
+        }
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        this->castlingHashCodes[i] = original.castlingHashCodes[i];
+    }
+
+    this->turnHashCode = original.turnHashCode;
+    this->hashValue = original.hashValue;
+}
+
 void ZobristHasher::load(Board board)
 {
     this->hashValue = 0ll;
@@ -56,7 +80,7 @@ void ZobristHasher::loadPieces(Board board)
             int pieceType = board.getSquareType(i, j);
             if (pieceType != EMPTY)
             {
-                this->togglePiece(i, j, pieceType - 1, board.getSquareColor(i, j));
+                this->togglePiece(i - 1, j - 1, pieceType, board.getSquareColor(i, j));
             }
         }
     }
@@ -88,7 +112,7 @@ void ZobristHasher::loadEnPassant(Board board)
 
 void ZobristHasher::togglePiece(int x, int y, int pieceType, bool color)
 {
-    if (x > 7 || x < 0 || y > 7 || y < 0 || pieceType > 5 || pieceType < 0)
+    if (x > 7 || x < 0 || y > 7 || y < 0 || pieceType > 6 || pieceType < 0)
     {
         throw "Coordinates out of bounds";
     }
@@ -192,6 +216,12 @@ void ZobristHasher::updatePieces(Board prevBoard, Move nextMove)
     this->togglePiece(nextMove.startX - 1, nextMove.startY - 1, movingPieceType, movingPieceColor);
     this->togglePiece(nextMove.endX - 1, nextMove.endY - 1, movingPieceType, movingPieceColor);
 
+    int capturePieceType = prevBoard.getSquareType(nextMove.endX, nextMove.endY);
+    if (capturePieceType != EMPTY)
+    {
+        this->togglePiece(nextMove.endX - 1, nextMove.endY - 1, capturePieceType, !movingPieceColor);
+    }
+
     if (movingPieceType == PAWN)
     {
         Piece prevEP = prevBoard.getEP();
@@ -202,7 +232,7 @@ void ZobristHasher::updatePieces(Board prevBoard, Move nextMove)
             this->togglePiece(prevEP.xPos - 1, prevEP.yPos - 1, PAWN, prevEP.color);
         }
 
-        if (nextMove.endY == 1 || nextMove.endX == 8)
+        if (nextMove.endY == 1 || nextMove.endY == 8)
         {
             int promotionType;
             switch (nextMove.promotion)
@@ -232,13 +262,13 @@ void ZobristHasher::updatePieces(Board prevBoard, Move nextMove)
     {
         if (nextMove.endX == 7)
         {
-            this->togglePiece(8, nextMove.endY - 1, ROOK, movingPieceColor);
-            this->togglePiece(6, nextMove.endY - 1, ROOK, movingPieceColor);
+            this->togglePiece(7, nextMove.endY - 1, ROOK, movingPieceColor);
+            this->togglePiece(5, nextMove.endY - 1, ROOK, movingPieceColor);
         }
         else if (nextMove.endX == 3)
         {
-            this->togglePiece(1, nextMove.endY - 1, ROOK, movingPieceColor);
-            this->togglePiece(4, nextMove.endY - 1, ROOK, movingPieceColor);
+            this->togglePiece(0, nextMove.endY - 1, ROOK, movingPieceColor);
+            this->togglePiece(3, nextMove.endY - 1, ROOK, movingPieceColor);
         }
     }
 }
