@@ -74,7 +74,7 @@ bool Piece::operator!=(Piece other)
 
 const bool Piece::isNull()
 {
-    return (type == EMPTY);
+    return (type == PieceType::Empty);
 }
 
 
@@ -102,30 +102,30 @@ void Piece::generateMoves(std::vector<Move>& moveList, int x, int y, Board& game
 void Piece::appendMoveArray(Move* moveList, int& moveCounter, int x, int y, Board& gameBoard)
 {
     int type = gameBoard.getSquareType(x, y);
-    if(type == EMPTY)
+    if(type == PieceType::Empty)
     {
     }
-    else if(type == PAWN)
+    else if(type == PieceType::Pawn)
     {
         pawnMoveArray(moveList, moveCounter, x, y, gameBoard);
     }
-    else if(type == KING)
+    else if(type == PieceType::King)
     {
         kingMoveArray(moveList, moveCounter, x, y, gameBoard);
     }
-    else if(type == QUEEN)
+    else if(type == PieceType::Queen)
     {
         queenMoveArray(moveList, moveCounter, x, y, gameBoard);
     }
-    else if(type == BISHOP)
+    else if(type == PieceType::Bishop)
     {
         bishopMoveArray(moveList, moveCounter, x, y, gameBoard);
     }
-    else if(type == KNIGHT)
+    else if(type == PieceType::Knight)
     {
         knightMoveArray(moveList, moveCounter, x, y, gameBoard);
     }
-    else if(type == ROOK)
+    else if(type == PieceType::Rook)
     {
         rookMoveArray(moveList, moveCounter, x, y, gameBoard);
     }
@@ -158,7 +158,7 @@ void Piece::kingMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
             }
 
             //Check to see if Friendly Piece is there
-            if(gameBoard.getSquareType(xPos + j, yPos + k) != EMPTY)
+            if(gameBoard.getSquareType(xPos + j, yPos + k) != PieceType::Empty)
             {
                 if(gameBoard.getSquareColor(xPos + j, yPos + k) == ownColor)
                 {
@@ -177,11 +177,11 @@ void Piece::kingMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
         {
             if(i)
             {
-                if(gameBoard.getSquareType(xPos+1, yPos) != EMPTY)
+                if(gameBoard.getSquareType(xPos+1, yPos) != PieceType::Empty)
                 {
                     continue;
                 }
-                if(gameBoard.getSquareType(xPos+2, yPos) != EMPTY)
+                if(gameBoard.getSquareType(xPos+2, yPos) != PieceType::Empty)
                 {
                     continue;
                 }
@@ -190,16 +190,16 @@ void Piece::kingMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
             }
             else
             {
-                if(gameBoard.getSquareType(xPos-1, yPos) != EMPTY)
+                if(gameBoard.getSquareType(xPos-1, yPos) != PieceType::Empty)
                 {
                     continue;
                 }
-                if(gameBoard.getSquareType(xPos-2, yPos) != EMPTY)
+                if(gameBoard.getSquareType(xPos-2, yPos) != PieceType::Empty)
                 {
                     continue;
                 }
 
-                if(gameBoard.getSquareType(xPos-3, yPos) != EMPTY)
+                if(gameBoard.getSquareType(xPos-3, yPos) != PieceType::Empty)
                 {
                     continue;
                 }
@@ -234,7 +234,7 @@ void Piece::bishopMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos
                     break;
                 }
 
-                if(gameBoard.getSquareType(xPos+(k*i), yPos+(k*j)) != EMPTY)
+                if(gameBoard.getSquareType(xPos+(k*i), yPos+(k*j)) != PieceType::Empty)
                 {
                     if(gameBoard.getSquareColor(xPos+(k*i), yPos+(k*j)) == ownColor)
                     {
@@ -273,7 +273,7 @@ void Piece::knightMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos
                 continue;
             }
 
-            if(gameBoard.getSquareType(xPos + j, yPos + k) != EMPTY)
+            if(gameBoard.getSquareType(xPos + j, yPos + k) != PieceType::Empty)
             {
                 if(gameBoard.getSquareColor(xPos + j, yPos + k) == ownColor)
                 {
@@ -309,7 +309,7 @@ void Piece::rookMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
                     continue;
                 }
 
-                if(gameBoard.getSquareType(xPos+(i*k), yPos+(j*k)) != EMPTY)
+                if(gameBoard.getSquareType(xPos+(i*k), yPos+(j*k)) != PieceType::Empty)
                 {
                     if(gameBoard.getSquareColor(xPos+(i*k), yPos+(j*k)) == ownColor)
                     {
@@ -337,7 +337,7 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
         direction = 1;
     }
 
-    if(gameBoard.getSquareType(xPos, yPos + direction) == EMPTY) //Normal Moves
+    if(gameBoard.getSquareType(xPos, yPos + direction) == PieceType::Empty) //Normal Moves
     {
         if(yPos+direction == 8 || yPos+direction == 1)
         {
@@ -353,7 +353,7 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
 
         if((yPos == 2 && ownColor) || (yPos == 7 && !ownColor)) //Double Moves
         {
-            if(gameBoard.getSquareType(xPos, yPos + 2 * direction) == EMPTY)
+            if(gameBoard.getSquareType(xPos, yPos + 2 * direction) == PieceType::Empty)
             {
                 moveList[moveCounter++] = Move(xPos, yPos, xPos, yPos+2*direction);
             }
@@ -368,7 +368,7 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
             continue;
         }
 
-        if(gameBoard.getSquareType(xPos + i, yPos + direction) == EMPTY)
+        if(gameBoard.getSquareType(xPos + i, yPos + direction) == PieceType::Empty)
         {
             if(yPos == gameBoard.getEP().getY())
             {
@@ -427,7 +427,7 @@ bool Piece::isSafe(Board gameBoard)
                     if(targetColor != color)
                     {
                         int targetType = gameBoard.getSquareType(targetX, targetY);
-                        if(targetType == BISHOP || targetType == QUEEN)
+                        if(targetType == PieceType::Bishop || targetType == PieceType::Queen)
                         {
                             return(false);
                         }
@@ -466,7 +466,7 @@ bool Piece::isSafe(Board gameBoard)
                     if(targetColor != color)
                     {
                         int targetType = gameBoard.getSquareType(targetX, targetY);
-                        if(targetType == ROOK || targetType == QUEEN)
+                        if(targetType == PieceType::Rook || targetType == PieceType::Queen)
                         {
                             return(false);
                         }
@@ -494,7 +494,7 @@ bool Piece::isSafe(Board gameBoard)
                     if(targetColor != color)
                     {
                         int targetType = gameBoard.getSquareType(targetX, targetY);
-                        if(targetType == KNIGHT)
+                        if(targetType == PieceType::Knight)
                         {
                             return false;
                         }
@@ -512,7 +512,7 @@ bool Piece::isSafe(Board gameBoard)
                     if(targetColor != color)
                     {
                         int targetType = gameBoard.getSquareType(targetX, targetY);
-                        if(targetType == KNIGHT)
+                        if(targetType == PieceType::Knight)
                         {
                             return false;
                         }
@@ -536,7 +536,7 @@ bool Piece::isSafe(Board gameBoard)
         }
         if (gameBoard.squareIsPopulated(targetX, targetY))
         {
-            if(gameBoard.getSquareType(targetX, targetY) == PAWN)
+            if(gameBoard.getSquareType(targetX, targetY) == PieceType::Pawn)
             {
                 if(gameBoard.getSquareColor(targetX, targetY) != color)
                 {
@@ -570,7 +570,7 @@ bool Piece::isSafe(Board gameBoard)
 
             if (gameBoard.squareIsPopulated(targetX, targetY))
             {
-                if(gameBoard.getSquareType(targetX, targetY) == KING)
+                if(gameBoard.getSquareType(targetX, targetY) == PieceType::King)
                 {
                     if (gameBoard.getSquareColor(targetX, targetY) != color)
                     {

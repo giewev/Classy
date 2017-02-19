@@ -78,7 +78,7 @@ void ZobristHasher::loadPieces(Board board)
         for (int j = 1; j <= 8; j++)
         {
             int pieceType = board.getSquareType(i, j);
-            if (pieceType != EMPTY)
+            if (pieceType != PieceType::Empty)
             {
                 this->togglePiece(i - 1, j - 1, pieceType, board.getSquareColor(i, j));
             }
@@ -104,7 +104,7 @@ void ZobristHasher::loadCastlingRights(Board board)
 void ZobristHasher::loadEnPassant(Board board)
 {
     Piece ep = board.getEP();
-    if (ep.type != EMPTY)
+    if (ep.type != PieceType::Empty)
     {
         this->toggleEnPassant(ep.getY() - 1);
     }
@@ -164,12 +164,12 @@ void ZobristHasher::update(Board prevBoard, Move nextMove)
 void ZobristHasher::updateEnPassant(Board prevBoard, Move nextMove)
 {
     Piece prevEP = prevBoard.getEP();
-    if (prevEP.type != EMPTY)
+    if (prevEP.type != PieceType::Empty)
     {
         this->toggleEnPassant(prevEP.getY() - 1);
     }
 
-    if (prevBoard.getSquareType(nextMove.startX, nextMove.startY) == PAWN &&
+    if (prevBoard.getSquareType(nextMove.startX, nextMove.startY) == PieceType::Pawn &&
         abs(nextMove.endY - nextMove.startY) == 2)
     {
         this->toggleEnPassant(nextMove.startY - 1);
@@ -178,7 +178,7 @@ void ZobristHasher::updateEnPassant(Board prevBoard, Move nextMove)
 
 void ZobristHasher::updateCastling(Board prevBoard, Move nextMove)
 {
-    if (prevBoard.getSquareType(nextMove.startX, nextMove.startY) == KING)
+    if (prevBoard.getSquareType(nextMove.startX, nextMove.startY) == PieceType::King)
     {
         bool kingColor = prevBoard.getSquareColor(nextMove.startX, nextMove.startY);
         if (prevBoard.getCastlingRights(kingColor, true))
@@ -191,7 +191,7 @@ void ZobristHasher::updateCastling(Board prevBoard, Move nextMove)
             this->toggleCastlingRights(kingColor, false);
         }
     }
-    else if (prevBoard.getSquareType(nextMove.startX, nextMove.startY) == ROOK)
+    else if (prevBoard.getSquareType(nextMove.startX, nextMove.startY) == PieceType::Rook)
     {
         bool rookColor = prevBoard.getSquareColor(nextMove.startX, nextMove.startY);
         if ((nextMove.startY == 1 && rookColor == true) ||
@@ -217,19 +217,19 @@ void ZobristHasher::updatePieces(Board prevBoard, Move nextMove)
     this->togglePiece(nextMove.endX - 1, nextMove.endY - 1, movingPieceType, movingPieceColor);
 
     int capturePieceType = prevBoard.getSquareType(nextMove.endX, nextMove.endY);
-    if (capturePieceType != EMPTY)
+    if (capturePieceType != PieceType::Empty)
     {
         this->togglePiece(nextMove.endX - 1, nextMove.endY - 1, capturePieceType, !movingPieceColor);
     }
 
-    if (movingPieceType == PAWN)
+    if (movingPieceType == PieceType::Pawn)
     {
         Piece prevEP = prevBoard.getEP();
-        if (prevEP.type != EMPTY &&
+        if (prevEP.type != PieceType::Empty &&
             nextMove.startY == prevEP.yPos &&
             nextMove.endX == prevEP.xPos)
         {
-            this->togglePiece(prevEP.xPos - 1, prevEP.yPos - 1, PAWN, prevEP.color);
+            this->togglePiece(prevEP.xPos - 1, prevEP.yPos - 1, PieceType::Pawn, prevEP.color);
         }
 
         if (nextMove.endY == 1 || nextMove.endY == 8)
@@ -238,16 +238,16 @@ void ZobristHasher::updatePieces(Board prevBoard, Move nextMove)
             switch (nextMove.promotion)
             {
             case(1):
-                promotionType = QUEEN;
+                promotionType = PieceType::Queen;
                 break;
             case(2):
-                promotionType = KNIGHT;
+                promotionType = PieceType::Knight;
                 break;
             case(3):
-                promotionType = BISHOP;
+                promotionType = PieceType::Bishop;
                 break;
             case(4):
-                promotionType = ROOK;
+                promotionType = PieceType::Rook;
                 break;
             default:
                 throw "Unknown Promotion Value";
@@ -258,17 +258,17 @@ void ZobristHasher::updatePieces(Board prevBoard, Move nextMove)
         }
     }
 
-    if (movingPieceType == KING && abs(nextMove.startX - nextMove.endX) == 2)
+    if (movingPieceType == PieceType::King && abs(nextMove.startX - nextMove.endX) == 2)
     {
         if (nextMove.endX == 7)
         {
-            this->togglePiece(7, nextMove.endY - 1, ROOK, movingPieceColor);
-            this->togglePiece(5, nextMove.endY - 1, ROOK, movingPieceColor);
+            this->togglePiece(7, nextMove.endY - 1, PieceType::Rook, movingPieceColor);
+            this->togglePiece(5, nextMove.endY - 1, PieceType::Rook, movingPieceColor);
         }
         else if (nextMove.endX == 3)
         {
-            this->togglePiece(0, nextMove.endY - 1, ROOK, movingPieceColor);
-            this->togglePiece(3, nextMove.endY - 1, ROOK, movingPieceColor);
+            this->togglePiece(0, nextMove.endY - 1, PieceType::Rook, movingPieceColor);
+            this->togglePiece(3, nextMove.endY - 1, PieceType::Rook, movingPieceColor);
         }
     }
 }

@@ -4,6 +4,7 @@
 #include <inttypes.h>
 struct Move;
 class Piece;
+enum PieceType : char;
 
 #define bitBoard uint64_t
 
@@ -40,7 +41,7 @@ public:
     Piece getSquare(int);
     int getKingX(bool);
     int getKingY(bool);
-    int getSquareType(int, int);
+    PieceType getSquareType(int, int);
     bool getSquareColor(int, int);
     bool getSquareMoved(int, int);
     void setSquare(Piece, int, int);

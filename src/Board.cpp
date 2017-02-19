@@ -53,53 +53,53 @@ void Board::loadFEN(std::string fenFile)
         //checking for every value that represents a piece
         if     (fenFile[i] == 'r')
         {
-            setSquare(Piece(ROOK, x, y, false), x, y);
+            setSquare(Piece(PieceType::Rook, x, y, false), x, y);
         }
         else if(fenFile[i] == 'R')
         {
-            setSquare(Piece(ROOK, x, y, true), x, y);
+            setSquare(Piece(PieceType::Rook, x, y, true), x, y);
         }
         else if(fenFile[i] == 'n')
         {
-            setSquare(Piece(KNIGHT, x, y, false), x, y);
+            setSquare(Piece(PieceType::Knight, x, y, false), x, y);
         }
         else if(fenFile[i] == 'N')
         {
-            setSquare(Piece(KNIGHT, x, y, true), x, y);
+            setSquare(Piece(PieceType::Knight, x, y, true), x, y);
         }
         else if(fenFile[i] == 'b')
         {
-            setSquare(Piece(BISHOP, x, y, false), x, y);
+            setSquare(Piece(PieceType::Bishop, x, y, false), x, y);
         }
         else if(fenFile[i] == 'B')
         {
-            setSquare(Piece(BISHOP, x, y, true), x, y);
+            setSquare(Piece(PieceType::Bishop, x, y, true), x, y);
         }
         else if(fenFile[i] == 'q')
         {
-            setSquare(Piece(QUEEN, x, y, false), x, y);
+            setSquare(Piece(PieceType::Queen, x, y, false), x, y);
         }
         else if(fenFile[i] == 'Q')
         {
-            setSquare(Piece(QUEEN, x, y, true), x, y);
+            setSquare(Piece(PieceType::Queen, x, y, true), x, y);
         }
         else if(fenFile[i] == 'k')
         {
             setKingLocation(false, x, y);
-            setSquare(Piece(KING, x, y, false), x, y);
+            setSquare(Piece(PieceType::King, x, y, false), x, y);
         }
         else if(fenFile[i] == 'K')
         {
             setKingLocation(true, x, y);
-            setSquare(Piece(KING, x, y, true), x, y);
+            setSquare(Piece(PieceType::King, x, y, true), x, y);
         }
         else if(fenFile[i] == 'p')
         {
-            setSquare(Piece(PAWN, x, y, false), x, y);
+            setSquare(Piece(PieceType::Pawn, x, y, false), x, y);
         }
         else if(fenFile[i] == 'P')
         {
-            setSquare(Piece(PAWN, x, y, true), x, y);
+            setSquare(Piece(PieceType::Pawn, x, y, true), x, y);
         }
 
         //Checking if the value was a number
@@ -285,11 +285,11 @@ string Board::outputFEN()
     {
         for(int x=1; x<=8; x++)
         {
-            int pieceType = getSquareType(x, y);
+            PieceType pieceType = getSquareType(x, y);
             bool pieceColor = getSquareColor(x, y);
             if(pieceColor)
             {
-                if(pieceType == EMPTY)
+                if(pieceType == PieceType::Empty)
                 {
                     count += 1;
                 }
@@ -301,27 +301,27 @@ string Board::outputFEN()
                         count = 0;
                     }
 
-                    if (pieceType == PAWN)
+                    if (pieceType == PieceType::Pawn)
                     {
                         FEN += "P";
                     }
-                    else if (pieceType == ROOK)
+                    else if (pieceType == PieceType::Rook)
                     {
                         FEN += "R";
                     }
-                    else if (pieceType == KNIGHT)
+                    else if (pieceType == PieceType::Knight)
                     {
                         FEN += "N";
                     }
-                    else if (pieceType == BISHOP)
+                    else if (pieceType == PieceType::Bishop)
                     {
                         FEN += "B";
                     }
-                    else if (pieceType == QUEEN)
+                    else if (pieceType == PieceType::Queen)
                     {
                         FEN += "Q";
                     }
-                    else if (pieceType == KING)
+                    else if (pieceType == PieceType::King)
                     {
                         FEN += "K";
                     }
@@ -333,7 +333,7 @@ string Board::outputFEN()
             }
             else
             {
-                if(pieceType == EMPTY)
+                if(pieceType == PieceType::Empty)
                 {
                     count += 1;
                 }
@@ -345,27 +345,27 @@ string Board::outputFEN()
                         count = 0;
                     }
 
-                    if (pieceType == PAWN)
+                    if (pieceType == PieceType::Pawn)
                     {
                         FEN += "p";
                     }
-                    else if (pieceType == ROOK)
+                    else if (pieceType == PieceType::Rook)
                     {
                         FEN += "r";
                     }
-                    else if (pieceType == KNIGHT)
+                    else if (pieceType == PieceType::Knight)
                     {
                         FEN += "n";
                     }
-                    else if (pieceType == BISHOP)
+                    else if (pieceType == PieceType::Bishop)
                     {
                         FEN += "b";
                     }
-                    else if (pieceType == QUEEN)
+                    else if (pieceType == PieceType::Queen)
                     {
                         FEN += "q";
                     }
-                    else if (pieceType == KING)
+                    else if (pieceType == PieceType::King)
                     {
                         FEN += "k";
                     }
@@ -426,10 +426,10 @@ Piece Board::getSquare(int x, int y)
     int type = 0;
     bool color = (pieces[0] >> (8 * x + y)) & 1;
     //Empty SquareCheck
-    if (false && !(((pieces[PAWN] | pieces[BISHOP] | pieces[KNIGHT] |
-                     pieces[QUEEN] | pieces[ROOK] | pieces[KING]) >> (8 * x + y)) & 1))
+    if (false && !(((pieces[PieceType::Pawn] | pieces[PieceType::Bishop] | pieces[PieceType::Knight] |
+                     pieces[PieceType::Queen] | pieces[PieceType::Rook] | pieces[PieceType::King]) >> (8 * x + y)) & 1))
     {
-        return Piece(EMPTY, x + 1, y + 1, color);
+        return Piece(PieceType::Empty, x + 1, y + 1, color);
     }
     for(int i=1; i<7; i++)
     {
@@ -441,11 +441,11 @@ Piece Board::getSquare(int x, int y)
     }
     return Piece(type, x + 1, y + 1, color);
 }
-int Board::getSquareType(int x, int y)
+PieceType Board::getSquareType(int x, int y)
 {
     if (!squareIsPopulated(x, y))
     {
-        return EMPTY;
+        return PieceType::Empty;
     }
 
     x--;
@@ -454,11 +454,11 @@ int Board::getSquareType(int x, int y)
     {
         if((pieces[i] >> (8*x + y)) & 1)
         {
-            return i;
+            return (PieceType)i;
         }
     }
 
-    return EMPTY;
+    return PieceType::Empty;
 }
 bool Board::getSquareColor(int x, int y)
 {
@@ -665,7 +665,7 @@ void Board::makeMove(Move data)
     movingPiece.setMoved(true);
     lastMoveCapture = false;
 
-    if(movingPiece.type == PAWN)
+    if(movingPiece.type == PieceType::Pawn)
     {
         //Check for double move
         if(fabs(data.endY - data.startY) == 2)
@@ -678,26 +678,26 @@ void Board::makeMove(Move data)
             Piece ePiece = getEP();
             if(data.endX == ePiece.getX() && data.startY == ePiece.getY())
             {
-                setSquare(Piece(EMPTY), ePiece.getX(), ePiece.getY());
+                setSquare(Piece(PieceType::Empty), ePiece.getX(), ePiece.getY());
                 lastMoveCapture = true;
             }
-            setEP(Piece(EMPTY));
+            setEP(Piece(PieceType::Empty));
         }
         if(data.endY == 8 || data.endY == 1)
         {
             switch(data.promotion)
             {
             case(1) :
-                movingPiece.type = QUEEN;
+                movingPiece.type = PieceType::Queen;
                 break;
             case(2):
-                movingPiece.type = KNIGHT;
+                movingPiece.type = PieceType::Knight;
                 break;
             case(3):
-                movingPiece.type = BISHOP;
+                movingPiece.type = PieceType::Bishop;
                 break;
             case(4):
-                movingPiece.type = ROOK;
+                movingPiece.type = PieceType::Rook;
                 break;
             default:
                 break;
@@ -706,9 +706,9 @@ void Board::makeMove(Move data)
     }
     else if(EPdata != -1)
     {
-        setEP(Piece(EMPTY));
+        setEP(Piece(PieceType::Empty));
     }
-    if(movingPiece.type == KING)
+    if(movingPiece.type == PieceType::King)
     {
         //Move the rook if castling
         if(fabs(data.startX - data.endX) == 2)
@@ -718,15 +718,15 @@ void Board::makeMove(Move data)
             {
                 getRook = getSquare(1, data.startY);
                 setSquare(getRook, 4, data.startY);
-                setSquare(Piece(EMPTY), 1, data.startY);
+                setSquare(Piece(PieceType::Empty), 1, data.startY);
             }
             else if(data.endX == 7)
             {
                 getRook = getSquare(8, data.startY);
                 setSquare(getRook, 6, data.startY);
-                setSquare(Piece(EMPTY), 8, data.startY);
+                setSquare(Piece(PieceType::Empty), 8, data.startY);
             }
-            if(getRook.type != ROOK)
+            if(getRook.type != PieceType::Rook)
             {
                 std::cout << "info string rook type " << getRook.type << std::endl;
             }
@@ -783,7 +783,7 @@ void Board::makeMove(Move data)
         }
     }
 
-    setSquare(Piece(EMPTY), data.startX, data.startY);
+    setSquare(Piece(PieceType::Empty), data.startX, data.startY);
     //Capturing anything in its way
     if(!getSquare(data.endX, data.endY).isNull())
     {
@@ -927,7 +927,7 @@ Piece Board::getEP()
 {
     if(EPdata == -1)
     {
-        return Piece(EMPTY);
+        return Piece(PieceType::Empty);
     }
     int x;
     int y;
@@ -939,7 +939,7 @@ Piece Board::getEP()
     copyData >>= 3;
     color = copyData & 1;
 
-    Piece ePiece = Piece(PAWN);
+    Piece ePiece = Piece(PieceType::Pawn);
     ePiece.xPos = x+1;
     ePiece.yPos = y+1;
     ePiece.color = color;
@@ -948,7 +948,7 @@ Piece Board::getEP()
 
 void Board::setCastlingRights(bool color, bool side, bool value)
 {
-    //FALSE QUEENSIDE TRUE KINGSIDE
+    //FALSE PieceType::QueenSIDE TRUE PieceType::KingSIDE
     char placer = 0;
     if(color)
     {
@@ -1008,28 +1008,28 @@ void Board::countPieces()
         }
     }
     std::cout << "Black:  " << blackCount << std::endl;
-    std::cout << "	Pawns:  " << blackPieces[PAWN] << std::endl;
-    std::cout << "	Queens:  " << blackPieces[QUEEN] << std::endl;
-    std::cout << "	Kings:  " << blackPieces[KING] << std::endl;
-    std::cout << "	Bishops  " << blackPieces[BISHOP] << std::endl;
-    std::cout << "	Knights  " << blackPieces[KNIGHT] << std::endl;
-    std::cout << "	Rooks  " << blackPieces[ROOK] << std::endl;
+    std::cout << "	Pawns:  " << blackPieces[PieceType::Pawn] << std::endl;
+    std::cout << "	Queens:  " << blackPieces[PieceType::Queen] << std::endl;
+    std::cout << "	Kings:  " << blackPieces[PieceType::King] << std::endl;
+    std::cout << "	Bishops  " << blackPieces[PieceType::Bishop] << std::endl;
+    std::cout << "	Knights  " << blackPieces[PieceType::Knight] << std::endl;
+    std::cout << "	Rooks  " << blackPieces[PieceType::Rook] << std::endl;
 
     std::cout << "White:  " << whiteCount << std::endl;
-    std::cout << "	Pawns:  " << whitePieces[PAWN] << std::endl;
-    std::cout << "	Queens:  " << whitePieces[QUEEN] << std::endl;
-    std::cout << "	Kings:  " << whitePieces[KING] << std::endl;
-    std::cout << "	Bishops  " << whitePieces[BISHOP] << std::endl;
-    std::cout << "	Knights  " << whitePieces[KNIGHT] << std::endl;
-    std::cout << "	Rooks  " << whitePieces[ROOK] << std::endl;
+    std::cout << "	Pawns:  " << whitePieces[PieceType::Pawn] << std::endl;
+    std::cout << "	Queens:  " << whitePieces[PieceType::Queen] << std::endl;
+    std::cout << "	Kings:  " << whitePieces[PieceType::King] << std::endl;
+    std::cout << "	Bishops  " << whitePieces[PieceType::Bishop] << std::endl;
+    std::cout << "	Knights  " << whitePieces[PieceType::Knight] << std::endl;
+    std::cout << "	Rooks  " << whitePieces[PieceType::Rook] << std::endl;
 }
 
 int Board::pieceCount()
 {
     int count = 0;
 
-    for (bitBoard pieceSet = pieces[PAWN] | pieces[ROOK] | pieces[KNIGHT]
-                             | pieces[BISHOP] | pieces[QUEEN] | pieces[KING]; pieceSet; count++)
+    for (bitBoard pieceSet = pieces[PieceType::Pawn] | pieces[PieceType::Rook] | pieces[PieceType::Knight]
+                             | pieces[PieceType::Bishop] | pieces[PieceType::Queen] | pieces[PieceType::King]; pieceSet; count++)
     {
         pieceSet &= pieceSet - 1;
     }

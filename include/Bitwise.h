@@ -7,13 +7,16 @@
 #define WHITE true
 #define BLACK false
 
-extern const int EMPTY;
-extern const int PAWN;
-extern const int QUEEN;
-extern const int KING;
-extern const int BISHOP;
-extern const int KNIGHT;
-extern const int ROOK;
+enum PieceType : char
+{
+    Empty,
+    Pawn,
+    Queen,
+    King,
+    Bishop,
+    Knight,
+    Rook
+};
 
 const bitBoard firstFile = 0x0000000000000000FF;
 const bitBoard centerBoard = 0x0000001818000000;

@@ -285,7 +285,7 @@ void Danger::addAttacker(int x, int y)
                 break;
             }
             target = dataBoard->getSquare(x + i*modifier, y + i*altModifier);
-            if(target.type == KING)
+            if(target.type == PieceType::King)
             {
                 safeSquareCount = i;
                 break;
@@ -349,7 +349,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                     break;
                 }
             }
-            else if(targetType == ROOK || targetType == QUEEN)
+            else if(targetType == PieceType::Rook || targetType == PieceType::Queen)
             {
                 if(trace)
                 {
@@ -393,7 +393,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                     break;
                 }
             }
-            else if(targetType == ROOK || targetType == QUEEN)
+            else if(targetType == PieceType::Rook || targetType == PieceType::Queen)
             {
                 if(trace)
                 {
@@ -437,7 +437,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                     break;
                 }
             }
-            else if(targetType == ROOK || targetType == QUEEN)
+            else if(targetType == PieceType::Rook || targetType == PieceType::Queen)
             {
                 if(trace)
                 {
@@ -481,7 +481,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                     break;
                 }
             }
-            else if(targetType == ROOK || targetType == QUEEN)
+            else if(targetType == PieceType::Rook || targetType == PieceType::Queen)
             {
                 if(trace)
                 {
@@ -525,7 +525,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                     break;
                 }
             }
-            else if(targetType == BISHOP || targetType == QUEEN)
+            else if(targetType == PieceType::Bishop || targetType == PieceType::Queen)
             {
                 if(trace)
                 {
@@ -569,7 +569,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                     break;
                 }
             }
-            else if(targetType == BISHOP || targetType == QUEEN)
+            else if(targetType == PieceType::Bishop || targetType == PieceType::Queen)
             {
                 if(trace)
                 {
@@ -613,7 +613,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                     break;
                 }
             }
-            else if(targetType == BISHOP || targetType == QUEEN)
+            else if(targetType == PieceType::Bishop || targetType == PieceType::Queen)
             {
                 if(trace)
                 {
@@ -657,7 +657,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                     break;
                 }
             }
-            else if(targetType == BISHOP || targetType == QUEEN)
+            else if(targetType == PieceType::Bishop || targetType == PieceType::Queen)
             {
                 if(trace)
                 {
@@ -682,7 +682,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
         }
     }
 
-    //PAWN
+    //PieceType::Pawn
     if(y + direction <= 8 && y + direction >= 1)
     {
         for(int i = -1; i <= 1; i+=2)
@@ -692,7 +692,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                 int targetType = gameBoard->getSquareType(x + i, y + direction);
                 int targetColor = gameBoard->getSquareColor(x + i, y + direction);
 
-                if(targetType == PAWN && targetColor != color)
+                if(targetType == PieceType::Pawn && targetColor != color)
                 {
                     addAttacker(x + i, y + direction);
                 }
@@ -700,7 +700,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
         }
     }
 
-    //KNIGHT
+    //PieceType::Knight
     int targetType;
     bool targetColor;
     for(int i = -2; i <= 2; i++)
@@ -719,7 +719,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                     targetType = gameBoard->getSquareType(x+i, y+j);
                     targetColor = gameBoard->getSquareColor(x+i, y+j);
 
-                    if(targetType == KNIGHT && targetColor != color)
+                    if(targetType == PieceType::Knight && targetColor != color)
                     {
                         addAttacker(x+i, y+j);
                     }

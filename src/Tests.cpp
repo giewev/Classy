@@ -56,28 +56,28 @@ void loadStartingPosition_test()
     Board testBoard = Board();
     testBoard.loadFEN(startingFEN);
 
-    assert(testBoard.getSquareType(1, 1) == ROOK);
-    assert(testBoard.getSquareType(2, 1) == KNIGHT);
-    assert(testBoard.getSquareType(3, 1) == BISHOP);
-    assert(testBoard.getSquareType(4, 1) == QUEEN);
-    assert(testBoard.getSquareType(5, 1) == KING);
-    assert(testBoard.getSquareType(6, 1) == BISHOP);
-    assert(testBoard.getSquareType(7, 1) == KNIGHT);
-    assert(testBoard.getSquareType(8, 1) == ROOK);
+    assert(testBoard.getSquareType(1, 1) == PieceType::Rook);
+    assert(testBoard.getSquareType(2, 1) == PieceType::Knight);
+    assert(testBoard.getSquareType(3, 1) == PieceType::Bishop);
+    assert(testBoard.getSquareType(4, 1) == PieceType::Queen);
+    assert(testBoard.getSquareType(5, 1) == PieceType::King);
+    assert(testBoard.getSquareType(6, 1) == PieceType::Bishop);
+    assert(testBoard.getSquareType(7, 1) == PieceType::Knight);
+    assert(testBoard.getSquareType(8, 1) == PieceType::Rook);
 
-    assert(testBoard.getSquareType(1, 8) == ROOK);
-    assert(testBoard.getSquareType(2, 8) == KNIGHT);
-    assert(testBoard.getSquareType(3, 8) == BISHOP);
-    assert(testBoard.getSquareType(4, 8) == QUEEN);
-    assert(testBoard.getSquareType(5, 8) == KING);
-    assert(testBoard.getSquareType(6, 8) == BISHOP);
-    assert(testBoard.getSquareType(7, 8) == KNIGHT);
-    assert(testBoard.getSquareType(8, 8) == ROOK);
+    assert(testBoard.getSquareType(1, 8) == PieceType::Rook);
+    assert(testBoard.getSquareType(2, 8) == PieceType::Knight);
+    assert(testBoard.getSquareType(3, 8) == PieceType::Bishop);
+    assert(testBoard.getSquareType(4, 8) == PieceType::Queen);
+    assert(testBoard.getSquareType(5, 8) == PieceType::King);
+    assert(testBoard.getSquareType(6, 8) == PieceType::Bishop);
+    assert(testBoard.getSquareType(7, 8) == PieceType::Knight);
+    assert(testBoard.getSquareType(8, 8) == PieceType::Rook);
 
     for (int i = 1; i <= 8; i++)
     {
-        assert(testBoard.getSquareType(i, 2) == PAWN);
-        assert(testBoard.getSquareType(i, 7) == PAWN);
+        assert(testBoard.getSquareType(i, 2) == PieceType::Pawn);
+        assert(testBoard.getSquareType(i, 7) == PieceType::Pawn);
 
         assert(testBoard.getSquareColor(i, 1) == true);
         assert(testBoard.getSquareColor(i, 2) == true);

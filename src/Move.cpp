@@ -88,7 +88,7 @@ bool Move::isSafe(Danger safetyData)
         {
             if (!safetyData.getBoard()->squareIsPopulated(endX, endY))
             {
-                if (safetyData.getBoard()->squareIsType(endX, startY, PAWN))
+                if (safetyData.getBoard()->squareIsType(endX, startY, PieceType::Pawn))
                 {
                     Board newBoard = safetyData.getBoard()->newCopy();
                     newBoard.makeMove(*this);
