@@ -624,7 +624,7 @@ int Board::gameOverCheck()
         for(int x=1; x<=8; x++)
         {
             //What Piece is there
-            if(getSquareType(x, y) == 0)
+            if(getSquareType(x, y) == PieceType::Empty)
             {
                 continue;
             }
@@ -986,7 +986,7 @@ void Board::countPieces()
         whitePieces[i] = 0;
         blackPieces[i] = 0;
     }
-    int targetType;
+    PieceType targetType;
     bool targetColor;
     for(int x=1; x<=8; x++)
     {

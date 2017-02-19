@@ -101,7 +101,7 @@ void Piece::generateMoves(std::vector<Move>& moveList, int x, int y, Board& game
 
 void Piece::appendMoveArray(Move* moveList, int& moveCounter, int x, int y, Board& gameBoard)
 {
-    int type = gameBoard.getSquareType(x, y);
+    PieceType type = gameBoard.getSquareType(x, y);
     if(type == PieceType::Empty)
     {
     }
@@ -426,7 +426,7 @@ bool Piece::isSafe(Board gameBoard)
                     bool targetColor = gameBoard.getSquareColor(targetX, targetY);
                     if(targetColor != color)
                     {
-                        int targetType = gameBoard.getSquareType(targetX, targetY);
+                        PieceType targetType = gameBoard.getSquareType(targetX, targetY);
                         if(targetType == PieceType::Bishop || targetType == PieceType::Queen)
                         {
                             return(false);
@@ -465,7 +465,7 @@ bool Piece::isSafe(Board gameBoard)
                     int targetColor = gameBoard.getSquareColor(targetX, targetY);
                     if(targetColor != color)
                     {
-                        int targetType = gameBoard.getSquareType(targetX, targetY);
+                        PieceType targetType = gameBoard.getSquareType(targetX, targetY);
                         if(targetType == PieceType::Rook || targetType == PieceType::Queen)
                         {
                             return(false);
@@ -493,7 +493,7 @@ bool Piece::isSafe(Board gameBoard)
                     bool targetColor =gameBoard.getSquareColor(targetX, targetY);
                     if(targetColor != color)
                     {
-                        int targetType = gameBoard.getSquareType(targetX, targetY);
+                        PieceType targetType = gameBoard.getSquareType(targetX, targetY);
                         if(targetType == PieceType::Knight)
                         {
                             return false;
@@ -511,7 +511,7 @@ bool Piece::isSafe(Board gameBoard)
                     bool targetColor =gameBoard.getSquareColor(targetX, targetY);
                     if(targetColor != color)
                     {
-                        int targetType = gameBoard.getSquareType(targetX, targetY);
+                        PieceType targetType = gameBoard.getSquareType(targetX, targetY);
                         if(targetType == PieceType::Knight)
                         {
                             return false;

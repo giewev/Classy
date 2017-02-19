@@ -77,7 +77,7 @@ void ZobristHasher::loadPieces(Board board)
     {
         for (int j = 1; j <= 8; j++)
         {
-            int pieceType = board.getSquareType(i, j);
+            PieceType pieceType = board.getSquareType(i, j);
             if (pieceType != PieceType::Empty)
             {
                 this->togglePiece(i - 1, j - 1, pieceType, board.getSquareColor(i, j));
@@ -211,12 +211,12 @@ void ZobristHasher::updateCastling(Board prevBoard, Move nextMove)
 
 void ZobristHasher::updatePieces(Board prevBoard, Move nextMove)
 {
-    int movingPieceType = prevBoard.getSquareType(nextMove.startX, nextMove.startY);
+    PieceType movingPieceType = prevBoard.getSquareType(nextMove.startX, nextMove.startY);
     bool movingPieceColor = prevBoard.getSquareColor(nextMove.startX, nextMove.startY);
     this->togglePiece(nextMove.startX - 1, nextMove.startY - 1, movingPieceType, movingPieceColor);
     this->togglePiece(nextMove.endX - 1, nextMove.endY - 1, movingPieceType, movingPieceColor);
 
-    int capturePieceType = prevBoard.getSquareType(nextMove.endX, nextMove.endY);
+    PieceType capturePieceType = prevBoard.getSquareType(nextMove.endX, nextMove.endY);
     if (capturePieceType != PieceType::Empty)
     {
         this->togglePiece(nextMove.endX - 1, nextMove.endY - 1, capturePieceType, !movingPieceColor);

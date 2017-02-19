@@ -332,7 +332,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     int traceY = 0;
     for (int i = 1; i < 9-y; i++)
     {
-        int targetType = gameBoard->getSquareType(x, y+i);
+        PieceType targetType = gameBoard->getSquareType(x, y+i);
         bool targetColor = gameBoard->getSquareColor(x, y+i);
         if(targetType)
         {
@@ -376,7 +376,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i < y; i++)
     {
-        int targetType = gameBoard->getSquareType(x, y-i);
+        PieceType targetType = gameBoard->getSquareType(x, y-i);
         bool targetColor = gameBoard->getSquareColor(x, y-i);
         if(targetType)
         {
@@ -420,7 +420,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i < x; i++)
     {
-        int targetType = gameBoard->getSquareType(x-i, y);
+        PieceType targetType = gameBoard->getSquareType(x-i, y);
         bool targetColor = gameBoard->getSquareColor(x-i, y);
         if(targetType)
         {
@@ -464,7 +464,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i < 9-x; i++)
     {
-        int targetType = gameBoard->getSquareType(x+i, y);
+        PieceType targetType = gameBoard->getSquareType(x+i, y);
         bool targetColor = gameBoard->getSquareColor(x+i, y);
         if(targetType)
         {
@@ -508,7 +508,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i < std::min(9-x, 9-y); i++)
     {
-        int targetType = gameBoard->getSquareType(x+i, y+i);
+        PieceType targetType = gameBoard->getSquareType(x+i, y+i);
         bool targetColor = gameBoard->getSquareColor(x+i, y+i);
         if(targetType)
         {
@@ -552,7 +552,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i < std::min(x, y); i++)
     {
-        int targetType = gameBoard->getSquareType(x-i, y-i);
+        PieceType targetType = gameBoard->getSquareType(x-i, y-i);
         bool targetColor = gameBoard->getSquareColor(x-i, y-i);
         if(targetType)
         {
@@ -596,7 +596,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i < std::min(x, 9-y); i++)
     {
-        int targetType = gameBoard->getSquareType(x-i, y+i);
+        PieceType targetType = gameBoard->getSquareType(x-i, y+i);
         bool targetColor = gameBoard->getSquareColor(x-i, y+i);
         if(targetType)
         {
@@ -640,7 +640,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i < std::min(9-x, y); i++)
     {
-        int targetType = gameBoard->getSquareType(x+i, y-i);
+        PieceType targetType = gameBoard->getSquareType(x+i, y-i);
         bool targetColor = gameBoard->getSquareColor(x+i, y-i);
         if(targetType)
         {
@@ -689,7 +689,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
         {
             if(x + i <= 8 && x + i >= 1)
             {
-                int targetType = gameBoard->getSquareType(x + i, y + direction);
+                PieceType targetType = gameBoard->getSquareType(x + i, y + direction);
                 int targetColor = gameBoard->getSquareColor(x + i, y + direction);
 
                 if(targetType == PieceType::Pawn && targetColor != color)
@@ -701,7 +701,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     }
 
     //PieceType::Knight
-    int targetType;
+    PieceType targetType;
     bool targetColor;
     for(int i = -2; i <= 2; i++)
     {

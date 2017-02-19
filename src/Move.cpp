@@ -257,6 +257,6 @@ bool Move::bigger(Move left, Move right)
 
 bool Move::isCapture(Board* safeBoard)
 {
-    int type = safeBoard->getSquareType(endX, endY);
+    PieceType type = safeBoard->getSquareType(endX, endY);
     return (type != 0);
 }
