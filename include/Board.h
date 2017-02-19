@@ -46,7 +46,7 @@ public:
     bool getSquareMoved(int, int);
     void setSquare(Piece, int, int);
     void setSquare(Piece, int);
-    void setSquare(int type, bool color, int x, int y);
+    void setSquare(PieceType type, bool color, int x, int y);
     void setEP(Piece);
     void setEP(int, int, bool);
     void setKingLocation(bool, int, int);

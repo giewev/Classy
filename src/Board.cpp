@@ -513,7 +513,7 @@ void Board::setSquare(Piece setPiece, int x, int y)
     setSquare(setPiece.type, setPiece.color, x+1, y+1);
 }
 
-void Board::setSquare(int type, bool color, int x, int y)
+void Board::setSquare(PieceType type, bool color, int x, int y)
 {
     x--;
     y--;
@@ -727,10 +727,6 @@ void Board::makeMove(Move data)
                 setSquare(getRook, 6, data.startY);
                 setSquare(Piece(PieceType::Empty), 8, data.startY);
             }
-            if(getRook.type != PieceType::Rook)
-            {
-                std::cout << "info string rook type " << getRook.type << std::endl;
-            }
         }
         setKingLocation(movingPiece.getColor(), data.endX, data.endY);
     }
@@ -890,7 +886,7 @@ char Board::getCastlingRights()
 
 void Board::setEP(Piece loadEP)
 {
-    if(loadEP.type == 0)
+    if(loadEP.type != PieceType::Pawn)
     {
         EPdata = -1;
         return;
