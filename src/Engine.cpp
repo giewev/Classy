@@ -269,11 +269,12 @@ Move Engine::alphaBeta(int depth, double bound)
 
 std::string Engine::toAlg(int val)
 {
-    if(val < 0 || val > 8)
+    if(val < 0 || val > 7)
     {
         return "z";
     }
-    std::string alpha[9] = {"z", "a", "b", "c", "d", "e", "f", "g", "h"};
+
+    std::string alpha[8] = {"a", "b", "c", "d", "e", "f", "g", "h"};
     return(alpha[val]);
 }
 int Engine::fromAlg(char val)

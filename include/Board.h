@@ -72,6 +72,7 @@ public:
     char getCastlingRights();
     void setCastlingRights(bool, bool, bool);
     void setCastlingRights(char);
+    static void throwIfOutOfBounds(int x, int y);
 };
 
 

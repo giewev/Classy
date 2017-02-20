@@ -44,8 +44,8 @@ void Board::loadFEN(std::string fenFile)
         pieces[i] = 0ull;
     }
 
-    int x = 1;
-    int y = 8;
+    int x = 0;
+    int y = 7;
 
     for(unsigned int i=0; i<fenFile.length(); i++)
     {
@@ -118,14 +118,14 @@ void Board::loadFEN(std::string fenFile)
         }
 
         //next Rank
-        if(x>8)
+        if(x >= 8)
         {
-            x=1;
-            y-=1;
+            x = 0;
+            y -= 1;
         }
 
         //Done setting pieces up
-        if(y==0)
+        if(y == -1)
         {
             bookmark = i+1;
             break;
@@ -213,11 +213,11 @@ void Board::loadFEN(std::string fenFile)
             int rank;
             if (fenFile[bookmark + 1] == '3')
             {
-                rank = 4;
+                rank = 3;
             }
             else
             {
-                rank = 5;
+                rank = 4;
             }
             setEP(fenFile[bookmark]-96, rank, !turn);
             break;
@@ -281,9 +281,9 @@ string Board::outputFEN()
 {
     string FEN = "";
     int count = 0;
-    for(int y=8; y>=1; y--)
+    for(int y = 7; y >= 0; y--)
     {
-        for(int x=1; x<=8; x++)
+        for(int x = 0; x < 8; x++)
         {
             PieceType pieceType = getSquareType(x, y);
             bool pieceColor = getSquareColor(x, y);
@@ -421,15 +421,14 @@ Board Board::newCopy()
 
 Piece Board::getSquare(int x, int y)
 {
-    x--;
-    y--;
+    throwIfOutOfBounds(x, y);
     int type = 0;
     bool color = (pieces[0] >> (8 * x + y)) & 1;
     //Empty SquareCheck
     if (false && !(((pieces[PieceType::Pawn] | pieces[PieceType::Bishop] | pieces[PieceType::Knight] |
                      pieces[PieceType::Queen] | pieces[PieceType::Rook] | pieces[PieceType::King]) >> (8 * x + y)) & 1))
     {
-        return Piece(PieceType::Empty, x + 1, y + 1, color);
+        return Piece(PieceType::Empty, x, y, color);
     }
     for(int i=1; i<7; i++)
     {
@@ -439,18 +438,17 @@ Piece Board::getSquare(int x, int y)
             break;
         }
     }
-    return Piece((PieceType)type, x + 1, y + 1, color);
+    return Piece((PieceType)type, x, y, color);
 }
 
 PieceType Board::getSquareType(int x, int y)
 {
+    throwIfOutOfBounds(x, y);
     if (!squareIsPopulated(x, y))
     {
         return PieceType::Empty;
     }
 
-    x--;
-    y--;
     for(int i=1; i<7; i++)
     {
         if((pieces[i] >> (8*x + y)) & 1)
@@ -463,15 +461,13 @@ PieceType Board::getSquareType(int x, int y)
 }
 bool Board::getSquareColor(int x, int y)
 {
-    x--;
-    y--;
+    throwIfOutOfBounds(x, y);
     return (pieces[0] >> (8*x + y)) & 1;
 }
 
 bool Board::getSquareMoved(int x, int y)
 {
-    x--;
-    y--;
+    throwIfOutOfBounds(x, y);
     return (movedBoard >> (8*x + y)) & 1;
 }
 
@@ -479,44 +475,33 @@ int Board::getKingX(bool getColor)
 {
     if(getColor)
     {
-        return((kingCoordinates & 7) +1);
+        return((kingCoordinates & 7));
     }
     else
     {
-        return(((kingCoordinates >> 6) & 7) +1);
+        return(((kingCoordinates >> 6) & 7));
     }
 }
 int Board::getKingY(bool getColor)
 {
     if(getColor)
     {
-        return(((kingCoordinates >> 3) & 7)+1);
+        return(((kingCoordinates >> 3) & 7));
     }
     else
     {
-        return(((kingCoordinates >> 9) & 7)+1);
+        return(((kingCoordinates >> 9) & 7));
     }
 }
 
 void Board::setSquare(Piece setPiece, int x, int y)
 {
-    x--;
-    y--;
-    if(setPiece.moved)
-    {
-        movedBoard |= 1ull << (8*x + y);
-    }
-    else
-    {
-        movedBoard &= ~(1ull << (8*x + y));
-    }
-    setSquare(setPiece.type, setPiece.color, x+1, y+1);
+    setSquare(setPiece.type, setPiece.color, x, y);
 }
 
 void Board::setSquare(PieceType type, bool color, int x, int y)
 {
-    x--;
-    y--;
+    throwIfOutOfBounds(x, y);
     for(int i=1; i<7; i++)
     {
         pieces[i] &= ~(1ull << (8*x + y));
@@ -543,16 +528,7 @@ void Board::setSquare(PieceType type, bool color, int x, int y)
 
 void Board::setKingLocation(bool setColor, int x, int y)
 {
-    if(x>8 || x<1)
-    {
-        std::cout << "info string King X is being set as " << x << std::endl;
-    }
-    if(y>8 || y<1)
-    {
-        std::cout << "info string King Y is being set as " << y << std::endl;
-    }
-    x-=1;
-    y-=1;
+    throwIfOutOfBounds(x, y);
     int placeHolder;
     if(setColor)
     {
@@ -583,9 +559,9 @@ std::vector<Move> Board::generateMoves()
 
 void Board::generateMoveArray(Move* finalMoveList, int& moveCounter)
 {
-    for(int y=1; y<=8; y++)
+    for(int y = 0; y < 8; y++)
     {
-        for(int x=1; x<=8; x++)
+        for(int x = 0; x < 8; x++)
         {
             if(getSquareColor(x, y) == turn)
             {
@@ -607,22 +583,12 @@ void Board::generateMoveArray(Move* finalMoveList, int& moveCounter)
 
 int Board::gameOverCheck()
 {
-    bitBoard rightColor;
-    if (turn)
-    {
-        rightColor = pieces[0];
-    }
-    else
-    {
-        rightColor = ~pieces[0];
-    }
-
     int moveCounter = 0;
     Move rawMoveList[27];
     Danger safetyData = Danger(this);
-    for(int y=1; y<=8; y++)
+    for(int y = 0; y < 8; y++)
     {
-        for(int x=1; x<=8; x++)
+        for(int x = 0; x < 8; x++)
         {
             //What Piece is there
             if(getSquareType(x, y) == PieceType::Empty)
@@ -631,7 +597,7 @@ int Board::gameOverCheck()
             }
             //If the piece is the right color, add its moves to the list
             //if(getSquareColor(x, y) == turn){
-            if ((rightColor >> (x * 8 + y - 9)) & 1)
+            if (getSquareColor(x, y) == turn)
             {
                 Piece target = getSquare(x, y);
                 moveCounter = 0;
@@ -684,7 +650,7 @@ void Board::makeMove(Move data)
             }
             setEP(Piece(PieceType::Empty));
         }
-        if(data.endY == 8 || data.endY == 1)
+        if(data.endY == 7 || data.endY == 0)
         {
             switch(data.promotion)
             {
@@ -701,6 +667,7 @@ void Board::makeMove(Move data)
                 movingPiece.type = PieceType::Rook;
                 break;
             default:
+                throw "Promotion value was missing from pawn move onto final rank";
                 break;
             }
         }
@@ -715,66 +682,68 @@ void Board::makeMove(Move data)
         if(fabs(data.startX - data.endX) == 2)
         {
             Piece getRook;
-            if(data.endX == 3)
+            if(data.endX == 2)
             {
-                getRook = getSquare(1, data.startY);
-                setSquare(getRook, 4, data.startY);
-                setSquare(Piece(PieceType::Empty), 1, data.startY);
+                getRook = getSquare(0, data.startY);
+                setSquare(getRook, 3, data.startY);
+                setSquare(Piece(PieceType::Empty), 0, data.startY);
             }
-            else if(data.endX == 7)
+            else if(data.endX == 6)
             {
-                getRook = getSquare(8, data.startY);
-                setSquare(getRook, 6, data.startY);
-                setSquare(Piece(PieceType::Empty), 8, data.startY);
+                getRook = getSquare(7, data.startY);
+                setSquare(getRook, 5, data.startY);
+                setSquare(Piece(PieceType::Empty), 7, data.startY);
             }
         }
         setKingLocation(movingPiece.getColor(), data.endX, data.endY);
     }
-    //Castling Rights handling
-    if(data.startY == 1 || data.startY == 8 || data.endY == 1 || data.endY == 8)
+
+    //King moved
+    if(data.startX == 4 && data.startY == 0)
     {
-        //King moved
-        if(data.startX == 5 && data.startY == 1)
-        {
-            setCastlingRights(true, true, false);
-            setCastlingRights(true, false, false);
-        }
-        if(data.startX == 5 && data.startY == 8)
-        {
-            setCastlingRights(false, true, false);
-            setCastlingRights(false, false, false);
-        }
+        setCastlingRights(true, true, false);
+        setCastlingRights(true, false, false);
+    }
+    if(data.startX == 4 && data.startY == 7)
+    {
+        setCastlingRights(false, true, false);
+        setCastlingRights(false, false, false);
+    }
+
+    //Castling Rights handling
+    if(data.startY == 0 || data.startY == 7 || data.endY == 0 || data.endY == 7)
+    {
         //Rook Moved
-        if(data.startX == 1 && data.startY == 1)
+        if(data.startX == 0 && data.startY == 0)
         {
             setCastlingRights(true, false, false);
         }
-        if(data.startX == 1 && data.startY == 8)
+        if(data.startX == 0 && data.startY == 7)
         {
             setCastlingRights(false, false, false);
         }
-        if(data.startX == 8 && data.startY == 1)
+        if(data.startX == 7 && data.startY == 0)
         {
             setCastlingRights(true, true, false);
         }
-        if(data.startX == 8 && data.startY == 8)
+        if(data.startX == 7 && data.startY == 7)
         {
             setCastlingRights(false, true, false);
         }
         //Something moved to the rooks square
-        if(data.endX == 1 && data.endY == 1)
+        if(data.endX == 0 && data.endY == 0)
         {
             setCastlingRights(true, false, false);
         }
-        if(data.endX == 8 && data.endY == 1)
+        if(data.endX == 7 && data.endY == 0)
         {
             setCastlingRights(true, true, false);
         }
-        if(data.endX == 1 && data.endY == 8)
+        if(data.endX == 0 && data.endY == 7)
         {
             setCastlingRights(false, false, false);
         }
-        if(data.endX == 8 && data.endY == 8)
+        if(data.endX == 7 && data.endY == 7)
         {
             setCastlingRights(false, true, false);
         }
@@ -838,8 +807,7 @@ double Board::dividePerft(int depth)
     {
         for(int i=0; i<moveGenCount; i++)
         {
-            std::cout << Engine::toAlg(moveList[i].startX) << moveList[i].startY << " "
-                      << Engine::toAlg(moveList[i].endX) << moveList[i].endY << " " << std::endl;
+            std::cout << moveList[i].basicAlg() << " " << std::endl;
         }
         return(moveGenCount);//How many moves can we make RIGHT NOW
     }
@@ -853,8 +821,7 @@ double Board::dividePerft(int depth)
         newBoard = this->newCopy();
         newBoard.makeMove(moveList[i]);
         newBoardMoveCount = newBoard.perft(depth-1);
-        std::cout << Engine::toAlg(moveList[i].startX) << moveList[i].startY << " ";
-        std::cout << Engine::toAlg(moveList[i].endX) << moveList[i].endY << " ";
+        std::cout << moveList[i].basicAlg() << " ";
         std::cout << std::fixed << newBoardMoveCount << std::endl;
         moveCounter += newBoardMoveCount;
     }
@@ -900,12 +867,13 @@ void Board::setEP(Piece loadEP)
         EPdata = 0;
     }
     EPdata <<= 3;
-    EPdata |= loadEP.getY()-1;
+    EPdata |= loadEP.getY();
     EPdata <<= 3;
-    EPdata |= loadEP.getX()-1;
+    EPdata |= loadEP.getX();
 }
 void Board::setEP(int x, int y, bool color)
 {
+    throwIfOutOfBounds(x, y);
     if (color)
     {
         EPdata = 1;
@@ -915,9 +883,9 @@ void Board::setEP(int x, int y, bool color)
         EPdata = 0;
     }
     EPdata <<= 3;
-    EPdata |= y - 1;
+    EPdata |= y;
     EPdata <<= 3;
-    EPdata |= x - 1;
+    EPdata |= x;
 }
 
 Piece Board::getEP()
@@ -937,8 +905,8 @@ Piece Board::getEP()
     color = copyData & 1;
 
     Piece ePiece = Piece(PieceType::Pawn);
-    ePiece.xPos = x+1;
-    ePiece.yPos = y+1;
+    ePiece.xPos = x;
+    ePiece.yPos = y;
     ePiece.color = color;
     return ePiece;
 }
@@ -978,16 +946,16 @@ void Board::countPieces()
     int blackPieces[7];
     int whiteCount = 0;
     int blackCount = 0;
-    for(int i=0; i<7; i++)
+    for(int i = 0; i < 7; i++)
     {
         whitePieces[i] = 0;
         blackPieces[i] = 0;
     }
     PieceType targetType;
     bool targetColor;
-    for(int x=1; x<=8; x++)
+    for(int x = 0; x < 8; x++)
     {
-        for(int y=1; y<=8; y++)
+        for(int y = 0; y < 8; y++)
         {
             targetType = getSquareType(x, y);
             targetColor = getSquareColor(x, y);
@@ -1078,22 +1046,27 @@ int Board::pieceCount(int type, bool color)
 
 bool Board::nullSquare(int x, int y)
 {
-    x--;
-    y--;
+    throwIfOutOfBounds(x, y);
     return  !(((pieces[1] | pieces[2] | pieces[3] | pieces[4] | pieces[5] | pieces[6])
                >> (8*x + y)) & 1);
 }
 
 bool Board::squareIsPopulated(int x, int y)
 {
-    x--;
-    y--;
+    throwIfOutOfBounds(x, y);
     return (allPieces >> (8*x + y)) & 1;
 }
 
 bool Board::squareIsType(int x, int y, int type)
 {
-    x--;
-    y--;
+    throwIfOutOfBounds(x, y);
     return (pieces[type] >> (8 * x + y)) & 1;
+}
+
+void Board::throwIfOutOfBounds(int x, int y)
+{
+    if (x < 0 || x > 7 || y < 0 || y > 7)
+    {
+        throw "Trying to get out of bounds coordinates";
+    }
 }

@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Move.h"
 #include "Bitwise.h"
+#include "Danger.h"
 #include "ZobristHasher.h"
 
 void startingPerft_test()
@@ -56,33 +57,33 @@ void loadStartingPosition_test()
     Board testBoard = Board();
     testBoard.loadFEN(startingFEN);
 
-    assert(testBoard.getSquareType(1, 1) == PieceType::Rook);
-    assert(testBoard.getSquareType(2, 1) == PieceType::Knight);
-    assert(testBoard.getSquareType(3, 1) == PieceType::Bishop);
-    assert(testBoard.getSquareType(4, 1) == PieceType::Queen);
-    assert(testBoard.getSquareType(5, 1) == PieceType::King);
-    assert(testBoard.getSquareType(6, 1) == PieceType::Bishop);
-    assert(testBoard.getSquareType(7, 1) == PieceType::Knight);
-    assert(testBoard.getSquareType(8, 1) == PieceType::Rook);
+    assert(testBoard.getSquareType(0, 0) == PieceType::Rook);
+    assert(testBoard.getSquareType(1, 0) == PieceType::Knight);
+    assert(testBoard.getSquareType(2, 0) == PieceType::Bishop);
+    assert(testBoard.getSquareType(3, 0) == PieceType::Queen);
+    assert(testBoard.getSquareType(4, 0) == PieceType::King);
+    assert(testBoard.getSquareType(5, 0) == PieceType::Bishop);
+    assert(testBoard.getSquareType(6, 0) == PieceType::Knight);
+    assert(testBoard.getSquareType(7, 0) == PieceType::Rook);
 
-    assert(testBoard.getSquareType(1, 8) == PieceType::Rook);
-    assert(testBoard.getSquareType(2, 8) == PieceType::Knight);
-    assert(testBoard.getSquareType(3, 8) == PieceType::Bishop);
-    assert(testBoard.getSquareType(4, 8) == PieceType::Queen);
-    assert(testBoard.getSquareType(5, 8) == PieceType::King);
-    assert(testBoard.getSquareType(6, 8) == PieceType::Bishop);
-    assert(testBoard.getSquareType(7, 8) == PieceType::Knight);
-    assert(testBoard.getSquareType(8, 8) == PieceType::Rook);
+    assert(testBoard.getSquareType(0, 7) == PieceType::Rook);
+    assert(testBoard.getSquareType(1, 7) == PieceType::Knight);
+    assert(testBoard.getSquareType(2, 7) == PieceType::Bishop);
+    assert(testBoard.getSquareType(3, 7) == PieceType::Queen);
+    assert(testBoard.getSquareType(4, 7) == PieceType::King);
+    assert(testBoard.getSquareType(5, 7) == PieceType::Bishop);
+    assert(testBoard.getSquareType(6, 7) == PieceType::Knight);
+    assert(testBoard.getSquareType(7, 7) == PieceType::Rook);
 
-    for (int i = 1; i <= 8; i++)
+    for (int i = 0; i < 8; i++)
     {
-        assert(testBoard.getSquareType(i, 2) == PieceType::Pawn);
-        assert(testBoard.getSquareType(i, 7) == PieceType::Pawn);
+        assert(testBoard.getSquareType(i, 1) == PieceType::Pawn);
+        assert(testBoard.getSquareType(i, 6) == PieceType::Pawn);
 
+        assert(testBoard.getSquareColor(i, 0) == true);
         assert(testBoard.getSquareColor(i, 1) == true);
-        assert(testBoard.getSquareColor(i, 2) == true);
+        assert(testBoard.getSquareColor(i, 6) == false);
         assert(testBoard.getSquareColor(i, 7) == false);
-        assert(testBoard.getSquareColor(i, 8) == false);
     }
 }
 
@@ -110,10 +111,10 @@ void basicMateInOnePuzzle_test_1()
     for (int depth = 1; depth < 5; depth++)
     {
         Move bestMove = engine.alphaBeta(depth);
-        assert(bestMove.startX == 1);
-        assert(bestMove.startY == 7);
-        assert(bestMove.endX == 5);
-        assert(bestMove.endY == 7);
+        assert(bestMove.startX == 0);
+        assert(bestMove.startY == 6);
+        assert(bestMove.endX == 4);
+        assert(bestMove.endY == 6);
     }
 }
 
@@ -128,10 +129,10 @@ void basicMateInOnePuzzle_test_2()
     for (int depth = 1; depth < 5; depth++)
     {
         Move bestMove = engine.alphaBeta(depth);
-        assert(bestMove.startX == 8);
-        assert(bestMove.startY == 1);
-        assert(bestMove.endX == 8);
-        assert(bestMove.endY == 8);
+        assert(bestMove.startX == 7);
+        assert(bestMove.startY == 0);
+        assert(bestMove.endX == 7);
+        assert(bestMove.endY == 7);
     }
 }
 
@@ -146,10 +147,11 @@ void promotionMateInOnePuzzle_test_1()
     for (int depth = 1; depth < 5; depth++)
     {
         Move bestMove = engine.alphaBeta(depth);
-        assert(bestMove.startX == 1);
-        assert(bestMove.startY == 7);
-        assert(bestMove.endX == 1);
-        assert(bestMove.endY == 8);
+
+        assert(bestMove.startX == 0);
+        assert(bestMove.startY == 6);
+        assert(bestMove.endX == 0);
+        assert(bestMove.endY == 7);
         assert(bestMove.promotion == 1 || bestMove.promotion == 3);
     }
 }
@@ -164,10 +166,10 @@ void mateInThreePuzzle_test_1()
 
     // Solution requires 3 white moves (5 ply)
     Move bestMove = engine.alphaBeta(5);
-    assert(bestMove.startX == 1);
-    assert(bestMove.startY == 2);
-    assert(bestMove.endX == 3);
-    assert(bestMove.endY == 1);
+    assert(bestMove.startX == 0);
+    assert(bestMove.startY == 1);
+    assert(bestMove.endX == 2);
+    assert(bestMove.endY == 0);
 }
 
 void avoidMatePuzzle_test_1()
@@ -181,10 +183,10 @@ void avoidMatePuzzle_test_1()
     for (int depth = 2; depth < 5; depth++)
     {
         Move bestMove = engine.alphaBeta(depth);
-        assert(bestMove.startX == 1);
-        assert(bestMove.startY == 6);
-        assert(bestMove.endX == 1);
-        assert(bestMove.endY == 5);
+        assert(bestMove.startX == 0);
+        assert(bestMove.startY == 5);
+        assert(bestMove.endX == 0);
+        assert(bestMove.endY == 4);
     }
 }
 
@@ -207,10 +209,10 @@ void zobristConsistancy_test_helper(std::string originalFEN, Move testMove)
 void zobristConsistancy_test()
 {
     std::string zobristTestFEN = "2n1k3/1P6/8/5Pp1/8/8/8/R3K2R w KQ g6 0 2";
-    Move promotionMove = Move(2, 7, 3, 8, 1);
-    Move enPassantCaptureMove = Move(6, 5, 7, 6);
-    Move castingRuinedByKingMove = Move(5, 1, 5, 2);
-    Move castingRuinedByRookMove = Move(1, 1, 2, 1);
+    Move promotionMove = Move(1, 6, 2, 7, 1);
+    Move enPassantCaptureMove = Move(5, 4, 6, 5);
+    Move castingRuinedByKingMove = Move(4, 0, 4, 1);
+    Move castingRuinedByRookMove = Move(0, 0, 1, 0);
 
     zobristConsistancy_test_helper(zobristTestFEN, promotionMove);
     zobristConsistancy_test_helper(zobristTestFEN, enPassantCaptureMove);

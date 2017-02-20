@@ -63,11 +63,8 @@ bitBoard bitwise::knightSquares(int x, int y)
     }
 
     int toShift = -18;
-    x--;
-    y--;
     toShift += y;
     toShift += x * 8;
-    //std::cout << "to shift " << toShift << std::endl;
     if (toShift < 0)
     {
         toReturn >>= -toShift;
@@ -81,7 +78,6 @@ bitBoard bitwise::knightSquares(int x, int y)
 
 int bitwise::firstBit(bitBoard input)
 {
-    //std::cout << "info string starting first bit" << std::endl;
     int index = 0;
     while (!(input & 1) && index < 64)
     {

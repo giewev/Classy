@@ -3,6 +3,7 @@
 #include <random>
 class Board;
 class Move;
+enum PieceType : char;
 
 class ZobristHasher
 {
@@ -34,7 +35,7 @@ private:
     void updateCastling(Board prevBoard, Move nextMove);
     void updatePieces(Board prevBoard, Move nextMove);
 
-    void togglePiece(int x, int y, int pieceType, bool color);
+    void togglePiece(int x, int y, PieceType pieceType, bool color);
     void toggleTurn();
     void toggleEnPassant(int file);
     void toggleCastlingRights(bool color, bool side);

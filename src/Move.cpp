@@ -20,6 +20,8 @@ template < typename T > std::string to_string( const T& n )
 
 Move::Move(int x1, int y1, int x2, int y2)
 {
+    Board::throwIfOutOfBounds(x1, y1);
+    Board::throwIfOutOfBounds(x2, y2);
     startX = x1;
     startY = y1;
     endX = x2;
@@ -32,6 +34,8 @@ Move::Move(int x1, int y1, int x2, int y2)
 
 Move::Move(int x1, int y1, int x2, int y2, int promote)
 {
+    Board::throwIfOutOfBounds(x1, y1);
+    Board::throwIfOutOfBounds(x2, y2);
     startX = x1;
     startY = y1;
     endX = x2;
@@ -82,7 +86,7 @@ bool Move::isSafe(Danger safetyData)
     }
 
     // Check for en passant capture, as this needs a manual check
-    if (startY == 4 || startY == 5)
+    if (startY == 3 || startY == 4)
     {
         if (fabs(startX - endX) == 1 && fabs(startY - endY) == 1)
         {
@@ -165,7 +169,7 @@ bool Move::isSafe(Danger safetyData)
 std::string Move::basicAlg()
 {
     std::string move = "";
-    move = Engine::toAlg(startX) + patch::to_string(startY) + "-"+ Engine::toAlg(endX) + patch::to_string(endY);
+    move = Engine::toAlg(startX) + patch::to_string(startY + 1) + "-"+ Engine::toAlg(endX) + patch::to_string(endY + 1);
     return move;
 }
 

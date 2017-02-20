@@ -148,11 +148,11 @@ void Piece::kingMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
                 continue;
             }
 
-            if(xPos+j > 8 || xPos+j<1) //if moving horizontally off the board
+            if(xPos+j >= 8 || xPos+j < 0) //if moving horizontally off the board
             {
                 continue;
             }
-            if(yPos+k > 8 || yPos+k<1) //if moving vertically off the board
+            if(yPos+k >= 8 || yPos+k < 0) //if moving vertically off the board
             {
                 continue;
             }
@@ -229,7 +229,7 @@ void Piece::bishopMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos
             for(int k=1; k<=7; k++)
             {
 
-                if(xPos+(k*i)<1 || xPos+(k*i)>8 || yPos+(k*j)<1 || yPos+(k*j)>8) //Too Far
+                if(xPos+(k*i) < 0 || xPos+(k*i) >= 8 || yPos+(k*j) < 0 || yPos+(k*j) >= 8) //Too Far
                 {
                     break;
                 }
@@ -268,7 +268,7 @@ void Piece::knightMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos
             {
                 continue;
             }
-            if(xPos+j>8 || xPos+j<1 || yPos+k>8 || yPos+k<1) //trying to move outside board
+            if(xPos+j >= 8 || xPos+j < 0 || yPos+k >= 8 || yPos+k < 0) //trying to move outside board
             {
                 continue;
             }
@@ -297,14 +297,14 @@ void Piece::rookMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
             {
                 continue;
             }
-            for(int k=1; k<8; k++)
+            for(int k = 1; k < 8; k++)
             {
 
-                if(xPos+(i*k) < 1 || xPos+(i*k) > 8) //out of bounds X
+                if(xPos+(i*k) < 0 || xPos+(i*k) >= 8) //out of bounds X
                 {
                     continue;
                 }
-                if(yPos+(j*k) < 1 || yPos+(j*k) > 8) //out of Bounds Y
+                if(yPos+(j*k) < 0 || yPos+(j*k) >= 8) //out of Bounds Y
                 {
                     continue;
                 }
@@ -339,7 +339,7 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
 
     if(gameBoard.getSquareType(xPos, yPos + direction) == PieceType::Empty) //Normal Moves
     {
-        if(yPos+direction == 8 || yPos+direction == 1)
+        if(yPos+direction == 7 || yPos+direction == 0)
         {
             for(int i=1; i<=4; i++)
             {
@@ -351,7 +351,7 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
             moveList[moveCounter++] = Move(xPos, yPos, xPos, yPos+direction);
         }
 
-        if((yPos == 2 && ownColor) || (yPos == 7 && !ownColor)) //Double Moves
+        if((yPos == 1 && ownColor) || (yPos == 6 && !ownColor)) //Double Moves
         {
             if(gameBoard.getSquareType(xPos, yPos + 2 * direction) == PieceType::Empty)
             {
@@ -363,7 +363,7 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
     //Capture Moves
     for(int i = -1; i<=1; i+=2)
     {
-        if(xPos+i > 8 || xPos+i < 1)
+        if(xPos+i >= 8 || xPos+i < 0)
         {
             continue;
         }
@@ -388,7 +388,7 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
             continue;
         }
 
-        if(yPos+direction == 8 || yPos+direction == 1)
+        if(yPos+direction == 7 || yPos+direction == 0)
         {
             for(int j=1; j<=4; j++)
             {
@@ -415,7 +415,7 @@ bool Piece::isSafe(Board gameBoard)
                 int targetX = xPos+(i*k);
                 int targetY = yPos+(j*k);
                 //Out of bounds
-                if(targetX > 8 || targetX < 1 || targetY > 8 || targetY < 1)
+                if(targetX >= 8 || targetX < 0 || targetY >= 8 || targetY < 0)
                 {
                     break;
                 }
@@ -454,7 +454,7 @@ bool Piece::isSafe(Board gameBoard)
                 int targetX = xPos+(i*k);
                 int targetY = yPos+(j*k);
                 //Out of bounds
-                if(targetX > 8 || targetX < 1 || targetY > 8 || targetY < 1)
+                if(targetX >= 8 || targetX < 0 || targetY >= 8 || targetY < 0)
                 {
                     break;
                 }
@@ -481,16 +481,15 @@ bool Piece::isSafe(Board gameBoard)
     //Check for Knight
     for(int i=-2; i<=2; i+= 4)
     {
-
         for(int j=-1; j<=1; j+=2)
         {
             int targetX = xPos+i;
             int targetY = yPos+j;
-            if(targetX > 0 && targetX < 9 && targetY > 0 && targetY < 9) //out of bounds
+            if(targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) // Within bounds
             {
                 if(gameBoard.squareIsPopulated(targetX, targetY))
                 {
-                    bool targetColor =gameBoard.getSquareColor(targetX, targetY);
+                    bool targetColor = gameBoard.getSquareColor(targetX, targetY);
                     if(targetColor != color)
                     {
                         PieceType targetType = gameBoard.getSquareType(targetX, targetY);
@@ -504,11 +503,11 @@ bool Piece::isSafe(Board gameBoard)
 
             targetX = xPos+j;
             targetY = yPos+i;
-            if(targetX > 0 && targetX < 9 && targetY > 0 && targetY < 9) //out of bounds
+            if(targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) // Within bounds
             {
                 if(gameBoard.squareIsPopulated(targetX, targetY))
                 {
-                    bool targetColor =gameBoard.getSquareColor(targetX, targetY);
+                    bool targetColor = gameBoard.getSquareColor(targetX, targetY);
                     if(targetColor != color)
                     {
                         PieceType targetType = gameBoard.getSquareType(targetX, targetY);
@@ -530,7 +529,7 @@ bool Piece::isSafe(Board gameBoard)
     {
         int targetX = xPos + x;
         int targetY = yPos+direction;
-        if(targetX > 8 || targetX <1)
+        if(targetX >= 8 || targetX < 0 || targetY >= 8 || targetY < 0)
         {
             continue;
         }
@@ -559,11 +558,11 @@ bool Piece::isSafe(Board gameBoard)
 
             int targetX = xPos + x;
             int targetY = yPos + y;
-            if(targetX > 8 || targetX < 1) //if checking horizontally off the board
+            if(targetX >= 8 || targetX < 0) //if checking horizontally off the board
             {
                 continue;
             }
-            if(targetY > 8 || targetY < 1) //if checking vertically off the board
+            if(targetY >= 8 || targetY < 0) //if checking vertically off the board
             {
                 continue;
             }

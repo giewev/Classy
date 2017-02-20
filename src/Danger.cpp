@@ -89,11 +89,11 @@ int Danger::getSafeSquareCount()
 }
 int Danger::getPinX(int index)
 {
-    return(((pinCoordinates[index] / 8) & 7) + 1);
+    return (pinCoordinates[index] / 8) & 7;
 }
 int Danger::getPinY(int index)
 {
-    return(((pinCoordinates[index] % 8) & 7) + 1);
+    return (pinCoordinates[index] % 8) & 7;
 }
 bool Danger::getCheck()
 {
@@ -117,10 +117,6 @@ bool Danger::inSafeSquares(int x, int y)
         safeY = getSafeY(i);
         if(safeY == y && safeX == x)
         {
-            if(x == 7 && y == 2)
-            {
-                //std::cout << "safe" << std::endl;
-            }
             return true;
         }
     }
@@ -197,7 +193,6 @@ bool Danger::movePinned(Move pinCheck)
 
 void Danger::addAttacker(int x, int y)
 {
-    //std::cout << x << "   " << y << std::endl;
     int modifier = 1;
     if(check)
     {
@@ -207,11 +202,8 @@ void Danger::addAttacker(int x, int y)
     else
     {
         check = true;
-        //check = false;
     }
     Piece target;
-
-
 
     //Vertical
     if(x == defenderX)
@@ -223,7 +215,7 @@ void Danger::addAttacker(int x, int y)
 
         for(int i=1; i<8; i++)
         {
-            if(defenderY + i*modifier > 8 || defenderY + i*modifier < 1)
+            if(defenderY + i*modifier >= 8 || defenderY + i*modifier < 0)
             {
                 break;
             }
@@ -249,7 +241,7 @@ void Danger::addAttacker(int x, int y)
 
         for(int i=1; i<8; i++)
         {
-            if(defenderX + i*modifier > 8 || defenderX + i*modifier < 1)
+            if(defenderX + i*modifier >= 8 || defenderX + i*modifier < 0)
             {
                 break;
             }
@@ -280,7 +272,7 @@ void Danger::addAttacker(int x, int y)
         for(int i=0; i<8; i++)
         {
             //Out of bounds
-            if(x + i*modifier > 8 || x + i*modifier < 1 || y + i*altModifier > 8 || y + i*altModifier < 1)
+            if(x + i*modifier >= 8 || x + i*modifier < 0 || y + i*altModifier >= 8 || y + i*altModifier < 0)
             {
                 break;
             }
@@ -303,9 +295,6 @@ void Danger::addAttacker(int x, int y)
 }
 void Danger::addPin(int x, int y)
 {
-    //std::cout << x << y << std::endl;
-    x--;
-    y--;
     pinCoordinates[pinCount] = x*8 + y;
     pinCount++;
 }
@@ -330,7 +319,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     bool trace = false;
     int traceX = 0;
     int traceY = 0;
-    for (int i = 1; i < 9-y; i++)
+    for (int i = 1; i <= 7-y; i++)
     {
         PieceType targetType = gameBoard->getSquareType(x, y+i);
         bool targetColor = gameBoard->getSquareColor(x, y+i);
@@ -374,7 +363,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     trace = false;
     traceX = 0;
     traceY = 0;
-    for (int i = 1; i < y; i++)
+    for (int i = 1; i <= y; i++)
     {
         PieceType targetType = gameBoard->getSquareType(x, y-i);
         bool targetColor = gameBoard->getSquareColor(x, y-i);
@@ -418,7 +407,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     trace = false;
     traceX = 0;
     traceY = 0;
-    for (int i = 1; i < x; i++)
+    for (int i = 1; i <= x; i++)
     {
         PieceType targetType = gameBoard->getSquareType(x-i, y);
         bool targetColor = gameBoard->getSquareColor(x-i, y);
@@ -462,7 +451,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     trace = false;
     traceX = 0;
     traceY = 0;
-    for (int i = 1; i < 9-x; i++)
+    for (int i = 1; i <= 7-x; i++)
     {
         PieceType targetType = gameBoard->getSquareType(x+i, y);
         bool targetColor = gameBoard->getSquareColor(x+i, y);
@@ -506,7 +495,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     trace = false;
     traceX = 0;
     traceY = 0;
-    for (int i = 1; i < std::min(9-x, 9-y); i++)
+    for (int i = 1; i <= std::min(7-x, 7-y); i++)
     {
         PieceType targetType = gameBoard->getSquareType(x+i, y+i);
         bool targetColor = gameBoard->getSquareColor(x+i, y+i);
@@ -550,7 +539,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     trace = false;
     traceX = 0;
     traceY = 0;
-    for (int i = 1; i < std::min(x, y); i++)
+    for (int i = 1; i <= std::min(x, y); i++)
     {
         PieceType targetType = gameBoard->getSquareType(x-i, y-i);
         bool targetColor = gameBoard->getSquareColor(x-i, y-i);
@@ -594,11 +583,11 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     trace = false;
     traceX = 0;
     traceY = 0;
-    for (int i = 1; i < std::min(x, 9-y); i++)
+    for (int i = 1; i <= std::min(x, 7-y); i++)
     {
         PieceType targetType = gameBoard->getSquareType(x-i, y+i);
         bool targetColor = gameBoard->getSquareColor(x-i, y+i);
-        if(targetType)
+        if(targetType != PieceType::Empty)
         {
             if(color == targetColor)
             {
@@ -638,7 +627,7 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     trace = false;
     traceX = 0;
     traceY = 0;
-    for (int i = 1; i < std::min(9-x, y); i++)
+    for (int i = 1; i <= std::min(7-x, y); i++)
     {
         PieceType targetType = gameBoard->getSquareType(x+i, y-i);
         bool targetColor = gameBoard->getSquareColor(x+i, y-i);
@@ -661,10 +650,6 @@ void Danger::loadData(Board* gameBoard, Piece defender)
             {
                 if(trace)
                 {
-                    if(traceX == 6 && traceY == 1)
-                    {
-                        //std::cout << "pina" << std::endl;
-                    }
                     addPin(traceX, traceY);
                     pinDirections[pinCount - 1] = 2;
                     break;
@@ -683,11 +668,11 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     }
 
     //PieceType::Pawn
-    if(y + direction <= 8 && y + direction >= 1)
+    if(y + direction <= 7 && y + direction >= 0)
     {
         for(int i = -1; i <= 1; i+=2)
         {
-            if(x + i <= 8 && x + i >= 1)
+            if(x + i <= 7 && x + i >= 0)
             {
                 PieceType targetType = gameBoard->getSquareType(x + i, y + direction);
                 int targetColor = gameBoard->getSquareColor(x + i, y + direction);
@@ -712,9 +697,9 @@ void Danger::loadData(Board* gameBoard, Piece defender)
                 continue;
             }
 
-            if(x + i <= 8 && x + i >= 1)
+            if(x + i < 8 && x + i >= 0)
             {
-                if(y + j <= 8 && y + j >= 1)
+                if(y + j < 8 && y + j >= 0)
                 {
                     targetType = gameBoard->getSquareType(x+i, y+j);
                     targetColor = gameBoard->getSquareColor(x+i, y+j);
@@ -735,16 +720,16 @@ void Danger::setSafeSquare(int index, int x, int y)
 {
     safeSquares[index] = 0;
     safeSquares[index] = x;
-    safeSquares[index] += y << 5;
+    safeSquares[index] += y << 3;
 }
 
 int Danger::getSafeX(int index)
 {
-    return safeSquares[index] & 15;
+    return safeSquares[index] & 7;
 }
 int Danger::getSafeY(int index)
 {
-    return safeSquares[index] >> 5;
+    return safeSquares[index] >> 3;
 }
 
 void Danger::printSafeSquares()
