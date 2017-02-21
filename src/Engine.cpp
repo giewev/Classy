@@ -107,6 +107,12 @@ Move Engine::minMax(int depth)
 
 Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
 {
+    TranspositionCache transposition = this->getTransposition(searchBoard);
+    if (transposition.depth >= depth)
+    {
+        return transposition.bestMove;
+    }
+
     int moveCount = 0;
     Move moveList[220];
     searchBoard.generateMoveArray(moveList, moveCount);
@@ -131,7 +137,7 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
         returnedMove.setGameOverDepth(0);
 
         returnedMove.setScore(evaluator.evaluate(searchBoard));
-
+        this->updateTranspositionIfDeeper(searchBoard, depth, returnedMove);
         return returnedMove;
     }
 
@@ -143,8 +149,6 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
         if(depth == 1)
         {
             moveScore = evaluator.evaluate(newBoard);
-
-            returnedMove = Move();
             if(moveScore != 1000)
             {
                 moveList[i].setScore(moveScore);
@@ -246,6 +250,8 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
             }
         }
     }
+
+    this->updateTranspositionIfDeeper(searchBoard, depth, moveList[bestIndex]);
     return moveList[bestIndex];
 }
 
@@ -362,4 +368,26 @@ void Engine::printMove(Move toPrint)
 void Engine::updateBoard(Board newBoard)
 {
     gameBoard = newBoard;
+}
+
+void Engine::updateTranspositionIfDeeper(Board newBoard, int depth, Move newMove)
+{
+    bool firstTime = this->transpositionTable.find(newBoard) == this->transpositionTable.end();
+    if (firstTime || this->transpositionTable[newBoard].depth < depth)
+    {
+        this->transpositionTable[newBoard] = TranspositionCache(depth, newMove);
+    }
+}
+
+TranspositionCache Engine::getTransposition(Board lookupBoard)
+{
+    bool notFound = this->transpositionTable.find(lookupBoard) == this->transpositionTable.end();
+    if (notFound)
+    {
+        return TranspositionCache();
+    }
+    else
+    {
+        return this->transpositionTable[lookupBoard];
+    }
 }

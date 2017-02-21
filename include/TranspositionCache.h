@@ -6,10 +6,10 @@ struct TranspositionCache
 {
     public:
         int depth;
-        int score;
         Move bestMove;
 
-        TranspositionCache(int newDepth, int newScore, Move newMove);
+        TranspositionCache();
+        TranspositionCache(int newDepth, Move newMove);
     protected:
     private:
 };

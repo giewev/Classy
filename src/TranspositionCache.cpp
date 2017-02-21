@@ -1,8 +1,13 @@
 #include "TranspositionCache.h"
 
-TranspositionCache::TranspositionCache(int newDepth, int newScore, Move newMove)
+TranspositionCache::TranspositionCache()
+{
+    this->depth = -1;
+    this->bestMove = Move();
+}
+
+TranspositionCache::TranspositionCache(int newDepth, Move newMove)
 {
     this->depth = newDepth;
-    this->score = newScore;
     this->bestMove = newMove;
 }
