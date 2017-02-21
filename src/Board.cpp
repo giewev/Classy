@@ -1106,3 +1106,20 @@ bool Board::operator==(const Board &other) const
 
     return this->turn == other.turn;
 }
+
+size_t Board::getHashCode() const
+{
+    return this->hasher.hashValue;
+}
+
+namespace std
+{
+template <> struct hash<Board>
+{
+    size_t operator()(const Board& board) const
+    {
+        return board.getHashCode();
+    }
+};
+}
+

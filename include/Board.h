@@ -44,6 +44,7 @@ public:
     Piece getSquare(int);
     int getKingX(bool);
     int getKingY(bool);
+    size_t getHashCode() const;
     PieceType getSquareType(int, int) const;
     bool getSquareColor(int, int) const;
     bool getSquareMoved(int, int);
