@@ -116,7 +116,18 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
     int moveCount = 0;
     Move moveList[220];
     searchBoard.generateMoveArray(moveList, moveCount);
-    //sortMoveList(moveList, moveCount, searchBoard);
+    if (transposition.depth >= 0)
+    {
+        for (int i = 0; i < moveCount; i++)
+        {
+            if (moveList[i] == transposition.bestMove)
+            {
+                moveList[i] = moveList[0];
+                moveList[0] = transposition.bestMove;
+                break;
+            }
+        }
+    }
 
     Board newBoard;
     double moveScore;
