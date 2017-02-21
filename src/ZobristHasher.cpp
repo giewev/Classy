@@ -6,28 +6,21 @@
 #include "Piece.h"
 
 std::mt19937_64 ZobristHasher::hashGenerator;
+long long ZobristHasher::whitePieceHashCodes[8][8][6];
+long long ZobristHasher::blackPieceHashCodes[8][8][6];
+long long ZobristHasher::castlingHashCodes[4];
+long long ZobristHasher::enPassantHashCodes[8];
+long long ZobristHasher::turnHashCode;
+bool ZobristHasher::alreadySeeded;
 
 ZobristHasher::ZobristHasher()
 {
-    for (int i = 0; i < 8; i++)
+    this->hashValue = 0;
+    if (!alreadySeeded)
     {
-        this->enPassantHashCodes[i] = generateHashCode();
-        for (int j = 0; j < 8; j++)
-        {
-            for (int k = 0; k < 6; k++)
-            {
-                this->whitePieceHashCodes[i][j][k] = generateHashCode();
-                this->blackPieceHashCodes[i][j][k] = generateHashCode();
-            }
-        }
+        seed();
+        alreadySeeded = true;
     }
-
-    for (int i = 0; i < 4; i++)
-    {
-        this->castlingHashCodes[i] = generateHashCode();
-    }
-
-    this->turnHashCode = generateHashCode();
 }
 
 ZobristHasher::ZobristHasher(Board board) : ZobristHasher()
@@ -35,28 +28,32 @@ ZobristHasher::ZobristHasher(Board board) : ZobristHasher()
     this->load(board);
 }
 
-ZobristHasher::ZobristHasher(const ZobristHasher& original)
+ZobristHasher::ZobristHasher(const ZobristHasher& original) : ZobristHasher()
+{
+    this->hashValue = original.hashValue;
+}
+
+void ZobristHasher::seed()
 {
     for (int i = 0; i < 8; i++)
     {
-        this->enPassantHashCodes[i] = original.enPassantHashCodes[i];
+        enPassantHashCodes[i] = generateHashCode();
         for (int j = 0; j < 8; j++)
         {
             for (int k = 0; k < 6; k++)
             {
-                this->whitePieceHashCodes[i][j][k] = original.whitePieceHashCodes[i][j][k];
-                this->blackPieceHashCodes[i][j][k] = original.blackPieceHashCodes[i][j][k];
+                whitePieceHashCodes[i][j][k] = generateHashCode();
+                blackPieceHashCodes[i][j][k] = generateHashCode();
             }
         }
     }
 
     for (int i = 0; i < 4; i++)
     {
-        this->castlingHashCodes[i] = original.castlingHashCodes[i];
+        castlingHashCodes[i] = generateHashCode();
     }
 
-    this->turnHashCode = original.turnHashCode;
-    this->hashValue = original.hashValue;
+    turnHashCode = generateHashCode();
 }
 
 void ZobristHasher::load(Board board)
@@ -119,22 +116,22 @@ void ZobristHasher::togglePiece(int x, int y, PieceType pieceType, bool color)
 
     if (color)
     {
-        this->hashValue ^= this->whitePieceHashCodes[x][y][pieceType - 1];
+        this->hashValue ^= whitePieceHashCodes[x][y][pieceType - 1];
     }
     else
     {
-        this->hashValue ^= this->blackPieceHashCodes[x][y][pieceType - 1];
+        this->hashValue ^= blackPieceHashCodes[x][y][pieceType - 1];
     }
 }
 
 void ZobristHasher::toggleTurn()
 {
-    this->hashValue ^= this->turnHashCode;
+    this->hashValue ^= turnHashCode;
 }
 
 void ZobristHasher::toggleEnPassant(int file)
 {
-    this->hashValue ^= this->enPassantHashCodes[file];
+    this->hashValue ^= enPassantHashCodes[file];
 }
 
 void ZobristHasher::toggleCastlingRights(bool color, bool side)
@@ -150,7 +147,7 @@ void ZobristHasher::toggleCastlingRights(bool color, bool side)
     castlingIndex++;
     }
 
-    this->hashValue ^= this->castlingHashCodes[castlingIndex];
+    this->hashValue ^= castlingHashCodes[castlingIndex];
 }
 
 void ZobristHasher::update(Board prevBoard, Move nextMove)

@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <inttypes.h>
+#include "ZobristHasher.h"
+
 struct Move;
 class Piece;
 enum PieceType : char;
@@ -12,6 +14,7 @@ class Board
 {
     char castlingRights;
     int kingCoordinates;
+    ZobristHasher hasher;
 public:
     int EPdata;
     bool turn;

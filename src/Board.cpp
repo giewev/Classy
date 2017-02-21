@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <inttypes.h>
+#include <math.h>
 
 #include "Piece.h"
 #include "Board.h"
@@ -8,7 +9,7 @@
 #include "Danger.h"
 #include "Engine.h"
 #include "Bitwise.h"
-#include <math.h>
+#include "ZobristHasher.h"
 
 using namespace std;
 
@@ -274,7 +275,8 @@ void Board::loadFEN(std::string fenFile)
             bookmark++;
         }
     }
-    return;
+
+    this->hasher = ZobristHasher(*this);
 }
 
 string Board::outputFEN()
@@ -415,6 +417,7 @@ Board Board::newCopy()
     newBoard.kingCoordinates = kingCoordinates;
     newBoard.moveCounter = moveCounter;
     newBoard.halfMoveCounter = halfMoveCounter;
+    newBoard.hasher = ZobristHasher(this->hasher);
 
     return(newBoard);
 }
@@ -627,6 +630,8 @@ int Board::gameOverCheck()
 
 void Board::makeMove(Move data)
 {
+    this->hasher.update(*this, data);
+
     //Picking up the Piece
     Piece movingPiece = getSquare(data.startX, data.startY);
     movingPiece.setMoved(true);

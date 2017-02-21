@@ -20,12 +20,14 @@ protected:
 private:
     static std::mt19937_64 hashGenerator;
     static long long generateHashCode();
+    static bool alreadySeeded;
+    static void seed();
 
-    long long whitePieceHashCodes[8][8][6];
-    long long blackPieceHashCodes[8][8][6];
-    long long castlingHashCodes[4];
-    long long enPassantHashCodes[8];
-    long long turnHashCode;
+    static long long whitePieceHashCodes[8][8][6];
+    static long long blackPieceHashCodes[8][8][6];
+    static long long castlingHashCodes[4];
+    static long long enPassantHashCodes[8];
+    static long long turnHashCode;
 
     void loadPieces(Board board);
     void loadEnPassant(Board board);
