@@ -441,7 +441,7 @@ Piece Board::getSquare(int x, int y)
     return Piece((PieceType)type, x, y, color);
 }
 
-PieceType Board::getSquareType(int x, int y)
+PieceType Board::getSquareType(int x, int y) const
 {
     throwIfOutOfBounds(x, y);
     if (!squareIsPopulated(x, y))
@@ -459,7 +459,7 @@ PieceType Board::getSquareType(int x, int y)
 
     return PieceType::Empty;
 }
-bool Board::getSquareColor(int x, int y)
+bool Board::getSquareColor(int x, int y) const
 {
     throwIfOutOfBounds(x, y);
     return (pieces[0] >> (8*x + y)) & 1;
@@ -1051,7 +1051,7 @@ bool Board::nullSquare(int x, int y)
                >> (8*x + y)) & 1);
 }
 
-bool Board::squareIsPopulated(int x, int y)
+bool Board::squareIsPopulated(int x, int y) const
 {
     throwIfOutOfBounds(x, y);
     return (allPieces >> (8*x + y)) & 1;
@@ -1069,4 +1069,35 @@ void Board::throwIfOutOfBounds(int x, int y)
     {
         throw "Trying to get out of bounds coordinates";
     }
+}
+
+bool Board::operator==(const Board &other) const
+{
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            PieceType type = this->getSquareType(i, j);
+            if (type != PieceType::Empty)
+            {
+                if (type != other.getSquareType(i, j) ||
+                    this->getSquareColor(i, j) != other.getSquareColor(i, j))
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+    if (this->EPdata != other.EPdata)
+    {
+        return false;
+    }
+
+    if (this->castlingRights != other.castlingRights)
+    {
+        return false;
+    }
+
+    return this->turn == other.turn;
 }

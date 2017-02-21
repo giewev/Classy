@@ -41,8 +41,8 @@ public:
     Piece getSquare(int);
     int getKingX(bool);
     int getKingY(bool);
-    PieceType getSquareType(int, int);
-    bool getSquareColor(int, int);
+    PieceType getSquareType(int, int) const;
+    bool getSquareColor(int, int) const;
     bool getSquareMoved(int, int);
     void setSquare(Piece, int, int);
     void setSquare(Piece, int);
@@ -60,10 +60,10 @@ public:
     void makeMove(Move);
     void countPieces();
 
-    bool operator==(const Board);
+    bool operator==(const Board&) const;
 
     bool nullSquare(int, int);
-    bool squareIsPopulated(int, int);
+    bool squareIsPopulated(int, int) const;
     bool squareIsType(int, int, int);
     void deleteSquare(int, int);
     double dividePerft(int);
