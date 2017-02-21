@@ -1,3 +1,6 @@
+#ifndef MOVE_H
+#define MOVE_H
+
 #include <string>
 class Danger;
 class Board;
@@ -36,3 +39,4 @@ public:
     bool isCapture(Board*);
 };
 
+#endif

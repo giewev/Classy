@@ -1,10 +1,9 @@
-#include "Board.h"
 #include "Danger.h"
 #include "Engine.h"
 #include "Evaluation Constants.h"
-#include "Move.h"
 #include "Piece.h"
 #include "Bitwise.h"
+#include "FullEvaluator.h"
 
 #include <iostream>
 #include <math.h>
@@ -15,7 +14,6 @@
 #include <algorithm>
 #include <string.h>
 #include <strings.h>
-#include "FullEvaluator.h"
 
 using namespace std;
 

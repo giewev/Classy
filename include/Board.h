@@ -1,3 +1,5 @@
+#ifndef BOARD_H
+#define BOARD_H
 
 #include <iostream>
 #include <vector>
@@ -79,4 +81,15 @@ public:
     static void throwIfOutOfBounds(int x, int y);
 };
 
+namespace std
+{
+template <> struct hash<Board>
+{
+    size_t operator()(const Board& board) const
+    {
+        return board.getHashCode();
+    }
+};
+}
 
+#endif

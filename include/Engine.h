@@ -1,8 +1,10 @@
 #include <inttypes.h>
 #include <time.h>
 #include <iostream>
+#include <unordered_map>
 #include "FullEvaluator.h"
-class Board;
+#include "TranspositionCache.h"
+#include "Board.h"
 struct Move;
 class HashData;
 class HashTable;
@@ -15,6 +17,7 @@ class Engine
     Board gameBoard;
     int score;
     FullEvaluator evaluator;
+    std::unordered_map<Board, TranspositionCache> transpositionTable;
 public:
     clock_t doneTime;
     int maxDepth;
