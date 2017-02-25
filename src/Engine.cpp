@@ -100,6 +100,7 @@ Move Engine::minMax(int depth, Board searchBoard)
     }
     return moveList[bestIndex];
 }
+
 Move Engine::minMax(int depth)
 {
     return(minMax(depth, gameBoard));
@@ -304,7 +305,6 @@ Move Engine::iterativeSearch(int milliseconds)
     while (difftime(time(NULL), timer) < milliseconds / 2000.0)
     {
         bestMove = alphaBeta(depth++);
-        std::cout << "Searched a depth of " << depth << " in " << difftime(time(NULL), timer) << " Seconds" << std::endl;
     }
 
     return bestMove;
