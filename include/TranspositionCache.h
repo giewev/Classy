@@ -7,9 +7,10 @@ struct TranspositionCache
     public:
         int depth;
         Move bestMove;
+        bool fullyEvaluated;
 
         TranspositionCache();
-        TranspositionCache(int newDepth, Move newMove);
+        TranspositionCache(int newDepth, Move newMove, bool fullyEvaluated);
     protected:
     private:
 };

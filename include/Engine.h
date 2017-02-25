@@ -59,6 +59,7 @@ public:
     static void trimRight(bitBoard&, int);
     static void trimLeft(bitBoard&, int);
 private:
-    void updateTranspositionIfDeeper(Board searchBoard, int depth, Move newMove);
+    void updateTranspositionBestIfDeeper(Board searchBoard, int depth, Move newMove);
+    void updateTranspositionCutoffIfDeeper(Board searchBoard, int depth, Move newMove);
     TranspositionCache getTransposition(Board lookupBoard);
 };
