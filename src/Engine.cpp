@@ -282,6 +282,20 @@ Move Engine::alphaBeta(int depth, double bound)
     return alphaBeta(depth, gameBoard, bound);
 }
 
+Move Engine::iterativeSearch(int milliseconds)
+{
+    time_t timer = time(NULL);
+    Move bestMove;
+    int depth = 1;
+    while (difftime(time(NULL), timer) < milliseconds / 2000.0)
+    {
+        bestMove = alphaBeta(depth++);
+        std::cout << "Searched a depth of " << depth << " in " << difftime(time(NULL), timer) << " Seconds" << std::endl;
+    }
+
+    return bestMove;
+}
+
 std::string Engine::toAlg(int val)
 {
     if(val < 0 || val > 7)

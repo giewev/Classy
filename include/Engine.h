@@ -44,6 +44,7 @@ public:
     Move alphaBeta(int, Board, double);
     Move alphaBeta(int);
     Move alphaBeta(int, double);
+    Move iterativeSearch(int milliseconds);
 
     void sortMoveList(Move*, int, Board*);
 
