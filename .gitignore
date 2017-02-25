@@ -37,3 +37,6 @@ bin/**
 
 # Code Blocks
 *.depend
+
+# Test Results
+bench.txt
