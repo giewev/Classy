@@ -51,6 +51,7 @@
 		<Unit filename="include/Piece.h" />
 		<Unit filename="include/PositionalEvaluator.h" />
 		<Unit filename="include/StandAlones.h" />
+		<Unit filename="include/TranspositionCache.h" />
 		<Unit filename="include/ZobristHasher.h" />
 		<Unit filename="src/ArgumentParser.cpp" />
 		<Unit filename="src/Board.cpp" />
@@ -65,6 +66,7 @@
 		<Unit filename="src/Piece.cpp" />
 		<Unit filename="src/PositionalEvaluator.cpp" />
 		<Unit filename="src/Tests.cpp" />
+		<Unit filename="src/TranspositionCache.cpp" />
 		<Unit filename="src/ZobristHasher.cpp" />
 		<Unit filename="src/bitWise.cpp" />
 		<Extensions>
