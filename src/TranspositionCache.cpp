@@ -2,14 +2,16 @@
 
 TranspositionCache::TranspositionCache()
 {
-    this->depth = -1;
+    this->bestDepth = -1;
     this->bestMove = Move();
-    this->fullyEvaluated = false;
+    this->cutoffDepth = -1;
+    this->cutoffMove = Move();
 }
 
-TranspositionCache::TranspositionCache(int newDepth, Move newMove, bool fullyEvaluated)
+TranspositionCache::TranspositionCache(int bestDepth, Move newMove, int cutoffDepth, Move cutoffMove)
 {
-    this->depth = newDepth;
+    this->bestDepth = bestDepth;
     this->bestMove = newMove;
-    this->fullyEvaluated = fullyEvaluated;
+    this->cutoffDepth = cutoffDepth;
+    this->cutoffMove = cutoffMove;
 }

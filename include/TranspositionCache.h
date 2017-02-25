@@ -5,12 +5,14 @@
 struct TranspositionCache
 {
     public:
-        int depth;
+        int bestDepth;
         Move bestMove;
-        bool fullyEvaluated;
+
+        int cutoffDepth;
+        Move cutoffMove;
 
         TranspositionCache();
-        TranspositionCache(int newDepth, Move newMove, bool fullyEvaluated);
+        TranspositionCache(int bestDepth, Move newMove, int cutoffDepth, Move cutoffMove);
     protected:
     private:
 };

@@ -108,28 +108,35 @@ Move Engine::minMax(int depth)
 Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
 {
     TranspositionCache transposition = this->getTransposition(searchBoard);
-    if (transposition.depth >= depth)
+    if (transposition.bestDepth >= depth)
     {
-        if (transposition.fullyEvaluated || // Guarenteed to be at least as good as answer as we would get
-            (transposition.bestMove.score > bound && searchBoard.turn) || // We know it's a white cutoff
-            (transposition.bestMove.score < bound && !searchBoard.turn)) // We know it's a black cutoff
-        {
-            return transposition.bestMove;
-        }
+        return transposition.bestMove;
+    }
+    else if (transposition.cutoffDepth >= depth && // Cutoff info is good enough
+        ((transposition.cutoffMove.score > bound && searchBoard.turn) || // We know it's a white cutoff
+        ((transposition.cutoffMove.score < bound && !searchBoard.turn)))) // We know it's a black cutoff
+    {
+        return transposition.cutoffMove;
     }
 
     int moveCount = 0;
     Move moveList[220];
     searchBoard.generateMoveArray(moveList, moveCount);
-    if (transposition.depth >= 0)
+    int movesPrioritized = 0;
+    if (transposition.bestDepth >= 0 || transposition.cutoffDepth >= 0)
     {
         for (int i = 0; i < moveCount; i++)
         {
-            if (moveList[i] == transposition.bestMove)
+            if (moveList[i] == transposition.bestMove || moveList[i] == transposition.cutoffMove)
             {
-                moveList[i] = moveList[0];
-                moveList[0] = transposition.bestMove;
-                break;
+                Move temp = moveList[i];
+                moveList[i] = moveList[movesPrioritized];
+                moveList[movesPrioritized] = temp;
+                movesPrioritized++;
+                if (movesPrioritized > 1)
+                {
+                    break;
+                }
             }
         }
     }
@@ -203,6 +210,7 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
             //Alpha Beta break
             if(moveScore > bound)
             {
+                this->updateTranspositionCutoffIfDeeper(searchBoard, depth, moveList[i]);
                 return(moveList[i]);
             }
             //Best move weve found
@@ -219,6 +227,7 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
             //Alpha Beta Break
             if(moveScore < bound)
             {
+                this->updateTranspositionCutoffIfDeeper(searchBoard, depth, moveList[i]);
                 return(moveList[i]);
             }
             //Best move weve found
@@ -402,20 +411,27 @@ void Engine::updateBoard(Board newBoard)
 
 void Engine::updateTranspositionBestIfDeeper(Board newBoard, int depth, Move newMove)
 {
-    bool firstTime = this->transpositionTable.find(newBoard) == this->transpositionTable.end();
-    if (firstTime || this->transpositionTable[newBoard].depth < depth)
+    if (this->transpositionTable.find(newBoard) == this->transpositionTable.end())
     {
-        this->transpositionTable[newBoard] = TranspositionCache(depth, newMove, true);
+        this->transpositionTable[newBoard] = TranspositionCache(depth, newMove, -1, Move());
+    }
+    else if (this->transpositionTable[newBoard].bestDepth < depth)
+    {
+        this->transpositionTable[newBoard].bestDepth = depth;
+        this->transpositionTable[newBoard].bestMove = newMove;
     }
 }
 
 void Engine::updateTranspositionCutoffIfDeeper(Board newBoard, int depth, Move newMove)
 {
-    bool firstTime = this->transpositionTable.find(newBoard) == this->transpositionTable.end();
-    bool deeperAndAlreadyCutoff = this->transpositionTable[newBoard].depth < depth && !this->transpositionTable[newBoard].fullyEvaluated;
-    if (firstTime || deeperAndAlreadyCutoff)
+    if (this->transpositionTable.find(newBoard) == this->transpositionTable.end())
     {
-        this->transpositionTable[newBoard] = TranspositionCache(depth, newMove, false);
+        this->transpositionTable[newBoard] = TranspositionCache(-1, Move(), depth, newMove);
+    }
+    else if (this->transpositionTable[newBoard].cutoffDepth < depth)
+    {
+        this->transpositionTable[newBoard].cutoffDepth = depth;
+        this->transpositionTable[newBoard].cutoffMove = newMove;
     }
 }
 
