@@ -23,8 +23,10 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="-t" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
+					<Add option="-std=c++11" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
@@ -46,6 +48,7 @@
 		<Unit filename="include/Evaluator.h" />
 		<Unit filename="include/FullEvaluator.h" />
 		<Unit filename="include/GameOverEvaluator.h" />
+		<Unit filename="include/Logger.h" />
 		<Unit filename="include/MaterialEvaluator.h" />
 		<Unit filename="include/Move.h" />
 		<Unit filename="include/Piece.h" />
@@ -61,6 +64,7 @@
 		<Unit filename="src/Evaluator.cpp" />
 		<Unit filename="src/FullEvaluator.cpp" />
 		<Unit filename="src/GameOverEvaluator.cpp" />
+		<Unit filename="src/Logger.cpp" />
 		<Unit filename="src/MaterialEvaluator.cpp" />
 		<Unit filename="src/Move.cpp" />
 		<Unit filename="src/Piece.cpp" />

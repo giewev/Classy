@@ -40,3 +40,4 @@ bin/**
 
 # Test Results
 bench.txt
+*.log
