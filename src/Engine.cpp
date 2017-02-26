@@ -4,6 +4,7 @@
 #include "Piece.h"
 #include "Bitwise.h"
 #include "FullEvaluator.h"
+#include "Logger.h"
 
 #include <iostream>
 #include <math.h>
@@ -283,18 +284,17 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
 
 Move Engine::alphaBeta(int depth)
 {
+    time_t timer = time(NULL);
+    double bound = -999;
     if(gameBoard.turn)
     {
-        return alphaBeta(depth, gameBoard, 999);
+        bound = 999;
     }
-    else
-    {
-        return alphaBeta(depth, gameBoard, -999);
-    }
-}
-Move Engine::alphaBeta(int depth, double bound)
-{
-    return alphaBeta(depth, gameBoard, bound);
+
+    Move bestMove = alphaBeta(depth, gameBoard, bound);
+    Logger::mainLog()->info("Alpha-beta search depth {0} chose: {1} after {2} seconds",
+                                depth, bestMove.basicAlg(), difftime(time(NULL), timer));
+    return bestMove;
 }
 
 Move Engine::iterativeSearch(int milliseconds)
@@ -306,6 +306,9 @@ Move Engine::iterativeSearch(int milliseconds)
     {
         bestMove = alphaBeta(depth++);
     }
+
+    Logger::mainLog()->info("Iterative search depth {0} chose: {1} after {2} seconds",
+                            depth - 1, bestMove.basicAlg(), difftime(time(NULL), timer));
 
     return bestMove;
 }

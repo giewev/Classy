@@ -8,11 +8,11 @@ class Logger
 {
     public:
         void writeInfo(std::string message);
-        Logger mainLog();
+        static std::shared_ptr<spdlog::logger> mainLog();
     protected:
     private:
-    static Logger mainLogInstance;
     std::shared_ptr<spdlog::logger> log;
+    static Logger mainLogInstance;
     Logger();
 };
 

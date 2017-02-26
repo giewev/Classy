@@ -40,15 +40,15 @@ double GameOverEvaluator::evaluate(Board boardState)
 
     // Check if there isn't enough material on the board for a mate
     // Only condition is one or fewer minor pieces on each side
-    if (!pieceCounts[PieceType::Pawn][WHITE] && !pieceCounts[PieceType::Pawn][BLACK])
+    if (!pieceCounts[PieceType::Pawn][0] && !pieceCounts[PieceType::Pawn][1])
     {
-        if (!pieceCounts[PieceType::Queen][WHITE] && !pieceCounts[PieceType::Queen][BLACK])
+        if (!pieceCounts[PieceType::Queen][0] && !pieceCounts[PieceType::Queen][1])
         {
-            if (!pieceCounts[PieceType::Rook][WHITE] && !pieceCounts[PieceType::Rook][BLACK])
+            if (!pieceCounts[PieceType::Rook][0] && !pieceCounts[PieceType::Rook][1])
             {
-                if (pieceCounts[PieceType::Knight][WHITE] + pieceCounts[PieceType::Bishop][WHITE] <= 1)
+                if (pieceCounts[PieceType::Knight][0] + pieceCounts[PieceType::Bishop][0] <= 1)
                 {
-                    if (pieceCounts[PieceType::Knight][BLACK] + pieceCounts[PieceType::Bishop][BLACK] <= 1)
+                    if (pieceCounts[PieceType::Knight][1] + pieceCounts[PieceType::Bishop][1] <= 1)
                     {
                         return 1000;
                     }

@@ -16,17 +16,17 @@ double MaterialEvaluator::evaluate(Board boardState)
     double score = 0;
 
     double knightBishopMod = knightBishopWeight * (bitwise::countBits(boardState.pieces[PieceType::Pawn] & centerBoard) - 2);
-    score += (knightValue + knightBishopMod) * boardState.pieceCount(PieceType::Knight, WHITE);
-    score -= (knightValue + knightBishopMod) * boardState.pieceCount(PieceType::Knight, BLACK);
-    score += (bishopValue - knightBishopMod) * boardState.pieceCount(PieceType::Bishop, WHITE);
-    score -= (bishopValue - knightBishopMod) * boardState.pieceCount(PieceType::Bishop, BLACK);
+    score += (knightValue + knightBishopMod) * boardState.pieceCount(PieceType::Knight, true);
+    score -= (knightValue + knightBishopMod) * boardState.pieceCount(PieceType::Knight, false);
+    score += (bishopValue - knightBishopMod) * boardState.pieceCount(PieceType::Bishop, true);
+    score -= (bishopValue - knightBishopMod) * boardState.pieceCount(PieceType::Bishop, false);
 
-    score += pawnValue * boardState.pieceCount(PieceType::Pawn, WHITE);
-    score -= pawnValue * boardState.pieceCount(PieceType::Pawn, BLACK);
-    score += rookValue * boardState.pieceCount(PieceType::Rook, WHITE);
-    score -= rookValue * boardState.pieceCount(PieceType::Rook, BLACK);
-    score += queenValue * boardState.pieceCount(PieceType::Queen, WHITE);
-    score -= queenValue * boardState.pieceCount(PieceType::Queen, BLACK);
+    score += pawnValue * boardState.pieceCount(PieceType::Pawn, true);
+    score -= pawnValue * boardState.pieceCount(PieceType::Pawn, false);
+    score += rookValue * boardState.pieceCount(PieceType::Rook, true);
+    score -= rookValue * boardState.pieceCount(PieceType::Rook, false);
+    score += queenValue * boardState.pieceCount(PieceType::Queen, true);
+    score -= queenValue * boardState.pieceCount(PieceType::Queen, false);
 
     return score;
 }

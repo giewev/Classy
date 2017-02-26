@@ -4,9 +4,6 @@
 #include <inttypes.h>
 #define bitBoard uint64_t
 
-#define WHITE true
-#define BLACK false
-
 enum PieceType : char
 {
     Empty,
