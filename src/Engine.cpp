@@ -307,8 +307,8 @@ Move Engine::iterativeSearch(int milliseconds)
         bestMove = alphaBeta(depth++);
     }
 
-    Logger::mainLog()->info("Iterative search depth {0} chose: {1} after {2} seconds",
-                            depth - 1, bestMove.basicAlg(), difftime(time(NULL), timer));
+    Logger::mainLog()->info("Iterative search depth {0} chose: {1} with score: {2} after {3} seconds",
+                            depth - 1, bestMove.basicAlg(), bestMove.score, difftime(time(NULL), timer));
 
     return bestMove;
 }
