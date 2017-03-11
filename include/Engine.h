@@ -45,7 +45,7 @@ public:
     Move alphaBeta(int);
     Move iterativeSearch(int milliseconds);
 
-    void sortMoveList(Move*, int, Board*);
+    void sortMoveList(Move*, int, Board*, TranspositionCache);
 
     static double manhattenDistance(int, int, double, double);
 

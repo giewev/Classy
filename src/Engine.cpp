@@ -124,24 +124,7 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
     int moveCount = 0;
     Move moveList[220];
     searchBoard.generateMoveArray(moveList, moveCount);
-    int movesPrioritized = 0;
-    if (transposition.bestDepth >= 0 || transposition.cutoffDepth >= 0)
-    {
-        for (int i = 0; i < moveCount; i++)
-        {
-            if (moveList[i] == transposition.bestMove || moveList[i] == transposition.cutoffMove)
-            {
-                Move temp = moveList[i];
-                moveList[i] = moveList[movesPrioritized];
-                moveList[movesPrioritized] = temp;
-                movesPrioritized++;
-                if (movesPrioritized > 1)
-                {
-                    break;
-                }
-            }
-        }
-    }
+    sortMoveList(moveList, moveCount, &searchBoard, transposition);
 
     Board newBoard;
     double moveScore;
@@ -364,35 +347,50 @@ int Engine::fromAlg(char val)
     return 0;
 }
 
-void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard)
+void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard, TranspositionCache transposition)
 {
-    int captures = 0;
-    int nonCaptures = 0;
-    Move captureList[230];
-    Move nonCaptureList[230];
+    const int maxPriority = 3;
+    char movePriorities[230];
 
     for(int i = 0; i < moveCount; i++)
     {
-        if(rawList[i].isCapture(sortBoard))
+        if (rawList[i] == transposition.bestMove)
         {
-            captureList[captures] = rawList[i];
-            captures++;
+            movePriorities[i] = 0;
+        }
+        if (rawList[i] == transposition.cutoffMove)
+        {
+            movePriorities[i] = 1;
+        }
+        else if (rawList[i].isCapture(sortBoard))
+        {
+            movePriorities[i] = 2;
         }
         else
         {
-            nonCaptureList[nonCaptures] = rawList[i];
-            nonCaptures++;
+            movePriorities[i] = 3;
         }
     }
 
-    for(int i = 0; i < captures; i++)
+    int sortedCount = 0;
+    for (int priority = 0; priority < maxPriority; priority++)
     {
-        rawList[i] = captureList[i];
-    }
+        for (int i = sortedCount; i < moveCount; i++)
+        {
+            if (movePriorities[i] == priority)
+            {
+                Move tempMove = rawList[sortedCount];
+                int tempPriority = movePriorities[sortedCount];
 
-    for(int i = 0; i < nonCaptures; i++)
-    {
-        rawList[i + captures] = nonCaptureList[i];
+                rawList[sortedCount] = rawList[i];
+                movePriorities[sortedCount] = movePriorities[i];
+
+                rawList[i] = tempMove;
+                movePriorities[i] = tempPriority;
+
+                sortedCount++;
+            }
+        }
     }
 }
 
