@@ -1078,33 +1078,27 @@ void Board::throwIfOutOfBounds(int x, int y)
 
 bool Board::operator==(const Board &other) const
 {
-    for (int i = 0; i < 8; i++)
+    for (int i = 1; i < 7; i++)
     {
-        for (int j = 0; j < 8; j++)
+        if (this->pieces[i] != other.pieces[i])
         {
-            PieceType type = this->getSquareType(i, j);
-            if (type != PieceType::Empty)
-            {
-                if (type != other.getSquareType(i, j) ||
-                    this->getSquareColor(i, j) != other.getSquareColor(i, j))
-                {
-                    return false;
-                }
-            }
+            return false;
         }
     }
 
-    if (this->EPdata != other.EPdata)
+    if ((this->pieces[0] & this->allPieces) != (other.pieces[0] & other.allPieces))
     {
         return false;
     }
 
-    if (this->castlingRights != other.castlingRights)
+    if ((~this->pieces[0] & this->allPieces) != (~other.pieces[0] & other.allPieces))
     {
         return false;
     }
 
-    return this->turn == other.turn;
+    return this->turn == other.turn &&
+        this->EPdata == other.EPdata &&
+        this->castlingRights == other.castlingRights;
 }
 
 size_t Board::getHashCode() const

@@ -414,11 +414,7 @@ void Engine::updateBoard(Board newBoard)
 
 void Engine::updateTranspositionBestIfDeeper(Board newBoard, int depth, Move newMove)
 {
-    if (this->transpositionTable.find(newBoard) == this->transpositionTable.end())
-    {
-        this->transpositionTable[newBoard] = TranspositionCache(depth, newMove, -1, Move());
-    }
-    else if (this->transpositionTable[newBoard].bestDepth < depth)
+    if (this->transpositionTable[newBoard].bestDepth < depth)
     {
         this->transpositionTable[newBoard].bestDepth = depth;
         this->transpositionTable[newBoard].bestMove = newMove;
@@ -427,11 +423,7 @@ void Engine::updateTranspositionBestIfDeeper(Board newBoard, int depth, Move new
 
 void Engine::updateTranspositionCutoffIfDeeper(Board newBoard, int depth, Move newMove)
 {
-    if (this->transpositionTable.find(newBoard) == this->transpositionTable.end())
-    {
-        this->transpositionTable[newBoard] = TranspositionCache(-1, Move(), depth, newMove);
-    }
-    else if (this->transpositionTable[newBoard].cutoffDepth < depth)
+    if (this->transpositionTable[newBoard].cutoffDepth < depth)
     {
         this->transpositionTable[newBoard].cutoffDepth = depth;
         this->transpositionTable[newBoard].cutoffMove = newMove;
@@ -440,13 +432,5 @@ void Engine::updateTranspositionCutoffIfDeeper(Board newBoard, int depth, Move n
 
 TranspositionCache Engine::getTransposition(Board lookupBoard)
 {
-    bool notFound = this->transpositionTable.find(lookupBoard) == this->transpositionTable.end();
-    if (notFound)
-    {
-        return TranspositionCache();
-    }
-    else
-    {
-        return this->transpositionTable[lookupBoard];
-    }
+    return this->transpositionTable[lookupBoard];
 }

@@ -48,14 +48,6 @@ Move::Move(int x1, int y1, int x2, int y2, int promote)
 
 Move::Move()
 {
-    startX = -1;
-    startY = -1;
-    endX = -1;
-    endY = -1;
-    promotion = 0;
-    score = 0;
-    gameOverDepth = -1;
-    scoreDepth = -1;
 }
 
 void Move::setScore(double scoreVal)
