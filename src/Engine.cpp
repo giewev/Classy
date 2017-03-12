@@ -128,15 +128,15 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
 
     Board newBoard;
     double moveScore;
-    double bestScore;
+    double defaultBound = 999;
+    if(searchBoard.turn)
+    {
+        defaultBound = -999;
+    }
+
     unsigned int bestIndex = 0;
     Move returnedMove;
 
-    bestScore = 999;
-    if(searchBoard.turn)
-    {
-        bestScore = -999;
-    }
     //Checkmate or StaleMate
     if(moveCount == 0)
     {
@@ -160,22 +160,22 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
         }
         else
         {
-            returnedMove = alphaBeta(depth - 1, newBoard, bestScore);
+            double newBound = moveList[bestIndex].score;
+            if (i == 0)
+            {
+                newBound = defaultBound;
+            }
+
+            returnedMove = alphaBeta(depth - 1, newBoard, newBound);
             moveScore = returnedMove.getScore();
             if(returnedMove.getGameOverDepth() != -1)
             {
                 moveList[i].setGameOverDepth(returnedMove.getGameOverDepth() + 1);
-                if (moveScore > 0)
-                {
-                    moveScore--;
-                }
-                else
-                {
-                    moveScore++;
-                }
             }
+
             moveList[i].setScore(moveScore);
         }
+
         if(searchBoard.turn)
         {
             //Alpha Beta break
@@ -185,9 +185,8 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
                 return(moveList[i]);
             }
             //Best move weve found
-            if(moveScore > bestScore)
+            if(i == 0 || moveScore > moveList[bestIndex].score)
             {
-                bestScore = moveScore;
                 bestIndex = i;
             }
         }
@@ -201,17 +200,15 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
                 return(moveList[i]);
             }
             //Best move weve found
-            if(moveScore < bestScore)
+            if(i == 0 || moveScore < moveList[bestIndex].score)
             {
-                bestScore = moveScore;
                 bestIndex = i;
             }
         }
 
-        if(moveScore == bestScore)
+        if(moveScore == moveList[bestIndex].score)
         {
             bestIndex = chooseBetweenEqualMoves(moveList, bestIndex, i, searchBoard.turn);
-            bestScore = moveList[bestIndex].score;
         }
     }
 
