@@ -127,7 +127,6 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
     sortMoveList(moveList, moveCount, &searchBoard, transposition);
 
     Board newBoard;
-    double moveScore;
     double defaultBound = 999;
     if(searchBoard.turn)
     {
@@ -156,7 +155,6 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
         if(depth == 1)
         {
             evaluateMove(newBoard, moveList, i);
-            moveScore = moveList[i].score;
         }
         else
         {
@@ -167,33 +165,18 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
             }
 
             returnedMove = alphaBeta(depth - 1, newBoard, newBound);
-            moveScore = returnedMove.getScore();
+
+            moveList[i].setScore(returnedMove.score);
             if(returnedMove.getGameOverDepth() != -1)
             {
                 moveList[i].setGameOverDepth(returnedMove.getGameOverDepth() + 1);
             }
-
-            moveList[i].setScore(moveScore);
         }
 
-        if(searchBoard.turn)
+        if (causesAlphaBetaBreak(moveList[i].score, bound, searchBoard.turn))
         {
-            //Alpha Beta break
-            if(moveScore > bound)
-            {
-                this->updateTranspositionCutoffIfDeeper(searchBoard, depth, moveList[i]);
-                return(moveList[i]);
-            }
-        }
-        //Its blacks turn
-        else
-        {
-            //Alpha Beta Break
-            if(moveScore < bound)
-            {
-                this->updateTranspositionCutoffIfDeeper(searchBoard, depth, moveList[i]);
-                return(moveList[i]);
-            }
+            this->updateTranspositionCutoffIfDeeper(searchBoard, depth, moveList[i]);
+            return(moveList[i]);
         }
 
         bestIndex = bestMove(moveList, bestIndex, i, searchBoard.turn);
@@ -234,7 +217,7 @@ Move Engine::iterativeSearch(int milliseconds)
     return bestMove;
 }
 
-int Engine::chooseBetweenEqualMoves(Move* moveList, const int currentIndex, const int newIndex, const bool turn)
+int Engine::chooseBetweenEqualMoves(Move* moveList, const int bestIndex, const int newIndex, const bool turn)
 {
     int modifier = -1;
     if(turn)
@@ -242,30 +225,29 @@ int Engine::chooseBetweenEqualMoves(Move* moveList, const int currentIndex, cons
         modifier = 1;
     }
 
-    int currentDepth = moveList[currentIndex].getGameOverDepth();
+    int bestDepth = moveList[bestIndex].getGameOverDepth();
     //Good result
     if(moveList[newIndex].score == 999 * modifier)
     {
-        if(moveList[newIndex].getGameOverDepth() < currentDepth || currentDepth == -1)
+        if(moveList[newIndex].getGameOverDepth() < bestDepth || bestDepth == -1)
         {
             return newIndex;
         }
         else
         {
-            return currentIndex;
+            return bestIndex;
         }
     }
-
     //Bad result
     else if(moveList[newIndex].score == -999 * modifier)
     {
-        if(moveList[newIndex].getGameOverDepth() > currentDepth || currentDepth == -1)
+        if(moveList[newIndex].getGameOverDepth() > bestDepth || bestDepth == -1)
         {
             return newIndex;
         }
         else
         {
-            return currentIndex;
+            return bestIndex;
         }
     }
     else if(rand() % 2)
@@ -274,20 +256,19 @@ int Engine::chooseBetweenEqualMoves(Move* moveList, const int currentIndex, cons
     }
     else
     {
-        return currentIndex;
+        return bestIndex;
     }
 }
 
 void Engine::evaluateMove(const Board evaluationBoard, Move* moveList, const int index)
 {
-    int moveScore = evaluator.evaluate(evaluationBoard);
+    double moveScore = evaluator.evaluate(evaluationBoard);
     if(moveScore != 1000)
     {
         moveList[index].setScore(moveScore);
     }
     else
     {
-        moveScore = 0;
         moveList[index].setGameOverDepth(1);
         moveList[index].setScore(0);
     }
@@ -298,7 +279,7 @@ void Engine::evaluateMove(const Board evaluationBoard, Move* moveList, const int
     }
 }
 
-int Engine::bestMove(Move* moveList, const int bestIndex, const int currentIndex, const bool turn) const
+int Engine::bestMove(Move* moveList, const int bestIndex, const int currentIndex, const bool turn)
 {
     if(turn)
     {
@@ -321,6 +302,12 @@ int Engine::bestMove(Move* moveList, const int bestIndex, const int currentIndex
     }
 
     return bestIndex;
+}
+
+bool Engine::causesAlphaBetaBreak(const double score, const double bound, const bool turn)
+{
+    return (turn && score > bound) ||
+            (!turn && score < bound);
 }
 
 std::string Engine::toAlg(int val)
