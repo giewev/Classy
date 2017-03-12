@@ -129,7 +129,6 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
     Board newBoard;
     double moveScore;
     double bestScore;
-    int bestDepth = -1;
     unsigned int bestIndex = 0;
     Move returnedMove;
 
@@ -201,7 +200,6 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
             //Best move weve found
             if(moveScore > bestScore)
             {
-                bestDepth = moveList[i].getGameOverDepth();
                 bestScore = moveScore;
                 bestIndex = i;
             }
@@ -218,46 +216,15 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
             //Best move weve found
             if(moveScore < bestScore)
             {
-                bestDepth = moveList[i].getGameOverDepth();
                 bestScore = moveScore;
                 bestIndex = i;
             }
         }
-        //Exactly equal, so flip a coin
+
         if(moveScore == bestScore)
         {
-
-            //GameOver score handling
-            int modifier = -1;
-            if(searchBoard.turn)
-            {
-                modifier = 1;
-            }
-            //Good result
-            if(moveScore == 999 * modifier)
-            {
-                if(moveList[i].getGameOverDepth() < bestDepth || bestDepth == -1)
-                {
-                    bestScore = moveScore;
-                    bestIndex = i;
-                    bestDepth = moveList[i].getGameOverDepth();
-                }
-            }	//Bad result
-            else if(moveScore == -999 * modifier)
-            {
-                if(moveList[i].getGameOverDepth() > bestDepth || bestDepth == -1)
-                {
-                    bestScore = moveScore;
-                    bestIndex = i;
-                    bestDepth = moveList[i].getGameOverDepth();
-                }
-            }
-            else if(rand() % 2)
-            {
-                bestScore = moveScore;
-                bestIndex = i;
-                bestDepth = moveList[i].getGameOverDepth();
-            }
+            bestIndex = chooseBetweenEqualMoves(moveList, bestIndex, i, searchBoard.turn);
+            bestScore = moveList[bestIndex].score;
         }
     }
 
@@ -294,6 +261,50 @@ Move Engine::iterativeSearch(int milliseconds)
                             depth - 1, bestMove.basicAlg(), bestMove.score, difftime(time(NULL), timer));
 
     return bestMove;
+}
+
+int Engine::chooseBetweenEqualMoves(Move* moveList, const int currentIndex, const int newIndex, const bool turn) const
+{
+    int modifier = -1;
+    if(turn)
+    {
+        modifier = 1;
+    }
+
+    int currentDepth = moveList[currentIndex].getGameOverDepth();
+    //Good result
+    if(moveList[newIndex].score == 999 * modifier)
+    {
+        if(moveList[newIndex].getGameOverDepth() < currentDepth || currentDepth == -1)
+        {
+            return newIndex;
+        }
+        else
+        {
+            return currentIndex;
+        }
+    }
+
+    //Bad result
+    else if(moveList[newIndex].score == -999 * modifier)
+    {
+        if(moveList[newIndex].getGameOverDepth() > currentDepth || currentDepth == -1)
+        {
+            return newIndex;
+        }
+        else
+        {
+            return currentIndex;
+        }
+    }
+    else if(rand() % 2)
+    {
+        return newIndex;
+    }
+    else
+    {
+        return currentIndex;
+    }
 }
 
 std::string Engine::toAlg(int val)
