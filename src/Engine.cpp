@@ -155,21 +155,8 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
 
         if(depth == 1)
         {
-            moveScore = evaluator.evaluate(newBoard);
-            if(moveScore != 1000)
-            {
-                moveList[i].setScore(moveScore);
-            }
-            else
-            {
-                moveScore = 0;
-                moveList[i].setGameOverDepth(1);
-                moveList[i].setScore(0);
-            }
-            if(moveScore == 999 || moveScore == -999)
-            {
-                moveList[i].setGameOverDepth(1);
-            }
+            evaluateMove(newBoard, moveList, i);
+            moveScore = moveList[i].score;
         }
         else
         {
@@ -263,7 +250,7 @@ Move Engine::iterativeSearch(int milliseconds)
     return bestMove;
 }
 
-int Engine::chooseBetweenEqualMoves(Move* moveList, const int currentIndex, const int newIndex, const bool turn) const
+int Engine::chooseBetweenEqualMoves(Move* moveList, const int currentIndex, const int newIndex, const bool turn)
 {
     int modifier = -1;
     if(turn)
@@ -304,6 +291,26 @@ int Engine::chooseBetweenEqualMoves(Move* moveList, const int currentIndex, cons
     else
     {
         return currentIndex;
+    }
+}
+
+void Engine::evaluateMove(const Board evaluationBoard, Move* moveList, const int index)
+{
+    int moveScore = evaluator.evaluate(evaluationBoard);
+    if(moveScore != 1000)
+    {
+        moveList[index].setScore(moveScore);
+    }
+    else
+    {
+        moveScore = 0;
+        moveList[index].setGameOverDepth(1);
+        moveList[index].setScore(0);
+    }
+
+    if(moveScore == 999 || moveScore == -999)
+    {
+        moveList[index].setGameOverDepth(1);
     }
 }
 

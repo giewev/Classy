@@ -62,5 +62,6 @@ private:
     void updateTranspositionCutoffIfDeeper(Board searchBoard, int depth, Move newMove);
     TranspositionCache getTransposition(Board lookupBoard);
 
-    int chooseBetweenEqualMoves(Move* moveList, const int currentIndex, const int newIndex, const bool turn) const;
+    static int chooseBetweenEqualMoves(Move* moveList, const int currentIndex, const int newIndex, const bool turn);
+    void evaluateMove(const Board evaluationBoard, Move* moveList, const int index);
 };
