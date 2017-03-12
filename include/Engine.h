@@ -64,4 +64,5 @@ private:
 
     static int chooseBetweenEqualMoves(Move* moveList, const int currentIndex, const int newIndex, const bool turn);
     void evaluateMove(const Board evaluationBoard, Move* moveList, const int index);
+    int bestMove(Move* moveList, const int bestIndex, const int currentIndex, const bool turn) const;
 };

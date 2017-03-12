@@ -184,11 +184,6 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
                 this->updateTranspositionCutoffIfDeeper(searchBoard, depth, moveList[i]);
                 return(moveList[i]);
             }
-            //Best move weve found
-            if(i == 0 || moveScore > moveList[bestIndex].score)
-            {
-                bestIndex = i;
-            }
         }
         //Its blacks turn
         else
@@ -199,17 +194,9 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
                 this->updateTranspositionCutoffIfDeeper(searchBoard, depth, moveList[i]);
                 return(moveList[i]);
             }
-            //Best move weve found
-            if(i == 0 || moveScore < moveList[bestIndex].score)
-            {
-                bestIndex = i;
-            }
         }
 
-        if(moveScore == moveList[bestIndex].score)
-        {
-            bestIndex = chooseBetweenEqualMoves(moveList, bestIndex, i, searchBoard.turn);
-        }
+        bestIndex = bestMove(moveList, bestIndex, i, searchBoard.turn);
     }
 
     this->updateTranspositionBestIfDeeper(searchBoard, depth, moveList[bestIndex]);
@@ -309,6 +296,31 @@ void Engine::evaluateMove(const Board evaluationBoard, Move* moveList, const int
     {
         moveList[index].setGameOverDepth(1);
     }
+}
+
+int Engine::bestMove(Move* moveList, const int bestIndex, const int currentIndex, const bool turn) const
+{
+    if(turn)
+    {
+        if (currentIndex == 0 || moveList[currentIndex].score > moveList[bestIndex].score)
+        {
+            return currentIndex;
+        }
+    }
+    else
+    {
+        if (currentIndex == 0 || moveList[currentIndex].score < moveList[bestIndex].score)
+        {
+            return currentIndex;
+        }
+    }
+
+    if(moveList[currentIndex].score == moveList[bestIndex].score)
+    {
+        return chooseBetweenEqualMoves(moveList, bestIndex, currentIndex, turn);
+    }
+
+    return bestIndex;
 }
 
 std::string Engine::toAlg(int val)
