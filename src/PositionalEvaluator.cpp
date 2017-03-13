@@ -48,8 +48,13 @@ double PositionalEvaluator::evaluate(Board boardState)
         kingLocationMultiplier *= -1;
     }
 
-    score += kingCornerValue * kingLocationMultiplier * Engine::manhattenDistance(boardState.getKingX(true), boardState.getKingY(true), 4.5, 4.5);
-    score -= kingCornerValue * kingLocationMultiplier * Engine::manhattenDistance(boardState.getKingX(false), boardState.getKingY(false), 4.5, 4.5);
+    score += kingCornerValue * kingLocationMultiplier * manhattenDistance(boardState.getKingX(true), boardState.getKingY(true), 4.5, 4.5);
+    score -= kingCornerValue * kingLocationMultiplier * manhattenDistance(boardState.getKingX(false), boardState.getKingY(false), 4.5, 4.5);
 
     return score;
+}
+
+double PositionalEvaluator::manhattenDistance(const int x1, const int y1, const double x2, const double y2)
+{
+    return fabs(x1 - x2) + fabs(y1 - y2);
 }

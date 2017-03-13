@@ -21,14 +21,12 @@ using namespace std;
 Engine::Engine()
 {
     gameBoard = Board();
-    score = 0;
     evaluator = FullEvaluator();
 }
 
 Engine::Engine(Board loadBoard)
 {
     gameBoard = loadBoard;
-    score = 0;
     evaluator = FullEvaluator();
 }
 
@@ -36,23 +34,14 @@ Engine::~Engine()
 {
 }
 
-
 Board Engine::getBoard()
 {
     return gameBoard;
-}
-int Engine::getScore()
-{
-    return score;
 }
 
 void Engine::setBoard(Board loadBoard)
 {
     gameBoard = loadBoard;
-}
-void Engine::setScore(int loadScore)
-{
-    score = loadScore;
 }
 
 Move Engine::minMax(int depth, Board searchBoard)
@@ -320,46 +309,6 @@ std::string Engine::toAlg(int val)
     std::string alpha[8] = {"a", "b", "c", "d", "e", "f", "g", "h"};
     return(alpha[val]);
 }
-int Engine::fromAlg(char val)
-{
-    if(val > 95 && val < 105)
-    {
-        return int(9-(105 - val));
-    }
-    else if(val == '1')
-    {
-        return 1;
-    }
-    else if(val == '2')
-    {
-        return 2;
-    }
-    else if(val == '3')
-    {
-        return 3;
-    }
-    else if(val == '4')
-    {
-        return 4;
-    }
-    else if(val == '5')
-    {
-        return 5;
-    }
-    else if(val == '6')
-    {
-        return 6;
-    }
-    else if(val == '7')
-    {
-        return 7;
-    }
-    else if(val == '8')
-    {
-        return 8;
-    }
-    return 0;
-}
 
 void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard, TranspositionCache transposition)
 {
@@ -406,22 +355,6 @@ void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard, Transp
             }
         }
     }
-}
-
-double Engine::manhattenDistance(int x1, int y1, double x2, double y2)
-{
-    return fabs(x1 - x2) + fabs(y1 - y2);
-}
-
-void Engine::printMove(Move toPrint)
-{
-    std::cout << Engine::toAlg(toPrint.startX) << toPrint.startY
-              << Engine::toAlg(toPrint.endX) << toPrint.endY << std::endl;
-}
-
-void Engine::updateBoard(Board newBoard)
-{
-    gameBoard = newBoard;
 }
 
 void Engine::updateTranspositionBestIfDeeper(Board newBoard, int depth, Move newMove)
