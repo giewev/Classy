@@ -26,13 +26,13 @@ Move::Move(int x1, int y1, int x2, int y2)
     startY = y1;
     endX = x2;
     endY = y2;
-    promotion = 0;
+    promotion = PieceType::Empty;
     score = 0;
     gameOverDepth = -1;
     scoreDepth = -1;
 }
 
-Move::Move(int x1, int y1, int x2, int y2, int promote)
+Move::Move(int x1, int y1, int x2, int y2, PieceType promote)
 {
     Board::throwIfOutOfBounds(x1, y1);
     Board::throwIfOutOfBounds(x2, y2);

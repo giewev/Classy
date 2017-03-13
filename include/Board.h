@@ -14,42 +14,32 @@ enum PieceType : char;
 
 class Board
 {
-    char castlingRights;
-    int kingCoordinates;
-    ZobristHasher hasher;
 public:
-    int EPdata;
     bool turn;
-    bool lastMoveCapture;
-    int moveCounter;
-    int halfMoveCounter;
     bitBoard pieces[7];
-    bitBoard movedBoard;
     bitBoard allPieces;
 
     Board();
     Board(int);
-    Board(Piece**);
     ~Board();
-
     Board newCopy();
 
+    void countPieces();
     int pieceCount();
     int pieceCount(bool);
-    int pieceCount(int);
-    int pieceCount(int, bool);
-
-    Piece findKing(bool);
+    int pieceCount(PieceType);
+    int pieceCount(PieceType, bool);
 
     Piece getEP();
     Piece getSquare(int, int);
-    Piece getSquare(int);
+    Piece findKing(bool);
     int getKingX(bool);
     int getKingY(bool);
-    size_t getHashCode() const;
+
     PieceType getSquareType(int, int) const;
     bool getSquareColor(int, int) const;
     bool getSquareMoved(int, int);
+
     void setSquare(Piece, int, int);
     void setSquare(Piece, int);
     void setSquare(PieceType type, bool color, int x, int y);
@@ -57,21 +47,18 @@ public:
     void setEP(int, int, bool);
     void setKingLocation(bool, int, int);
 
+    size_t getHashCode() const;
     void loadFEN(std::string);
     std::string outputFEN();
     double perft(int);
-    std::vector<Move> generateMoves();
     void generateMoveArray(Move*, int&);
     int gameOverCheck();
     void makeMove(Move);
-    void countPieces();
 
     bool operator==(const Board&) const;
 
-    bool nullSquare(int, int);
     bool squareIsPopulated(int, int) const;
     bool squareIsType(int, int, int);
-    void deleteSquare(int, int);
     double dividePerft(int);
     char convertToAlg(int);
     bool getCastlingRights(bool, bool);
@@ -79,6 +66,14 @@ public:
     void setCastlingRights(bool, bool, bool);
     void setCastlingRights(char);
     static void throwIfOutOfBounds(int x, int y);
+private:
+    char castlingRights;
+    int kingCoordinates;
+    int EPdata;
+    int moveCounter;
+    int halfMoveCounter;
+    bool lastMoveCapture;
+    ZobristHasher hasher;
 };
 
 namespace std

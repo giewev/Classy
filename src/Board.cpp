@@ -20,17 +20,18 @@ Board::Board()
     turn = true;
     lastMoveCapture = false;
     castlingRights = 15;
+    EPdata = -1;
+    allPieces = 0ull;
     for(int i=0; i<7; i++)
     {
         pieces[i] = 0ull;
     }
-    movedBoard = 0;
-    allPieces = 0;
-    EPdata = -1;
 }
+
 Board::Board(int null)
 {
 }
+
 Board::~Board()
 {
 }
@@ -404,7 +405,7 @@ Board Board::newCopy()
     {
         newBoard.pieces[i] = pieces[i];
     }
-    newBoard.movedBoard = movedBoard;
+
     newBoard.allPieces = allPieces;
     newBoard.EPdata = EPdata;
 
@@ -462,16 +463,11 @@ PieceType Board::getSquareType(int x, int y) const
 
     return PieceType::Empty;
 }
+
 bool Board::getSquareColor(int x, int y) const
 {
     throwIfOutOfBounds(x, y);
     return (pieces[0] >> (8*x + y)) & 1;
-}
-
-bool Board::getSquareMoved(int x, int y)
-{
-    throwIfOutOfBounds(x, y);
-    return (movedBoard >> (8*x + y)) & 1;
 }
 
 int Board::getKingX(bool getColor)
@@ -485,6 +481,7 @@ int Board::getKingX(bool getColor)
         return(((kingCoordinates >> 6) & 7));
     }
 }
+
 int Board::getKingY(bool getColor)
 {
     if(getColor)
@@ -543,21 +540,6 @@ void Board::setKingLocation(bool setColor, int x, int y)
         placeHolder = kingCoordinates & ((1<<6)-1);
         kingCoordinates = placeHolder | (x<<6) | (y<<9);
     }
-}
-
-std::vector<Move> Board::generateMoves()
-{
-    std::vector<Move> moveList;
-    Move rawMoveList[220];
-    int moveCounter = 0;
-    generateMoveArray(rawMoveList, moveCounter);
-
-    for (int i = 0; i < moveCounter; i++)
-    {
-        moveList.push_back(rawMoveList[i]);
-    }
-
-    return moveList;
 }
 
 void Board::generateMoveArray(Move* finalMoveList, int& moveCounter)
@@ -657,24 +639,7 @@ void Board::makeMove(Move data)
         }
         if(data.endY == 7 || data.endY == 0)
         {
-            switch(data.promotion)
-            {
-            case(1) :
-                movingPiece.type = PieceType::Queen;
-                break;
-            case(2):
-                movingPiece.type = PieceType::Knight;
-                break;
-            case(3):
-                movingPiece.type = PieceType::Bishop;
-                break;
-            case(4):
-                movingPiece.type = PieceType::Rook;
-                break;
-            default:
-                throw "Promotion value was missing from pawn move onto final rank";
-                break;
-            }
+            movingPiece.type = data.promotion;
         }
     }
     else if(EPdata != -1)
@@ -947,65 +912,28 @@ void Board::setCastlingRights(char rights)
 
 void Board::countPieces()
 {
-    int whitePieces[7];
-    int blackPieces[7];
-    int whiteCount = 0;
-    int blackCount = 0;
-    for(int i = 0; i < 7; i++)
-    {
-        whitePieces[i] = 0;
-        blackPieces[i] = 0;
-    }
-    PieceType targetType;
-    bool targetColor;
-    for(int x = 0; x < 8; x++)
-    {
-        for(int y = 0; y < 8; y++)
-        {
-            targetType = getSquareType(x, y);
-            targetColor = getSquareColor(x, y);
+    std::cout << "Black:  " << pieceCount(false) << std::endl;
+    std::cout << "	Pawns:  " << pieceCount(PieceType::Pawn, false) << std::endl;
+    std::cout << "	Queens:  " << pieceCount(PieceType::Queen, false) << std::endl;
+    std::cout << "	Kings:  " << pieceCount(PieceType::King, false) << std::endl;
+    std::cout << "	Bishops  " << pieceCount(PieceType::Bishop, false) << std::endl;
+    std::cout << "	Knights  " << pieceCount(PieceType::Knight, false) << std::endl;
+    std::cout << "	Rooks  " << pieceCount(PieceType::Rook, false) << std::endl;
 
-            if(targetColor)
-            {
-                whitePieces[targetType]++;
-                whiteCount++;
-            }
-            else
-            {
-                blackPieces[targetType]++;
-                blackCount++;
-            }
-        }
-    }
-    std::cout << "Black:  " << blackCount << std::endl;
-    std::cout << "	Pawns:  " << blackPieces[PieceType::Pawn] << std::endl;
-    std::cout << "	Queens:  " << blackPieces[PieceType::Queen] << std::endl;
-    std::cout << "	Kings:  " << blackPieces[PieceType::King] << std::endl;
-    std::cout << "	Bishops  " << blackPieces[PieceType::Bishop] << std::endl;
-    std::cout << "	Knights  " << blackPieces[PieceType::Knight] << std::endl;
-    std::cout << "	Rooks  " << blackPieces[PieceType::Rook] << std::endl;
-
-    std::cout << "White:  " << whiteCount << std::endl;
-    std::cout << "	Pawns:  " << whitePieces[PieceType::Pawn] << std::endl;
-    std::cout << "	Queens:  " << whitePieces[PieceType::Queen] << std::endl;
-    std::cout << "	Kings:  " << whitePieces[PieceType::King] << std::endl;
-    std::cout << "	Bishops  " << whitePieces[PieceType::Bishop] << std::endl;
-    std::cout << "	Knights  " << whitePieces[PieceType::Knight] << std::endl;
-    std::cout << "	Rooks  " << whitePieces[PieceType::Rook] << std::endl;
+    std::cout << "White:  " << pieceCount(true) << std::endl;
+    std::cout << "	Pawns:  " << pieceCount(PieceType::Pawn, true) << std::endl;
+    std::cout << "	Queens:  " << pieceCount(PieceType::Queen, true) << std::endl;
+    std::cout << "	Kings:  " << pieceCount(PieceType::King, true) << std::endl;
+    std::cout << "	Bishops  " << pieceCount(PieceType::Bishop, true) << std::endl;
+    std::cout << "	Knights  " << pieceCount(PieceType::Knight, true) << std::endl;
+    std::cout << "	Rooks  " << pieceCount(PieceType::Rook, true) << std::endl;
 }
 
 int Board::pieceCount()
 {
-    int count = 0;
-
-    for (bitBoard pieceSet = pieces[PieceType::Pawn] | pieces[PieceType::Rook] | pieces[PieceType::Knight]
-                             | pieces[PieceType::Bishop] | pieces[PieceType::Queen] | pieces[PieceType::King]; pieceSet; count++)
-    {
-        pieceSet &= pieceSet - 1;
-    }
-
-    return count;
+    return bitwise::countBits(allPieces);
 }
+
 int Board::pieceCount(bool color)
 {
     bitBoard mask = pieces[0];
@@ -1014,26 +942,15 @@ int Board::pieceCount(bool color)
         mask = ~mask;
     }
 
-    int count = 0;
-    for (int i = 1; i < 7; i++)
-    {
-        for (bitBoard pieceSet = pieces[i] & mask; pieceSet; count++)
-        {
-            pieceSet &= pieceSet - 1;
-        }
-    }
-    return count;
+    return bitwise::countBits(allPieces & mask);
 }
-int Board::pieceCount(int type)
+
+int Board::pieceCount(PieceType type)
 {
-    int count = 0;
-    for (bitBoard pieceSet = pieces[type]; pieceSet; count++)
-    {
-        pieceSet &= pieceSet - 1;
-    }
-    return count;
+    return bitwise::countBits(pieces[type]);
 }
-int Board::pieceCount(int type, bool color)
+
+int Board::pieceCount(PieceType type, bool color)
 {
     bitBoard mask = pieces[0];
     if (!color)
@@ -1041,19 +958,7 @@ int Board::pieceCount(int type, bool color)
         mask = ~mask;
     }
 
-    int count = 0;
-    for (bitBoard pieceSet = pieces[type] & mask; pieceSet; count++)
-    {
-        pieceSet &= pieceSet - 1;
-    }
-    return count;
-}
-
-bool Board::nullSquare(int x, int y)
-{
-    throwIfOutOfBounds(x, y);
-    return  !(((pieces[1] | pieces[2] | pieces[3] | pieces[4] | pieces[5] | pieces[6])
-               >> (8*x + y)) & 1);
+    return bitwise::countBits(pieces[type] & mask);
 }
 
 bool Board::squareIsPopulated(int x, int y) const

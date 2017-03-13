@@ -2,6 +2,7 @@
 #define MOVE_H
 
 #include <string>
+#include "Bitwise.h"
 class Danger;
 class Board;
 
@@ -9,7 +10,7 @@ struct Move
 {
     int startX, startY;
     int endX, endY;
-    int promotion;
+    PieceType promotion;
     double score;
     int gameOverDepth;
     int scoreDepth;
@@ -18,7 +19,7 @@ public:
 
     Move();
     Move(int, int, int, int);
-    Move(int, int, int, int, int);
+    Move(int, int, int, int, PieceType);
 
     //void setEnPassent(bool);
     void setScore(double);

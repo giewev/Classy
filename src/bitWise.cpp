@@ -8,6 +8,7 @@ void bitwise::trimBottom(bitBoard& toTrim, int layers)
         toTrim &= ~(firstRank << i);
     }
 }
+
 void bitwise::trimTop(bitBoard& toTrim, int layers)
 {
     for (int i = 0; i < layers; i++)
@@ -15,6 +16,7 @@ void bitwise::trimTop(bitBoard& toTrim, int layers)
         toTrim &= ~(firstRank << (7 - i));
     }
 }
+
 void bitwise::trimLeft(bitBoard& toTrim, int layers)
 {
     for (int i = 0; i < layers; i++)
@@ -22,6 +24,7 @@ void bitwise::trimLeft(bitBoard& toTrim, int layers)
         toTrim &= ~(firstFile << (i * 8));
     }
 }
+
 void bitwise::trimRight(bitBoard& toTrim, int layers)
 {
     for (int i = 0; i < layers; i++)
@@ -38,6 +41,7 @@ int bitwise::countBits(bitBoard data)
         data &= data - 1;
         count++;
     }
+
     return count;
 }
 
@@ -94,9 +98,9 @@ int bitwise::firstBit(bitBoard input)
         return index;
     }
 }
+
 int bitwise::lastBit(bitBoard input)
 {
-    //std::cout << "info string starting last bit" << std::endl;
     bitBoard save = input;
     while (input)
     {
@@ -106,7 +110,7 @@ int bitwise::lastBit(bitBoard input)
             save = input;
         }
     }
-    //std::cout << "info string ending last bit" << std::endl;
+
     return firstBit(save);
 }
 
@@ -114,6 +118,7 @@ int bitwise::getX(int raw)
 {
     return (raw >> 3) + 1;
 }
+
 int bitwise::getY(int raw)
 {
     return (raw % 8) + 1;

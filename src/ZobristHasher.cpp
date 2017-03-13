@@ -231,27 +231,8 @@ void ZobristHasher::updatePieces(Board prevBoard, Move nextMove)
 
         if (nextMove.endY == 0 || nextMove.endY == 7)
         {
-            PieceType promotionType;
-            switch (nextMove.promotion)
-            {
-            case(1):
-                promotionType = PieceType::Queen;
-                break;
-            case(2):
-                promotionType = PieceType::Knight;
-                break;
-            case(3):
-                promotionType = PieceType::Bishop;
-                break;
-            case(4):
-                promotionType = PieceType::Rook;
-                break;
-            default:
-                throw "Unknown Promotion Value";
-            }
-
             this->togglePiece(nextMove.endX, nextMove.endY, movingPieceType, movingPieceColor);
-            this->togglePiece(nextMove.endX, nextMove.endY, promotionType, movingPieceColor);
+            this->togglePiece(nextMove.endX, nextMove.endY, nextMove.promotion, movingPieceColor);
         }
     }
 

@@ -152,7 +152,7 @@ void promotionMateInOnePuzzle_test_1()
         assert(bestMove.startY == 6);
         assert(bestMove.endX == 0);
         assert(bestMove.endY == 7);
-        assert(bestMove.promotion == 1 || bestMove.promotion == 3);
+        assert(bestMove.promotion == PieceType::Queen || bestMove.promotion == PieceType::Bishop);
     }
 }
 
@@ -209,7 +209,7 @@ void zobristConsistancy_test_helper(std::string originalFEN, Move testMove)
 void zobristConsistancy_test()
 {
     std::string zobristTestFEN = "2n1k3/1P6/8/5Pp1/8/8/8/R3K2R w KQ g6 0 2";
-    Move promotionMove = Move(1, 6, 2, 7, 1);
+    Move promotionMove = Move(1, 6, 2, 7, PieceType::Queen);
     Move enPassantCaptureMove = Move(5, 4, 6, 5);
     Move castingRuinedByKingMove = Move(4, 0, 4, 1);
     Move castingRuinedByRookMove = Move(0, 0, 1, 0);

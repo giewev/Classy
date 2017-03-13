@@ -34,8 +34,8 @@ double GameOverEvaluator::evaluate(Board boardState)
     int pieceCounts[7][2];
     for (int i = 1; i < 7; i++)
     {
-        pieceCounts[i][0] = boardState.pieceCount(i, false);
-        pieceCounts[i][1] = boardState.pieceCount(i, true);
+        pieceCounts[i][0] = boardState.pieceCount((PieceType)i, false);
+        pieceCounts[i][1] = boardState.pieceCount((PieceType)i, true);
     }
 
     // Check if there isn't enough material on the board for a mate

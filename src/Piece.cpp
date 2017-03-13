@@ -166,7 +166,7 @@ void Piece::kingMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
                 }
             }
             //Everything is good, so make a move and add it to the moveList
-            moveList[moveCounter++] = Move(xPos, yPos, xPos+j, yPos+k, 0);
+            moveList[moveCounter++] = Move(xPos, yPos, xPos+j, yPos+k);
         }
     }
 
@@ -281,7 +281,7 @@ void Piece::knightMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos
                 }
             }
 
-            moveList[moveCounter++] = Move(xPos, yPos, xPos+j, yPos+k, 0);
+            moveList[moveCounter++] = Move(xPos, yPos, xPos+j, yPos+k);
         }
     }
 }
@@ -341,10 +341,10 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
     {
         if(yPos+direction == 7 || yPos+direction == 0)
         {
-            for(int i=1; i<=4; i++)
-            {
-                moveList[moveCounter++] = Move(xPos, yPos, xPos, yPos+direction, i);
-            }
+            moveList[moveCounter++] = Move(xPos, yPos, xPos, yPos+direction, PieceType::Queen);
+            moveList[moveCounter++] = Move(xPos, yPos, xPos, yPos+direction, PieceType::Knight);
+            moveList[moveCounter++] = Move(xPos, yPos, xPos, yPos+direction, PieceType::Rook);
+            moveList[moveCounter++] = Move(xPos, yPos, xPos, yPos+direction, PieceType::Bishop);
         }
         else
         {
@@ -390,10 +390,10 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
 
         if(yPos+direction == 7 || yPos+direction == 0)
         {
-            for(int j=1; j<=4; j++)
-            {
-                moveList[moveCounter++] = Move(xPos, yPos, xPos+i, yPos+direction, j);
-            }
+            moveList[moveCounter++] = Move(xPos, yPos, xPos+i, yPos+direction, PieceType::Queen);
+            moveList[moveCounter++] = Move(xPos, yPos, xPos+i, yPos+direction, PieceType::Knight);
+            moveList[moveCounter++] = Move(xPos, yPos, xPos+i, yPos+direction, PieceType::Rook);
+            moveList[moveCounter++] = Move(xPos, yPos, xPos+i, yPos+direction, PieceType::Bishop);
         }
         else
         {
