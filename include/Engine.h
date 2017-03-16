@@ -33,7 +33,6 @@ public:
     Move alphaBeta(int);
     Move iterativeSearch(int milliseconds);
 
-    void sortMoveList(Move*, int, Board*, TranspositionCache);
 
     static std::string toAlg(int);
 private:
@@ -41,8 +40,9 @@ private:
     void updateTranspositionCutoffIfDeeper(Board searchBoard, int depth, Move newMove);
     TranspositionCache getTransposition(Board lookupBoard);
 
-    static int chooseBetweenEqualMoves(Move* moveList, const int currentIndex, const int newIndex, const bool turn);
-    void evaluateMove(const Board evaluationBoard, Move* moveList, const int index);
-    static int bestMove(Move* moveList, const int bestIndex, const int currentIndex, const bool turn);
-    static bool causesAlphaBetaBreak(const double score, const double alpha, const double beta, const bool turn);
+    static int chooseBetweenEqualMoves(Move* moveList, int currentIndex, int newIndex, bool turn);
+    void evaluateMove(Board evaluationBoard, Move* moveList, int index);
+    static int bestMove(Move* moveList, int bestIndex, int currentIndex, bool turn);
+    static bool causesAlphaBetaBreak(double score, double alpha, double beta, bool turn);
+    static void sortMoveList(Move*, int, Board*, TranspositionCache);
 };

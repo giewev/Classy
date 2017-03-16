@@ -201,7 +201,7 @@ Move Engine::iterativeSearch(int milliseconds)
     return bestMove;
 }
 
-int Engine::chooseBetweenEqualMoves(Move* moveList, const int bestIndex, const int newIndex, const bool turn)
+int Engine::chooseBetweenEqualMoves(Move* moveList,  int bestIndex,  int newIndex,  bool turn)
 {
     int modifier = -1;
     if(turn)
@@ -244,7 +244,7 @@ int Engine::chooseBetweenEqualMoves(Move* moveList, const int bestIndex, const i
     }
 }
 
-void Engine::evaluateMove(const Board evaluationBoard, Move* moveList, const int index)
+void Engine::evaluateMove( Board evaluationBoard, Move* moveList,  int index)
 {
     double moveScore = evaluator.evaluate(evaluationBoard);
     if(moveScore != 1000)
@@ -263,7 +263,7 @@ void Engine::evaluateMove(const Board evaluationBoard, Move* moveList, const int
     }
 }
 
-int Engine::bestMove(Move* moveList, const int bestIndex, const int currentIndex, const bool turn)
+int Engine::bestMove(Move* moveList,  int bestIndex,  int currentIndex,  bool turn)
 {
     if(turn)
     {
@@ -288,7 +288,7 @@ int Engine::bestMove(Move* moveList, const int bestIndex, const int currentIndex
     return bestIndex;
 }
 
-bool Engine::causesAlphaBetaBreak(const double score, const double alpha, const double beta, const bool turn)
+bool Engine::causesAlphaBetaBreak( double score,  double alpha,  double beta,  bool turn)
 {
     return (turn && score > beta) ||
             (!turn && score < alpha);
@@ -307,7 +307,7 @@ std::string Engine::toAlg(int val)
 
 void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard, TranspositionCache transposition)
 {
-    const int maxPriority = 3;
+     int maxPriority = 3;
     char movePriorities[230];
 
     for(int i = 0; i < moveCount; i++)
