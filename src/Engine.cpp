@@ -180,8 +180,8 @@ Move Engine::alphaBeta(int depth)
 {
     time_t timer = time(NULL);
     Move bestMove = alphaBeta(gameBoard, depth, -1000, 1000);
-    Logger::mainLog()->info("Alpha-beta search depth {0} chose: {1} after {2} seconds",
-                                depth, bestMove.basicAlg(), difftime(time(NULL), timer));
+    Logger::mainLog()->info("Alpha-beta search on position [{0}] to a depth of {1} chose: {2} after {3} seconds",
+                                gameBoard.outputFEN(), depth, bestMove.basicAlg(), difftime(time(NULL), timer));
     return bestMove;
 }
 
@@ -195,8 +195,8 @@ Move Engine::iterativeSearch(int milliseconds)
         bestMove = alphaBeta(depth++);
     }
 
-    Logger::mainLog()->info("Iterative search depth {0} chose: {1} with score: {2} after {3} seconds",
-                            depth - 1, bestMove.basicAlg(), bestMove.score, difftime(time(NULL), timer));
+    Logger::mainLog()->info("Iterative search on position [{0}] to a depth of {1} chose: {2} with score: {3} after {4} seconds",
+                            gameBoard.outputFEN(), depth - 1, bestMove.basicAlg(), bestMove.score, difftime(time(NULL), timer));
 
     return bestMove;
 }
