@@ -96,32 +96,25 @@ Move Engine::minMax(int depth)
     return(minMax(depth, gameBoard));
 }
 
-Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
+Move Engine::alphaBeta(Board boardState, int depth, double alpha, double beta)
 {
-    TranspositionCache transposition = this->getTransposition(searchBoard);
+    TranspositionCache transposition = this->getTransposition(boardState);
     if (transposition.bestDepth >= depth)
     {
         return transposition.bestMove;
     }
     else if (transposition.cutoffDepth >= depth && // Cutoff info is good enough
-        ((transposition.cutoffMove.score > bound && searchBoard.turn) || // We know it's a white cutoff
-        ((transposition.cutoffMove.score < bound && !searchBoard.turn)))) // We know it's a black cutoff
+        causesAlphaBetaBreak(transposition.cutoffMove.score, alpha, beta, boardState.turn))
     {
         return transposition.cutoffMove;
     }
 
     int moveCount = 0;
     Move moveList[220];
-    searchBoard.generateMoveArray(moveList, moveCount);
-    sortMoveList(moveList, moveCount, &searchBoard, transposition);
+    boardState.generateMoveArray(moveList, moveCount);
+    sortMoveList(moveList, moveCount, &boardState, transposition);
 
     Board newBoard;
-    double defaultBound = 999;
-    if(searchBoard.turn)
-    {
-        defaultBound = -999;
-    }
-
     unsigned int bestIndex = 0;
     Move returnedMove;
 
@@ -131,14 +124,14 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
         returnedMove = Move();
         returnedMove.setGameOverDepth(0);
 
-        returnedMove.setScore(evaluator.evaluate(searchBoard));
-        this->updateTranspositionBestIfDeeper(searchBoard, depth, returnedMove);
+        returnedMove.setScore(evaluator.evaluate(boardState));
+        this->updateTranspositionBestIfDeeper(boardState, depth, returnedMove);
         return returnedMove;
     }
 
     for(int i=0; i<moveCount; i++)
     {
-        newBoard = searchBoard.newCopy();
+        newBoard = boardState.newCopy();
         newBoard.makeMove(moveList[i]);
 
         if(depth == 1)
@@ -147,13 +140,7 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
         }
         else
         {
-            double newBound = moveList[bestIndex].score;
-            if (i == 0)
-            {
-                newBound = defaultBound;
-            }
-
-            returnedMove = alphaBeta(depth - 1, newBoard, newBound);
+            returnedMove = alphaBeta(newBoard, depth - 1, alpha, beta);
 
             moveList[i].setScore(returnedMove.score);
             if(returnedMove.getGameOverDepth() != -1)
@@ -162,29 +149,37 @@ Move Engine::alphaBeta(int depth, Board searchBoard, double bound)
             }
         }
 
-        if (causesAlphaBetaBreak(moveList[i].score, bound, searchBoard.turn))
+        bestIndex = bestMove(moveList, bestIndex, i, boardState.turn);
+        if (boardState.turn)
         {
-            this->updateTranspositionCutoffIfDeeper(searchBoard, depth, moveList[i]);
-            return(moveList[i]);
+            if (moveList[bestIndex].score > alpha)
+            {
+                alpha = moveList[bestIndex].score;
+            }
+        }
+        else
+        {
+            if (moveList[bestIndex].score < beta)
+            {
+                beta = moveList[bestIndex].score;
+            }
         }
 
-        bestIndex = bestMove(moveList, bestIndex, i, searchBoard.turn);
+        if (causesAlphaBetaBreak(moveList[i].score, alpha, beta, boardState.turn))
+        {
+            this->updateTranspositionCutoffIfDeeper(boardState, depth, moveList[i]);
+            return(moveList[i]);
+        }
     }
 
-    this->updateTranspositionBestIfDeeper(searchBoard, depth, moveList[bestIndex]);
+    this->updateTranspositionBestIfDeeper(boardState, depth, moveList[bestIndex]);
     return moveList[bestIndex];
 }
 
 Move Engine::alphaBeta(int depth)
 {
     time_t timer = time(NULL);
-    double bound = -999;
-    if(gameBoard.turn)
-    {
-        bound = 999;
-    }
-
-    Move bestMove = alphaBeta(depth, gameBoard, bound);
+    Move bestMove = alphaBeta(gameBoard, depth, -1000, 1000);
     Logger::mainLog()->info("Alpha-beta search depth {0} chose: {1} after {2} seconds",
                                 depth, bestMove.basicAlg(), difftime(time(NULL), timer));
     return bestMove;
@@ -293,10 +288,10 @@ int Engine::bestMove(Move* moveList, const int bestIndex, const int currentIndex
     return bestIndex;
 }
 
-bool Engine::causesAlphaBetaBreak(const double score, const double bound, const bool turn)
+bool Engine::causesAlphaBetaBreak(const double score, const double alpha, const double beta, const bool turn)
 {
-    return (turn && score > bound) ||
-            (!turn && score < bound);
+    return (turn && score > beta) ||
+            (!turn && score < alpha);
 }
 
 std::string Engine::toAlg(int val)
