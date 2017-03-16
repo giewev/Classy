@@ -82,11 +82,11 @@ bool Move::isSafe(Danger safetyData)
     {
         if (fabs(startX - endX) == 1 && fabs(startY - endY) == 1)
         {
-            if (!safetyData.getBoard()->squareIsPopulated(endX, endY))
+            if (!safetyData.getBoard().squareIsPopulated(endX, endY))
             {
-                if (safetyData.getBoard()->squareIsType(endX, startY, PieceType::Pawn))
+                if (safetyData.getBoard().squareIsType(endX, startY, PieceType::Pawn))
                 {
-                    Board newBoard = safetyData.getBoard()->newCopy();
+                    Board newBoard = safetyData.getBoard().newCopy();
                     newBoard.makeMove(*this);
                     if (newBoard.getSquare(newBoard.getKingX(!newBoard.turn), newBoard.getKingY(!newBoard.turn)).isSafe(newBoard))
                     {
@@ -118,7 +118,7 @@ bool Move::isSafe(Danger safetyData)
             int direction = -1*fabs(startX-endX)/(startX-endX);
             for (int i = startX + direction; i <= startX + 2 && i >= startX - 2; i+=direction)
             {
-                newBoard = safetyData.getBoard()->newCopy();
+                newBoard = safetyData.getBoard().newCopy();
                 newBoard.makeMove(Move(startX, startY, i, startY));
                 if(!newBoard.getSquare(i, endY).isSafe(newBoard))
                 {
@@ -128,7 +128,7 @@ bool Move::isSafe(Danger safetyData)
             return true;
         }
         //Normal King moves
-        newBoard = safetyData.getBoard()->newCopy();
+        newBoard = safetyData.getBoard().newCopy();
         newBoard.makeMove(*this);
         if(newBoard.getSquare(endX, endY).isSafe(newBoard))
         {
@@ -251,7 +251,7 @@ bool Move::bigger(Move left, Move right)
     }
 }
 
-bool Move::isCapture(Board* safeBoard)
+bool Move::isCapture(const Board& safeBoard)
 {
-    return safeBoard->squareIsPopulated(endX, endY);
+    return safeBoard.squareIsPopulated(endX, endY);
 }

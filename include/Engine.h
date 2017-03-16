@@ -25,24 +25,23 @@ public:
     Board getBoard();
     void setBoard(Board);
 
-    Move minMax(int, Board);
+    Move minMax(int, const Board&);
     Move minMax(int);
 
-    Move alphaBeta(int, Board, double);
-    Move alphaBeta(Board boardState, int depth, double alpha, double beta);
+    Move alphaBeta(int, const Board&, double);
+    Move alphaBeta(const Board& boardState, int depth, double alpha, double beta);
     Move alphaBeta(int);
     Move iterativeSearch(int milliseconds);
 
-
     static std::string toAlg(int);
 private:
-    void updateTranspositionBestIfDeeper(Board searchBoard, int depth, Move newMove);
-    void updateTranspositionCutoffIfDeeper(Board searchBoard, int depth, Move newMove);
-    TranspositionCache getTransposition(Board lookupBoard);
+    void updateTranspositionBestIfDeeper(const Board& searchBoard, int depth, Move newMove);
+    void updateTranspositionCutoffIfDeeper(const Board& searchBoard, int depth, Move newMove);
+    TranspositionCache getTransposition(const Board& lookupBoard);
 
     static int chooseBetweenEqualMoves(Move* moveList, int currentIndex, int newIndex, bool turn);
-    void evaluateMove(Board evaluationBoard, Move* moveList, int index);
+    void evaluateMove(const Board& evaluationBoard, Move* moveList, int index);
     static int bestMove(Move* moveList, int bestIndex, int currentIndex, bool turn);
     static bool causesAlphaBetaBreak(double score, double alpha, double beta, bool turn);
-    static void sortMoveList(Move*, int, Board*, TranspositionCache);
+    static void sortMoveList(Move*, int, const Board&, const TranspositionCache&);
 };

@@ -44,7 +44,7 @@ void Engine::setBoard(Board loadBoard)
     gameBoard = loadBoard;
 }
 
-Move Engine::minMax(int depth, Board searchBoard)
+Move Engine::minMax(int depth, const Board& searchBoard)
 {
     int moveCount = 0;
     Move moveList[220];
@@ -96,7 +96,7 @@ Move Engine::minMax(int depth)
     return(minMax(depth, gameBoard));
 }
 
-Move Engine::alphaBeta(Board boardState, int depth, double alpha, double beta)
+Move Engine::alphaBeta(const Board& boardState, int depth, double alpha, double beta)
 {
     TranspositionCache transposition = this->getTransposition(boardState);
     if (transposition.bestDepth >= depth)
@@ -112,7 +112,7 @@ Move Engine::alphaBeta(Board boardState, int depth, double alpha, double beta)
     int moveCount = 0;
     Move moveList[220];
     boardState.generateMoveArray(moveList, moveCount);
-    sortMoveList(moveList, moveCount, &boardState, transposition);
+    sortMoveList(moveList, moveCount, boardState, transposition);
 
     Board newBoard;
     unsigned int bestIndex = 0;
@@ -201,7 +201,7 @@ Move Engine::iterativeSearch(int milliseconds)
     return bestMove;
 }
 
-int Engine::chooseBetweenEqualMoves(Move* moveList,  int bestIndex,  int newIndex,  bool turn)
+int Engine::chooseBetweenEqualMoves(Move* moveList, int bestIndex, int newIndex, bool turn)
 {
     int modifier = -1;
     if(turn)
@@ -244,7 +244,7 @@ int Engine::chooseBetweenEqualMoves(Move* moveList,  int bestIndex,  int newInde
     }
 }
 
-void Engine::evaluateMove( Board evaluationBoard, Move* moveList,  int index)
+void Engine::evaluateMove(const Board& evaluationBoard, Move* moveList, int index)
 {
     double moveScore = evaluator.evaluate(evaluationBoard);
     if(moveScore != 1000)
@@ -263,7 +263,7 @@ void Engine::evaluateMove( Board evaluationBoard, Move* moveList,  int index)
     }
 }
 
-int Engine::bestMove(Move* moveList,  int bestIndex,  int currentIndex,  bool turn)
+int Engine::bestMove(Move* moveList, int bestIndex, int currentIndex, bool turn)
 {
     if(turn)
     {
@@ -288,7 +288,7 @@ int Engine::bestMove(Move* moveList,  int bestIndex,  int currentIndex,  bool tu
     return bestIndex;
 }
 
-bool Engine::causesAlphaBetaBreak( double score,  double alpha,  double beta,  bool turn)
+bool Engine::causesAlphaBetaBreak(double score, double alpha, double beta, bool turn)
 {
     return (turn && score > beta) ||
             (!turn && score < alpha);
@@ -305,7 +305,7 @@ std::string Engine::toAlg(int val)
     return(alpha[val]);
 }
 
-void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard, TranspositionCache transposition)
+void Engine::sortMoveList(Move* rawList, int moveCount, const Board& sortBoard, const TranspositionCache& transposition)
 {
      int maxPriority = 3;
     char movePriorities[230];
@@ -352,7 +352,7 @@ void Engine::sortMoveList(Move* rawList, int moveCount, Board* sortBoard, Transp
     }
 }
 
-void Engine::updateTranspositionBestIfDeeper(Board newBoard, int depth, Move newMove)
+void Engine::updateTranspositionBestIfDeeper(const Board& newBoard, int depth, Move newMove)
 {
     if (this->transpositionTable[newBoard].bestDepth < depth)
     {
@@ -361,7 +361,7 @@ void Engine::updateTranspositionBestIfDeeper(Board newBoard, int depth, Move new
     }
 }
 
-void Engine::updateTranspositionCutoffIfDeeper(Board newBoard, int depth, Move newMove)
+void Engine::updateTranspositionCutoffIfDeeper(const Board& newBoard, int depth, Move newMove)
 {
     if (this->transpositionTable[newBoard].cutoffDepth < depth)
     {
@@ -370,7 +370,7 @@ void Engine::updateTranspositionCutoffIfDeeper(Board newBoard, int depth, Move n
     }
 }
 
-TranspositionCache Engine::getTransposition(Board lookupBoard)
+TranspositionCache Engine::getTransposition(const Board& lookupBoard)
 {
     return this->transpositionTable[lookupBoard];
 }

@@ -280,7 +280,7 @@ void Board::loadFEN(std::string fenFile)
     this->hasher = ZobristHasher(*this);
 }
 
-string Board::outputFEN()
+string Board::outputFEN() const
 {
     string FEN = "";
     int count = 0;
@@ -398,7 +398,7 @@ string Board::outputFEN()
 }
 
 //Creates a new copy of the current Board and all of its contents
-Board Board::newCopy()
+Board Board::newCopy() const
 {
     Board newBoard = Board(0);
     for(int i=0; i<7; i++)
@@ -423,7 +423,7 @@ Board Board::newCopy()
     return(newBoard);
 }
 
-Piece Board::getSquare(int x, int y)
+Piece Board::getSquare(int x, int y) const
 {
     throwIfOutOfBounds(x, y);
     int type = 0;
@@ -470,7 +470,7 @@ bool Board::getSquareColor(int x, int y) const
     return (pieces[0] >> (8*x + y)) & 1;
 }
 
-int Board::getKingX(bool getColor)
+int Board::getKingX(bool getColor) const
 {
     if(getColor)
     {
@@ -482,7 +482,7 @@ int Board::getKingX(bool getColor)
     }
 }
 
-int Board::getKingY(bool getColor)
+int Board::getKingY(bool getColor) const
 {
     if(getColor)
     {
@@ -542,7 +542,7 @@ void Board::setKingLocation(bool setColor, int x, int y)
     }
 }
 
-void Board::generateMoveArray(Move* finalMoveList, int& moveCounter)
+void Board::generateMoveArray(Move* finalMoveList, int& moveCounter) const
 {
     for(int y = 0; y < 8; y++)
     {
@@ -555,7 +555,7 @@ void Board::generateMoveArray(Move* finalMoveList, int& moveCounter)
         }
     }
 
-    Danger safetyData = Danger(this);
+    Danger safetyData = Danger(*this);
     for(int i = moveCounter - 1; i >= 0; i--)
     {
         if(!finalMoveList[i].isSafe(safetyData))
@@ -566,11 +566,11 @@ void Board::generateMoveArray(Move* finalMoveList, int& moveCounter)
     }
 }
 
-int Board::gameOverCheck()
+int Board::gameOverCheck() const
 {
     int moveCounter = 0;
     Move rawMoveList[27];
-    Danger safetyData = Danger(this);
+    Danger safetyData = Danger(*this);
     for(int y = 0; y < 8; y++)
     {
         for(int x = 0; x < 8; x++)
@@ -741,7 +741,7 @@ void Board::makeMove(Move data)
 // 4        197281
 // 5        4865609
 // 6        119060324
-double Board::perft(int depth)
+double Board::perft(int depth) const
 {
     if(depth == 0) return(1);//No moves at 0 depth
     int moveGenCount = 0;
@@ -766,7 +766,7 @@ double Board::perft(int depth)
     return moveCounter;
 }
 
-double Board::dividePerft(int depth)
+double Board::dividePerft(int depth) const
 {
     if(depth == 0) return(1);//No moves at 0 depth
 
@@ -798,12 +798,12 @@ double Board::dividePerft(int depth)
     return moveCounter;
 }
 
-Piece Board::findKing(bool getColor)
+Piece Board::findKing(bool getColor) const
 {
     return(getSquare(getKingX(getColor), getKingY(getColor)));
 }
 
-bool Board::getCastlingRights(bool color, bool side)
+bool Board::getCastlingRights(bool color, bool side) const
 {
     char placer = 0;
     if(color)
@@ -816,7 +816,7 @@ bool Board::getCastlingRights(bool color, bool side)
     }
     return((castlingRights >> placer) & 1);
 }
-char Board::getCastlingRights()
+char Board::getCastlingRights() const
 {
     return castlingRights;
 }
@@ -841,6 +841,7 @@ void Board::setEP(Piece loadEP)
     EPdata <<= 3;
     EPdata |= loadEP.getX();
 }
+
 void Board::setEP(int x, int y, bool color)
 {
     throwIfOutOfBounds(x, y);
@@ -858,7 +859,7 @@ void Board::setEP(int x, int y, bool color)
     EPdata |= x;
 }
 
-Piece Board::getEP()
+Piece Board::getEP() const
 {
     if(EPdata == -1)
     {
@@ -905,12 +906,13 @@ void Board::setCastlingRights(bool color, bool side, bool value)
         castlingRights = castlingRights & ~(1 << placer);
     }
 }
+
 void Board::setCastlingRights(char rights)
 {
     castlingRights = rights;
 }
 
-void Board::countPieces()
+void Board::countPieces() const
 {
     std::cout << "Black:  " << pieceCount(false) << std::endl;
     std::cout << "	Pawns:  " << pieceCount(PieceType::Pawn, false) << std::endl;
@@ -929,12 +931,12 @@ void Board::countPieces()
     std::cout << "	Rooks  " << pieceCount(PieceType::Rook, true) << std::endl;
 }
 
-int Board::pieceCount()
+int Board::pieceCount() const
 {
     return bitwise::countBits(allPieces);
 }
 
-int Board::pieceCount(bool color)
+int Board::pieceCount(bool color) const
 {
     bitBoard mask = pieces[0];
     if (!color)
@@ -945,12 +947,12 @@ int Board::pieceCount(bool color)
     return bitwise::countBits(allPieces & mask);
 }
 
-int Board::pieceCount(PieceType type)
+int Board::pieceCount(PieceType type) const
 {
     return bitwise::countBits(pieces[type]);
 }
 
-int Board::pieceCount(PieceType type, bool color)
+int Board::pieceCount(PieceType type, bool color) const
 {
     bitBoard mask = pieces[0];
     if (!color)
@@ -967,7 +969,7 @@ bool Board::squareIsPopulated(int x, int y) const
     return (allPieces >> (8*x + y)) & 1;
 }
 
-bool Board::squareIsType(int x, int y, int type)
+bool Board::squareIsType(int x, int y, int type) const
 {
     throwIfOutOfBounds(x, y);
     return (pieces[type] >> (8 * x + y)) & 1;

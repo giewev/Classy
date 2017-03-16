@@ -35,17 +35,17 @@ public:
         return(color);
     }
 
-    static void generateMoves(std::vector<Move>&, int x, int y, Board&);
+    static void generateMoves(std::vector<Move>&, int x, int y, const Board&);
 
-    static void appendMoveArray(Move*, int&, int x, int y, Board&);
-    static void kingMoveArray(Move*, int&, int x, int y, Board&);
-    static void queenMoveArray(Move*, int&, int x, int y, Board&);
-    static void pawnMoveArray(Move*, int&, int x, int y, Board&);
-    static void bishopMoveArray(Move*, int&, int x, int y, Board&);
-    static void knightMoveArray(Move*, int&, int x, int y, Board&);
-    static void rookMoveArray(Move*, int&, int x, int y, Board&);
+    static void appendMoveArray(Move*, int&, int x, int y, const Board&);
+    static void kingMoveArray(Move*, int&, int x, int y, const Board&);
+    static void queenMoveArray(Move*, int&, int x, int y, const Board&);
+    static void pawnMoveArray(Move*, int&, int x, int y, const Board&);
+    static void bishopMoveArray(Move*, int&, int x, int y, const Board&);
+    static void knightMoveArray(Move*, int&, int x, int y, const Board&);
+    static void rookMoveArray(Move*, int&, int x, int y, const Board&);
 
-    bool isSafe(Board);
+    bool isSafe(const Board&);
     bool operator!=(Piece);
 
     virtual bool hasMoved();

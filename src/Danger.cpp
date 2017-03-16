@@ -30,7 +30,8 @@ Danger::Danger()
     defenderX = -1;
     defenderY = -1;
 }
-Danger::Danger(Board* gameBoard)
+
+Danger::Danger(const Board& gameBoard)
 {
     for(int i=0; i<8; i++)
     {
@@ -46,14 +47,15 @@ Danger::Danger(Board* gameBoard)
     doubleCheck = false;
     pinCount = 0;
     safeSquareCount = 0;
-    dataBoard = gameBoard;
-    Piece King = gameBoard->findKing(gameBoard->turn);
+    dataBoard = gameBoard.newCopy();
+    Piece King = gameBoard.findKing(gameBoard.turn);
     defenderX = King.getX();
     defenderY = King.getY();
 
-    loadData(gameBoard, gameBoard->findKing(gameBoard->turn));
+    loadData(gameBoard, gameBoard.findKing(gameBoard.turn));
 }
-Danger::Danger(Board* gameBoard, Piece defender)
+
+Danger::Danger(const Board& gameBoard, Piece defender)
 {
     for(int i=0; i<8; i++)
     {
@@ -71,10 +73,11 @@ Danger::Danger(Board* gameBoard, Piece defender)
     safeSquareCount = 0;
     defenderX = defender.getX();
     defenderY = defender.getY();
-    dataBoard = gameBoard;
+    dataBoard = gameBoard.newCopy();
 
     loadData(gameBoard, defender);
 }
+
 Danger::~Danger()
 {
 }
@@ -83,27 +86,33 @@ int Danger::getPinCount()
 {
     return pinCount;
 }
+
 int Danger::getSafeSquareCount()
 {
     return safeSquareCount;
 }
+
 int Danger::getPinX(int index)
 {
     return (pinCoordinates[index] / 8) & 7;
 }
+
 int Danger::getPinY(int index)
 {
     return (pinCoordinates[index] % 8) & 7;
 }
+
 bool Danger::getCheck()
 {
     return check;
 }
+
 bool Danger::getDoubleCheck()
 {
     return doubleCheck;
 }
-Board* Danger::getBoard()
+
+Board Danger::getBoard()
 {
     return dataBoard;
 }
@@ -219,7 +228,7 @@ void Danger::addAttacker(int x, int y)
             {
                 break;
             }
-            target = dataBoard->getSquare(x, defenderY + i * modifier);
+            target = dataBoard.getSquare(x, defenderY + i * modifier);
             setSafeSquare(i-1, defenderX, defenderY+i*modifier);
             if(!target.isNull())
             {
@@ -245,7 +254,7 @@ void Danger::addAttacker(int x, int y)
             {
                 break;
             }
-            target = dataBoard->getSquare(defenderX + i * (modifier), y);
+            target = dataBoard.getSquare(defenderX + i * (modifier), y);
             setSafeSquare(i-1, defenderX+i*modifier, defenderY);
             if(!target.isNull())
             {
@@ -276,7 +285,7 @@ void Danger::addAttacker(int x, int y)
             {
                 break;
             }
-            target = dataBoard->getSquare(x + i*modifier, y + i*altModifier);
+            target = dataBoard.getSquare(x + i*modifier, y + i*altModifier);
             if(target.type == PieceType::King)
             {
                 safeSquareCount = i;
@@ -304,9 +313,9 @@ void Danger::addPin(int data)
     pinCount++;
 }
 
-void Danger::loadData(Board* gameBoard, Piece defender)
+void Danger::loadData(const Board& gameBoard, Piece defender)
 {
-    bool color = gameBoard->turn;
+    bool color = gameBoard.turn;
     int direction = -1;
     if(color)
     {
@@ -321,8 +330,8 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     int traceY = 0;
     for (int i = 1; i <= 7-y; i++)
     {
-        PieceType targetType = gameBoard->getSquareType(x, y+i);
-        bool targetColor = gameBoard->getSquareColor(x, y+i);
+        PieceType targetType = gameBoard.getSquareType(x, y+i);
+        bool targetColor = gameBoard.getSquareColor(x, y+i);
         if(targetType)
         {
             if(color == targetColor)
@@ -365,8 +374,8 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i <= y; i++)
     {
-        PieceType targetType = gameBoard->getSquareType(x, y-i);
-        bool targetColor = gameBoard->getSquareColor(x, y-i);
+        PieceType targetType = gameBoard.getSquareType(x, y-i);
+        bool targetColor = gameBoard.getSquareColor(x, y-i);
         if(targetType)
         {
             if(color == targetColor)
@@ -409,8 +418,8 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i <= x; i++)
     {
-        PieceType targetType = gameBoard->getSquareType(x-i, y);
-        bool targetColor = gameBoard->getSquareColor(x-i, y);
+        PieceType targetType = gameBoard.getSquareType(x-i, y);
+        bool targetColor = gameBoard.getSquareColor(x-i, y);
         if(targetType)
         {
             if(color == targetColor)
@@ -453,8 +462,8 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i <= 7-x; i++)
     {
-        PieceType targetType = gameBoard->getSquareType(x+i, y);
-        bool targetColor = gameBoard->getSquareColor(x+i, y);
+        PieceType targetType = gameBoard.getSquareType(x+i, y);
+        bool targetColor = gameBoard.getSquareColor(x+i, y);
         if(targetType)
         {
             if(color == targetColor)
@@ -497,8 +506,8 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i <= std::min(7-x, 7-y); i++)
     {
-        PieceType targetType = gameBoard->getSquareType(x+i, y+i);
-        bool targetColor = gameBoard->getSquareColor(x+i, y+i);
+        PieceType targetType = gameBoard.getSquareType(x+i, y+i);
+        bool targetColor = gameBoard.getSquareColor(x+i, y+i);
         if(targetType)
         {
             if(color == targetColor)
@@ -541,8 +550,8 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i <= std::min(x, y); i++)
     {
-        PieceType targetType = gameBoard->getSquareType(x-i, y-i);
-        bool targetColor = gameBoard->getSquareColor(x-i, y-i);
+        PieceType targetType = gameBoard.getSquareType(x-i, y-i);
+        bool targetColor = gameBoard.getSquareColor(x-i, y-i);
         if(targetType)
         {
             if(color == targetColor)
@@ -585,8 +594,8 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i <= std::min(x, 7-y); i++)
     {
-        PieceType targetType = gameBoard->getSquareType(x-i, y+i);
-        bool targetColor = gameBoard->getSquareColor(x-i, y+i);
+        PieceType targetType = gameBoard.getSquareType(x-i, y+i);
+        bool targetColor = gameBoard.getSquareColor(x-i, y+i);
         if(targetType != PieceType::Empty)
         {
             if(color == targetColor)
@@ -629,8 +638,8 @@ void Danger::loadData(Board* gameBoard, Piece defender)
     traceY = 0;
     for (int i = 1; i <= std::min(7-x, y); i++)
     {
-        PieceType targetType = gameBoard->getSquareType(x+i, y-i);
-        bool targetColor = gameBoard->getSquareColor(x+i, y-i);
+        PieceType targetType = gameBoard.getSquareType(x+i, y-i);
+        bool targetColor = gameBoard.getSquareColor(x+i, y-i);
         if(targetType)
         {
             if(color == targetColor)
@@ -674,8 +683,8 @@ void Danger::loadData(Board* gameBoard, Piece defender)
         {
             if(x + i <= 7 && x + i >= 0)
             {
-                PieceType targetType = gameBoard->getSquareType(x + i, y + direction);
-                int targetColor = gameBoard->getSquareColor(x + i, y + direction);
+                PieceType targetType = gameBoard.getSquareType(x + i, y + direction);
+                int targetColor = gameBoard.getSquareColor(x + i, y + direction);
 
                 if(targetType == PieceType::Pawn && targetColor != color)
                 {
@@ -701,8 +710,8 @@ void Danger::loadData(Board* gameBoard, Piece defender)
             {
                 if(y + j < 8 && y + j >= 0)
                 {
-                    targetType = gameBoard->getSquareType(x+i, y+j);
-                    targetColor = gameBoard->getSquareColor(x+i, y+j);
+                    targetType = gameBoard.getSquareType(x+i, y+j);
+                    targetColor = gameBoard.getSquareColor(x+i, y+j);
 
                     if(targetType == PieceType::Knight && targetColor != color)
                     {

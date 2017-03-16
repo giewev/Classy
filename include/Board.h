@@ -22,23 +22,23 @@ public:
     Board();
     Board(int);
     ~Board();
-    Board newCopy();
+    Board newCopy() const;
 
-    void countPieces();
-    int pieceCount();
-    int pieceCount(bool);
-    int pieceCount(PieceType);
-    int pieceCount(PieceType, bool);
+    void countPieces() const;
+    int pieceCount() const;
+    int pieceCount(bool) const;
+    int pieceCount(PieceType) const;
+    int pieceCount(PieceType, bool) const;
 
-    Piece getEP();
-    Piece getSquare(int, int);
-    Piece findKing(bool);
-    int getKingX(bool);
-    int getKingY(bool);
+    Piece getEP() const;
+    Piece getSquare(int, int) const;
+    Piece findKing(bool) const;
+    int getKingX(bool) const;
+    int getKingY(bool) const;
 
     PieceType getSquareType(int, int) const;
     bool getSquareColor(int, int) const;
-    bool getSquareMoved(int, int);
+    bool getSquareMoved(int, int) const;
 
     void setSquare(Piece, int, int);
     void setSquare(Piece, int);
@@ -49,20 +49,20 @@ public:
 
     size_t getHashCode() const;
     void loadFEN(std::string);
-    std::string outputFEN();
-    double perft(int);
-    void generateMoveArray(Move*, int&);
-    int gameOverCheck();
+    std::string outputFEN() const;
+    double perft(int) const;
+    void generateMoveArray(Move*, int&) const;
+    int gameOverCheck() const;
     void makeMove(Move);
 
     bool operator==(const Board&) const;
 
     bool squareIsPopulated(int, int) const;
-    bool squareIsType(int, int, int);
-    double dividePerft(int);
-    char convertToAlg(int);
-    bool getCastlingRights(bool, bool);
-    char getCastlingRights();
+    bool squareIsType(int, int, int) const;
+    double dividePerft(int) const;
+    char convertToAlg(int) const;
+    bool getCastlingRights(bool, bool) const;
+    char getCastlingRights() const;
     void setCastlingRights(bool, bool, bool);
     void setCastlingRights(char);
     static void throwIfOutOfBounds(int x, int y);

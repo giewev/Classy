@@ -88,7 +88,7 @@ void Piece::setMoved(bool x)
     return;
 }
 
-void Piece::generateMoves(std::vector<Move>& moveList, int x, int y, Board& gameBoard)
+void Piece::generateMoves(std::vector<Move>& moveList, int x, int y, const Board& gameBoard)
 {
     Move moveArray[220];
     int moveCounter = 0;
@@ -99,7 +99,7 @@ void Piece::generateMoves(std::vector<Move>& moveList, int x, int y, Board& game
     }
 }
 
-void Piece::appendMoveArray(Move* moveList, int& moveCounter, int x, int y, Board& gameBoard)
+void Piece::appendMoveArray(Move* moveList, int& moveCounter, int x, int y, const Board& gameBoard)
 {
     PieceType type = gameBoard.getSquareType(x, y);
     if(type == PieceType::Empty)
@@ -136,7 +136,7 @@ void Piece::appendMoveArray(Move* moveList, int& moveCounter, int x, int y, Boar
     return;
 }
 
-void Piece::kingMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, Board& gameBoard)
+void Piece::kingMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, const Board& gameBoard)
 {
     bool ownColor = gameBoard.getSquareColor(xPos, yPos);
     for (int j=-1; j<=1; j++)
@@ -209,13 +209,13 @@ void Piece::kingMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
     }
 }
 
-void Piece::queenMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, Board& gameBoard)
+void Piece::queenMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, const Board& gameBoard)
 {
     rookMoveArray(moveList, moveCounter, xPos, yPos, gameBoard);
     bishopMoveArray(moveList, moveCounter, xPos, yPos, gameBoard);
 }
 
-void Piece::bishopMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, Board& gameBoard)
+void Piece::bishopMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, const Board& gameBoard)
 {
     bool ownColor = gameBoard.getSquareColor(xPos, yPos);
     for(int i=-1; i<=1; i+=2)
@@ -253,7 +253,7 @@ void Piece::bishopMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos
         }
     }
 }
-void Piece::knightMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, Board& gameBoard)
+void Piece::knightMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, const Board& gameBoard)
 {
     bool ownColor = gameBoard.getSquareColor(xPos, yPos);
     for(int j=-2; j<=2; j++)
@@ -286,7 +286,7 @@ void Piece::knightMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos
     }
 }
 
-void Piece::rookMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, Board& gameBoard)
+void Piece::rookMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, const Board& gameBoard)
 {
     bool ownColor = gameBoard.getSquareColor(xPos, yPos);
     for(int i=-1; i<=1; i++)
@@ -328,7 +328,7 @@ void Piece::rookMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
     }
 }
 
-void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, Board& gameBoard)
+void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, const Board& gameBoard)
 {
     bool ownColor = gameBoard.getSquareColor(xPos, yPos);
     int direction = -1;
@@ -403,7 +403,7 @@ void Piece::pawnMoveArray(Move* moveList, int& moveCounter, int xPos, int yPos, 
 }
 
 //Returns false if the Piece is in check, true otherwise
-bool Piece::isSafe(Board gameBoard)
+bool Piece::isSafe(const Board& gameBoard)
 {
     //Check for Bishop or Queen
     for(int i=-1; i<=1; i+=2)

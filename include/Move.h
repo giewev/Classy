@@ -37,7 +37,7 @@ public:
 
     bool isSafe(Danger);
     std::string basicAlg();
-    bool isCapture(Board*);
+    bool isCapture(const Board&);
 };
 
 #endif

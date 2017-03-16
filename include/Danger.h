@@ -1,12 +1,10 @@
-
+#include "Board.h"
 #include <vector>
 class Piece;
-class Board;
 struct Move;
 
 class Danger
 {
-
     int pinCoordinates[8];
     int pinDirections[8];
     int safeSquares[7];
@@ -14,21 +12,21 @@ class Danger
     bool doubleCheck;
     int pinCount;
     int safeSquareCount;
-    Board* dataBoard;
+    Board dataBoard;
 
     void addAttacker(int, int);
     void addPin(int, int);
     void addPin(int);
 public:
     Danger();
-    Danger(Board*);
-    Danger(Board*, Piece);
+    Danger(const Board&);
+    Danger(const Board&, Piece);
     ~Danger();
 
     int defenderX;
     int defenderY;
 
-    void loadData(Board*, Piece);
+    void loadData(const Board&, Piece);
     void setSafeSquare(int index,int x,int y);
 
     int getPinCount();
@@ -39,7 +37,7 @@ public:
     int getSafeY(int);
     bool getCheck();
     bool getDoubleCheck();
-    Board* getBoard();
+    Board getBoard();
 
     bool inSafeSquares(int, int);
     bool inPinCoordinates(int, int);
