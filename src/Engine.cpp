@@ -134,13 +134,19 @@ Move Engine::alphaBeta(const Board& boardState, int depth, double alpha, double 
         newBoard = boardState.newCopy();
         newBoard.makeMove(moveList[i]);
 
-        if(depth == 1)
+        if(depth == 1 && !moveList[i].isCapture(boardState))
         {
             evaluateMove(newBoard, moveList, i);
         }
         else
         {
-            returnedMove = alphaBeta(newBoard, depth - 1, alpha, beta);
+            int nextDepth = depth - 1;
+            if (nextDepth <= 0)
+            {
+                nextDepth = 1;
+            }
+
+            returnedMove = alphaBeta(newBoard, nextDepth, alpha, beta);
 
             moveList[i].setScore(returnedMove.score);
             if(returnedMove.getGameOverDepth() != -1)
