@@ -52,6 +52,7 @@ public:
     std::string outputFEN() const;
     double perft(int) const;
     void generateMoveArray(Move*, int&) const;
+    void generateCaptureMoves(Move* moveList, int& moveCounter) const;
     int gameOverCheck() const;
     void makeMove(Move);
 

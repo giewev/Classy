@@ -29,3 +29,11 @@ double FullEvaluator::evaluate(Board boardState)
 
     return score;
 }
+
+double FullEvaluator::lazyEvaluate(Board boardState)
+{
+    double score = materialEvaluator.evaluate(boardState);
+    score += positionalEvaluator.evaluate(boardState);
+
+    return score;
+}

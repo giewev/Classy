@@ -41,7 +41,11 @@ private:
 
     static int chooseBetweenEqualMoves(Move* moveList, int currentIndex, int newIndex, bool turn);
     void evaluateMove(const Board& evaluationBoard, Move* moveList, int index);
+    double evaluatePosition(const Board& evaluationBoard);
     static int bestMove(Move* moveList, int bestIndex, int currentIndex, bool turn);
     static bool causesAlphaBetaBreak(double score, double alpha, double beta, bool turn);
     static void sortMoveList(Move*, int, const Board&, const TranspositionCache&);
+    static void updateAlphaBeta(double newScore, bool turn, double& alpha, double& beta);
+
+    double quiesce(const Board& boardState, double alpha, double beta);
 };

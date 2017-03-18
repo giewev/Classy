@@ -566,6 +566,42 @@ void Board::generateMoveArray(Move* finalMoveList, int& moveCounter) const
     }
 }
 
+void Board::generateCaptureMoves(Move* moveList, int& moveCounter) const
+{
+    for(int y = 0; y < 8; y++)
+    {
+        for(int x = 0; x < 8; x++)
+        {
+            if(getSquareColor(x, y) == turn)
+            {
+                Piece::appendMoveArray(moveList, moveCounter, x, y, *this);
+            }
+        }
+    }
+
+    for (int i = moveCounter - 1; i >= 0; i--)
+    {
+        if (!moveList[i].isCapture(*this))
+        {
+            moveCounter--;
+            moveList[i] = moveList[moveCounter];
+        }
+    }
+
+    if (moveCounter > 0)
+    {
+        Danger safetyData = Danger(*this);
+        for(int i = moveCounter - 1; i >= 0; i--)
+        {
+            if(!moveList[i].isSafe(safetyData))
+            {
+                moveList[i] = moveList[moveCounter - 1];
+                moveCounter--;
+            }
+        }
+    }
+}
+
 int Board::gameOverCheck() const
 {
     int moveCounter = 0;

@@ -12,6 +12,7 @@ public:
     FullEvaluator();
     virtual ~FullEvaluator();
     double evaluate(Board);
+    double lazyEvaluate(Board);
 protected:
 private:
     GameOverEvaluator gameOverEvaluator;
