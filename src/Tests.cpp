@@ -220,6 +220,31 @@ void zobristConsistancy_test()
     zobristConsistancy_test_helper(zobristTestFEN, castingRuinedByRookMove);
 }
 
+void centerPawnMask_test()
+{
+    std::string fullCenterFEN = "8/8/8/3Pp3/3pP3/8/8/8 w - - 0 1";
+    std::string threeCenterFEN = "8/8/8/3P4/3pP3/8/8/8 w - - 0 1";
+    std::string twoCenterFEN = "8/8/8/3P4/3p4/8/8/8 w - - 0 1";
+    std::string oneCenterFEN = "8/8/8/8/3p4/8/8/8 w - - 0 1";
+    std::string emptyCenterFEN = "8/8/8/8/8/8/8/8 w - - 0 1";
+
+    Board board = Board();
+    board.loadFEN(fullCenterFEN);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 4);
+
+    board.loadFEN(threeCenterFEN);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 3);
+
+    board.loadFEN(twoCenterFEN);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 2);
+
+    board.loadFEN(oneCenterFEN);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 1);
+
+    board.loadFEN(emptyCenterFEN);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 0);
+}
+
 void runAllTests()
 {
     loadStartingPosition_test();
@@ -233,4 +258,5 @@ void runAllTests()
     mateInThreePuzzle_test_1();
     avoidMatePuzzle_test_1();
     zobristConsistancy_test();
+    centerPawnMask_test();
 }
