@@ -245,6 +245,19 @@ void centerPawnMask_test()
     assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 0);
 }
 
+void semiCenterPawnMask_test()
+{
+    std::string fullWhiteSemiCenter = "8/8/8/8/2P2P2/2PPPP2/8/8 w - - 0 1";
+    std::string fullBlackSemiCenter = "8/8/2pppp2/2p2p2/8/8/8/8 w - - 0 1";
+
+    Board board = Board();
+    board.loadFEN(fullWhiteSemiCenter);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 6);
+
+    board.loadFEN(fullBlackSemiCenter);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 6);
+}
+
 void runAllTests()
 {
     loadStartingPosition_test();
@@ -259,4 +272,5 @@ void runAllTests()
     avoidMatePuzzle_test_1();
     zobristConsistancy_test();
     centerPawnMask_test();
+    semiCenterPawnMask_test();
 }
