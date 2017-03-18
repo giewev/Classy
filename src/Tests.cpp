@@ -230,19 +230,19 @@ void centerPawnMask_test()
 
     Board board = Board();
     board.loadFEN(fullCenterFEN);
-    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 4);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn] & centerBoard) == 4);
 
     board.loadFEN(threeCenterFEN);
-    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 3);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn] & centerBoard) == 3);
 
     board.loadFEN(twoCenterFEN);
-    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 2);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn] & centerBoard) == 2);
 
     board.loadFEN(oneCenterFEN);
-    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 1);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn] & centerBoard) == 1);
 
     board.loadFEN(emptyCenterFEN);
-    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 0);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn] & centerBoard) == 0);
 }
 
 void semiCenterPawnMask_test()
@@ -252,10 +252,10 @@ void semiCenterPawnMask_test()
 
     Board board = Board();
     board.loadFEN(fullWhiteSemiCenter);
-    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 6);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn] & whiteSemiCenter) == 6);
 
     board.loadFEN(fullBlackSemiCenter);
-    assert(bitwise::countBits(board.pieces[PieceType::Pawn]) == 6);
+    assert(bitwise::countBits(board.pieces[PieceType::Pawn] & blackSemiCenter) == 6);
 }
 
 void runAllTests()
