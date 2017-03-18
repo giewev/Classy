@@ -165,7 +165,7 @@ std::string Move::basicAlg()
     return move;
 }
 
-bool Move::operator==(Move other)
+bool Move::operator==(Move other) const
 {
     if(startX != other.startX)
     {
@@ -190,7 +190,7 @@ bool Move::operator==(Move other)
     return true;
 }
 
-bool Move::operator!=(Move other)
+bool Move::operator!=(Move other) const
 {
     if(startX != other.startX)
     {
@@ -215,7 +215,7 @@ bool Move::operator!=(Move other)
     return false;
 }
 
-bool Move::operator<(Move other)
+bool Move::operator<(Move other) const
 {
     if (score < other.score)
     {
@@ -227,7 +227,7 @@ bool Move::operator<(Move other)
     }
 }
 
-bool Move::operator>(Move other)
+bool Move::operator>(Move other) const
 {
     if (score > other.score)
     {

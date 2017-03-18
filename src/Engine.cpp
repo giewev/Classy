@@ -5,6 +5,7 @@
 #include "Bitwise.h"
 #include "FullEvaluator.h"
 #include "Logger.h"
+#include "MoveSorter.h"
 
 #include <iostream>
 #include <math.h>
@@ -136,7 +137,7 @@ Move Engine::alphaBeta(const Board& boardState, int depth, double alpha, double 
 
         if(depth == 1)
         {
-            if (moveList[i].isCapture(boardState))
+            if (moveList[i].isCapture(boardState) && fabs(alpha) != 999 && fabs(beta) != 999)
             {
                 moveList[i].score = quiesce(newBoard, alpha, beta);
             }
@@ -193,6 +194,7 @@ Move Engine::iterativeSearch(int milliseconds)
     while (difftime(time(NULL), timer) < milliseconds / 2000.0)
     {
         bestMove = alphaBeta(depth++);
+        Logger::mainLog()->flush();
     }
 
     Logger::mainLog()->info("Iterative search on position [{0}] to a depth of {1} chose: {2} with score: {3} after {4} seconds",
@@ -306,8 +308,8 @@ int Engine::bestMove(Move* moveList, int bestIndex, int currentIndex, bool turn)
 
 bool Engine::causesAlphaBetaBreak(double score, double alpha, double beta, bool turn)
 {
-    return (turn && score > beta) ||
-            (!turn && score < alpha);
+    return (turn && score >= beta) ||
+            (!turn && score <= alpha);
 }
 
 void Engine::updateAlphaBeta(double score, bool turn, double& alpha, double& beta)
@@ -385,62 +387,8 @@ std::string Engine::toAlg(int val)
 
 void Engine::sortMoveList(Move* rawList, int moveCount, const Board& sortBoard, const TranspositionCache& transposition)
 {
-     int maxPriority = 5;
-    char movePriorities[230];
-
-    for(int i = 0; i < moveCount; i++)
-    {
-        if (rawList[i] == transposition.bestMove)
-        {
-            movePriorities[i] = 0;
-        }
-        if (rawList[i] == transposition.cutoffMove)
-        {
-            movePriorities[i] = 1;
-        }
-        else if (rawList[i].isCapture(sortBoard))
-        {
-            double attackerValue = MaterialEvaluator::pieceValue(sortBoard.getSquareType(rawList[i].startX, rawList[i].startY));
-            double victimValue = MaterialEvaluator::pieceValue(sortBoard.getSquareType(rawList[i].endX, rawList[i].endY));
-            if (victimValue > attackerValue)
-            {
-                movePriorities[i] = 2;
-            }
-            else if (victimValue == attackerValue)
-            {
-                movePriorities[i] = 3;
-            }
-            else
-            {
-                movePriorities[i] = 5;
-            }
-        }
-        else
-        {
-            movePriorities[i] = 4;
-        }
-    }
-
-    int sortedCount = 0;
-    for (int priority = 0; priority < maxPriority; priority++)
-    {
-        for (int i = sortedCount; i < moveCount; i++)
-        {
-            if (movePriorities[i] == priority)
-            {
-                Move tempMove = rawList[sortedCount];
-                int tempPriority = movePriorities[sortedCount];
-
-                rawList[sortedCount] = rawList[i];
-                movePriorities[sortedCount] = movePriorities[i];
-
-                rawList[i] = tempMove;
-                movePriorities[i] = tempPriority;
-
-                sortedCount++;
-            }
-        }
-    }
+    MoveSorter sorter = MoveSorter(rawList, moveCount, sortBoard, transposition);
+    sorter.sortMoves();
 }
 
 void Engine::updateTranspositionBestIfDeeper(const Board& newBoard, int depth, Move newMove)

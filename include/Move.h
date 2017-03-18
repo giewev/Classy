@@ -28,11 +28,11 @@ public:
     double getScore();
     int getGameOverDepth();
 
-    bool operator==(Move);
-    bool operator!=(Move);
+    bool operator==(Move) const;
+    bool operator!=(Move) const;
 
-    bool operator<(Move);
-    bool operator>(Move);
+    bool operator<(Move) const;
+    bool operator>(Move) const;
     static bool bigger(Move, Move);
 
     bool isSafe(Danger);
