@@ -30,3 +30,26 @@ double MaterialEvaluator::evaluate(Board boardState)
 
     return score;
 }
+
+double MaterialEvaluator::pieceValue(PieceType type)
+{
+    switch (type)
+    {
+        case PieceType::Empty:
+            return 0;
+        case PieceType::Pawn:
+            return pawnValue;
+        case PieceType::Knight:
+            return knightValue;
+        case PieceType::Bishop:
+            return bishopValue;
+        case PieceType::Rook:
+            return rookValue;
+        case PieceType::Queen:
+            return queenValue;
+        case PieceType::King:
+            return 999;
+    }
+
+    throw "Unkown piece type";
+}

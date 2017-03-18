@@ -341,21 +341,20 @@ double Engine::quiesce(const Board& boardState, double alpha, double beta)
     int moveCount = 0;
     Move moveList[220];
     boardState.generateCaptureMoves(moveList, moveCount);
+    sortMoveList(moveList, moveCount, boardState, TranspositionCache());
     int bestIndex = -1;
     for (int i = 0; i < moveCount; i++)
     {
-        if (moveList[i].isCapture(boardState))
+        Board moveBoard = boardState.newCopy();
+        moveBoard.makeMove(moveList[i]);
+        double score = quiesce(moveBoard, alpha, beta);
+        if (causesAlphaBetaBreak(score, alpha, beta, boardState.turn))
         {
-            Board moveBoard = boardState.newCopy();
-            moveBoard.makeMove(moveList[i]);
-            double score = quiesce(moveBoard, alpha, beta);
-            if (causesAlphaBetaBreak(score, alpha, beta, boardState.turn))
-            {
-                return score;
-            }
-
-            bestIndex = bestMove(moveList, bestIndex, i, boardState.turn);
+            return score;
         }
+
+        updateAlphaBeta(score, boardState.turn, alpha, beta);
+        bestIndex = bestMove(moveList, bestIndex, i, boardState.turn);
     }
 
     if (bestIndex == -1)
@@ -386,7 +385,7 @@ std::string Engine::toAlg(int val)
 
 void Engine::sortMoveList(Move* rawList, int moveCount, const Board& sortBoard, const TranspositionCache& transposition)
 {
-     int maxPriority = 3;
+     int maxPriority = 5;
     char movePriorities[230];
 
     for(int i = 0; i < moveCount; i++)
@@ -401,11 +400,24 @@ void Engine::sortMoveList(Move* rawList, int moveCount, const Board& sortBoard, 
         }
         else if (rawList[i].isCapture(sortBoard))
         {
-            movePriorities[i] = 2;
+            double attackerValue = MaterialEvaluator::pieceValue(sortBoard.getSquareType(rawList[i].startX, rawList[i].startY));
+            double victimValue = MaterialEvaluator::pieceValue(sortBoard.getSquareType(rawList[i].endX, rawList[i].endY));
+            if (victimValue > attackerValue)
+            {
+                movePriorities[i] = 2;
+            }
+            else if (victimValue == attackerValue)
+            {
+                movePriorities[i] = 3;
+            }
+            else
+            {
+                movePriorities[i] = 5;
+            }
         }
         else
         {
-            movePriorities[i] = 3;
+            movePriorities[i] = 4;
         }
     }
 

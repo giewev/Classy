@@ -852,6 +852,7 @@ bool Board::getCastlingRights(bool color, bool side) const
     }
     return((castlingRights >> placer) & 1);
 }
+
 char Board::getCastlingRights() const
 {
     return castlingRights;
