@@ -14,9 +14,6 @@ class HashTable;
 
 class Engine
 {
-    Board gameBoard;
-    FullEvaluator evaluator;
-    std::unordered_map<Board, TranspositionCache> transpositionTable;
 public:
     Engine();
     Engine(Board);
@@ -35,8 +32,14 @@ public:
 
     static std::string toAlg(int);
 private:
+    Board gameBoard;
+    FullEvaluator evaluator;
+    std::unordered_map<Board, TranspositionCache> transpositionTable;
+    unsigned long transTableMax = 1024 * 1024 * 64;
+
     void updateTranspositionBestIfDeeper(const Board& searchBoard, int depth, Move newMove);
     void updateTranspositionCutoffIfDeeper(const Board& searchBoard, int depth, Move newMove);
+    void clearTranspositionIfFull();
     TranspositionCache getTransposition(const Board& lookupBoard);
 
     static int chooseBetweenEqualMoves(Move* moveList, int currentIndex, int newIndex, bool turn);

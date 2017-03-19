@@ -393,6 +393,7 @@ void Engine::sortMoveList(Move* rawList, int moveCount, const Board& sortBoard, 
 
 void Engine::updateTranspositionBestIfDeeper(const Board& newBoard, int depth, Move newMove)
 {
+    this->clearTranspositionIfFull();
     if (this->transpositionTable[newBoard].bestDepth < depth)
     {
         this->transpositionTable[newBoard].bestDepth = depth;
@@ -402,10 +403,32 @@ void Engine::updateTranspositionBestIfDeeper(const Board& newBoard, int depth, M
 
 void Engine::updateTranspositionCutoffIfDeeper(const Board& newBoard, int depth, Move newMove)
 {
+    this->clearTranspositionIfFull();
     if (this->transpositionTable[newBoard].cutoffDepth < depth)
     {
         this->transpositionTable[newBoard].cutoffDepth = depth;
         this->transpositionTable[newBoard].cutoffMove = newMove;
+    }
+}
+
+void Engine::clearTranspositionIfFull()
+{
+    int eraseDepth = 1;
+    while (this->transpositionTable.size() > this->transTableMax)
+    {
+        for (auto entry = this->transpositionTable.begin(); entry != this->transpositionTable.end();)
+        {
+            if (entry->second.bestDepth <= eraseDepth && entry->second.cutoffDepth <= eraseDepth)
+            {
+                entry = this->transpositionTable.erase(entry);
+            }
+            else
+            {
+                entry++;
+            }
+        }
+
+        eraseDepth++;
     }
 }
 
