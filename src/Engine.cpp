@@ -126,6 +126,11 @@ Move Engine::alphaBeta(const Board& boardState, int depth, double alpha, double 
         returnedMove.setGameOverDepth(0);
 
         returnedMove.setScore(evaluator.evaluate(boardState));
+        if (returnedMove.score == 1000)
+        {
+            returnedMove.setScore(0);
+        }
+
         this->updateTranspositionBestIfDeeper(boardState, depth, returnedMove);
         return returnedMove;
     }
@@ -148,13 +153,7 @@ Move Engine::alphaBeta(const Board& boardState, int depth, double alpha, double 
         }
         else
         {
-            int nextDepth = depth - 1;
-            if (nextDepth <= 0)
-            {
-                nextDepth = 1;
-            }
-
-            returnedMove = alphaBeta(newBoard, nextDepth, alpha, beta);
+            returnedMove = alphaBeta(newBoard, depth - 1, alpha, beta);
 
             moveList[i].setScore(returnedMove.score);
             if(returnedMove.getGameOverDepth() != -1)
