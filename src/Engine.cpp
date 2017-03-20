@@ -214,7 +214,7 @@ int Engine::chooseBetweenEqualMoves(Move* moveList, int bestIndex, int newIndex,
     //Good result
     if(moveList[newIndex].score == 999 * modifier)
     {
-        if(moveList[newIndex].getGameOverDepth() < bestDepth || bestDepth == -1)
+        if(moveList[newIndex].getGameOverDepth() < bestDepth)
         {
             return newIndex;
         }
@@ -226,7 +226,7 @@ int Engine::chooseBetweenEqualMoves(Move* moveList, int bestIndex, int newIndex,
     //Bad result
     else if(moveList[newIndex].score == -999 * modifier)
     {
-        if(moveList[newIndex].getGameOverDepth() > bestDepth || bestDepth == -1)
+        if(moveList[newIndex].getGameOverDepth() > bestDepth)
         {
             return newIndex;
         }
