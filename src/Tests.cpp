@@ -110,7 +110,7 @@ void basicMateInOnePuzzle_test_1()
 
     for (int depth = 1; depth < 5; depth++)
     {
-        Move bestMove = engine.alphaBeta(depth);
+        Move bestMove = engine.searchToDepth(depth);
         assert(bestMove.startX == 0);
         assert(bestMove.startY == 6);
         assert(bestMove.endX == 4);
@@ -128,7 +128,7 @@ void basicMateInOnePuzzle_test_2()
 
     for (int depth = 1; depth < 5; depth++)
     {
-        Move bestMove = engine.alphaBeta(depth);
+        Move bestMove = engine.searchToDepth(depth);
         assert(bestMove.startX == 7);
         assert(bestMove.startY == 0);
         assert(bestMove.endX == 7);
@@ -146,7 +146,7 @@ void promotionMateInOnePuzzle_test_1()
 
     for (int depth = 1; depth < 5; depth++)
     {
-        Move bestMove = engine.alphaBeta(depth);
+        Move bestMove = engine.searchToDepth(depth);
 
         assert(bestMove.startX == 0);
         assert(bestMove.startY == 6);
@@ -165,7 +165,7 @@ void mateInThreePuzzle_test_1()
     Engine engine = Engine(testBoard);
 
     // Solution requires 3 white moves (5 ply)
-    Move bestMove = engine.alphaBeta(5);
+    Move bestMove = engine.searchToDepth(5);
     assert(bestMove.startX == 0);
     assert(bestMove.startY == 1);
     assert(bestMove.endX == 2);
@@ -182,7 +182,7 @@ void avoidMatePuzzle_test_1()
 
     for (int depth = 2; depth < 5; depth++)
     {
-        Move bestMove = engine.alphaBeta(depth);
+        Move bestMove = engine.searchToDepth(depth);
         assert(bestMove.startX == 0);
         assert(bestMove.startY == 5);
         assert(bestMove.endX == 0);

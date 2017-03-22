@@ -25,12 +25,12 @@ int main(int argc, char *argv[])
         if (argParser.flagExists("-depth"))
         {
             int moveDepth = std::stoi(argParser.argumentContent("-depth"));
-            std::cout << engine.alphaBeta(moveDepth).basicAlg() << std::endl;
+            std::cout << engine.searchToDepth(moveDepth).basicAlg() << std::endl;
         }
         else if (argParser.flagExists("-time"))
         {
             double searchTime = std::stod(argParser.argumentContent("-time")) * 1000;
-            std::cout << engine.iterativeSearch(searchTime).basicAlg() << std::endl;
+            std::cout << engine.searchForTime(searchTime).basicAlg() << std::endl;
         }
     }
 

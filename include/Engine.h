@@ -25,8 +25,8 @@ public:
     Board getBoard();
     void setBoard(Board);
 
-    Move alphaBeta(int depth);
-    Move iterativeSearch(int milliseconds);
+    Move searchToDepth(int depth);
+    Move searchForTime(int milliseconds);
 
     void updateTranspositionBestIfDeeper(const Board& searchBoard, int depth, Move newMove);
     void updateTranspositionCutoffIfDeeper(const Board& searchBoard, int depth, Move newMove);

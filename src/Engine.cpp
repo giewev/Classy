@@ -46,7 +46,7 @@ void Engine::setBoard(Board loadBoard)
     gameBoard = loadBoard;
 }
 
-Move Engine::alphaBeta(int depth)
+Move Engine::searchToDepth(int depth)
 {
     time_t timer = time(NULL);
     AlphaBetaSearcher searcher = AlphaBetaSearcher(*this);
@@ -56,14 +56,14 @@ Move Engine::alphaBeta(int depth)
     return bestMove;
 }
 
-Move Engine::iterativeSearch(int milliseconds)
+Move Engine::searchForTime(int milliseconds)
 {
     time_t timer = time(NULL);
     Move bestMove;
     int depth = 1;
     while (difftime(time(NULL), timer) < milliseconds / 2000.0)
     {
-        bestMove = alphaBeta(depth++);
+        bestMove = searchToDepth(depth++);
         Logger::mainLog()->flush();
     }
 
