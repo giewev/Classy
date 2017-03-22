@@ -6,6 +6,7 @@
 #include "FullEvaluator.h"
 #include "Logger.h"
 #include "MoveSorter.h"
+#include "AlphaBetaSearcher.h"
 
 #include <iostream>
 #include <math.h>
@@ -45,89 +46,11 @@ void Engine::setBoard(Board loadBoard)
     gameBoard = loadBoard;
 }
 
-Move Engine::alphaBeta(const Board& boardState, int depth, double alpha, double beta)
-{
-    TranspositionCache transposition = this->getTransposition(boardState);
-    if (transposition.bestDepth >= depth)
-    {
-        return transposition.bestMove;
-    }
-    else if (transposition.cutoffDepth >= depth && // Cutoff info is good enough
-        causesAlphaBetaBreak(transposition.cutoffMove.score, alpha, beta, boardState.turn))
-    {
-        return transposition.cutoffMove;
-    }
-
-    int moveCount = 0;
-    Move moveList[220];
-    boardState.generateMoveArray(moveList, moveCount);
-    sortMoveList(moveList, moveCount, boardState, transposition);
-
-    Board newBoard;
-    unsigned int bestIndex = 0;
-    Move returnedMove;
-
-    //Checkmate or StaleMate
-    if(moveCount == 0)
-    {
-        returnedMove = Move();
-        returnedMove.setScore(evaluator.evaluate(boardState));
-        returnedMove.setGameOverDepth(0);
-
-        if (returnedMove.score == 1000)
-        {
-            returnedMove.setScore(0);
-        }
-
-        this->updateTranspositionBestIfDeeper(boardState, depth, returnedMove);
-        return returnedMove;
-    }
-
-    for(int i=0; i<moveCount; i++)
-    {
-        newBoard = boardState.newCopy();
-        newBoard.makeMove(moveList[i]);
-
-        if(depth == 1)
-        {
-            if (moveList[i].isCapture(boardState))
-            {
-                moveList[i].score = quiesce(newBoard, alpha, beta);
-            }
-            else
-            {
-                evaluateMove(newBoard, moveList, i);
-            }
-        }
-        else
-        {
-            returnedMove = alphaBeta(newBoard, depth - 1, alpha, beta);
-
-            moveList[i].setScore(returnedMove.score);
-            if(returnedMove.getGameOverDepth() != -1)
-            {
-                moveList[i].setGameOverDepth(returnedMove.getGameOverDepth() + 1);
-            }
-        }
-
-        bestIndex = bestMove(moveList, bestIndex, i, boardState.turn);
-        updateAlphaBeta(moveList[bestIndex].score, boardState.turn, alpha, beta);
-
-        if (causesAlphaBetaBreak(moveList[i].score, alpha, beta, boardState.turn))
-        {
-            this->updateTranspositionCutoffIfDeeper(boardState, depth, moveList[i]);
-            return(moveList[i]);
-        }
-    }
-
-    this->updateTranspositionBestIfDeeper(boardState, depth, moveList[bestIndex]);
-    return moveList[bestIndex];
-}
-
 Move Engine::alphaBeta(int depth)
 {
     time_t timer = time(NULL);
-    Move bestMove = alphaBeta(gameBoard, depth, -1000, 1000);
+    AlphaBetaSearcher searcher = AlphaBetaSearcher(*this);
+    Move bestMove = searcher.alphaBeta(gameBoard, depth);
     Logger::mainLog()->info("Alpha-beta search on position [{0}] to a depth of {1} chose: {2} with score: {3} after {4} seconds",
                             gameBoard.outputFEN(), depth, bestMove.basicAlg(), bestMove.score, difftime(time(NULL), timer));
     return bestMove;
@@ -148,18 +71,6 @@ Move Engine::iterativeSearch(int milliseconds)
                             gameBoard.outputFEN(), depth - 1, bestMove.basicAlg(), bestMove.score, difftime(time(NULL), timer));
 
     return bestMove;
-}
-
-int Engine::chooseBetweenEqualMoves(Move* moveList, int bestIndex, int newIndex)
-{
-    if(rand() % 2)
-    {
-        return newIndex;
-    }
-    else
-    {
-        return bestIndex;
-    }
 }
 
 void Engine::evaluateMove(const Board& evaluationBoard, Move* moveList, int index)
@@ -191,102 +102,9 @@ double Engine::evaluatePosition(const Board& evaluationBoard)
     return rawScore;
 }
 
-int Engine::bestMove(Move* moveList, int bestIndex, int currentIndex, bool turn)
+double Engine::lazyEvaluatePosition(const Board& evaluationBoard)
 {
-    if (bestIndex == -1)
-    {
-        return currentIndex;
-    }
-
-    if(turn)
-    {
-        if (currentIndex == 0 || moveList[currentIndex].score > moveList[bestIndex].score)
-        {
-            return currentIndex;
-        }
-    }
-    else
-    {
-        if (currentIndex == 0 || moveList[currentIndex].score < moveList[bestIndex].score)
-        {
-            return currentIndex;
-        }
-    }
-
-    if(moveList[currentIndex].score == moveList[bestIndex].score)
-    {
-        return chooseBetweenEqualMoves(moveList, bestIndex, currentIndex);
-    }
-
-    return bestIndex;
-}
-
-bool Engine::causesAlphaBetaBreak(double score, double alpha, double beta, bool turn)
-{
-    return (turn && score > beta) ||
-            (!turn && score < alpha);
-}
-
-void Engine::updateAlphaBeta(double score, bool turn, double& alpha, double& beta)
-{
-    if (turn)
-    {
-        if (score > alpha)
-        {
-            alpha = score;
-        }
-    }
-    else
-    {
-        if (score < beta)
-        {
-            beta = score;
-        }
-    }
-}
-
-double Engine::quiesce(const Board& boardState, double alpha, double beta)
-{
-    double staticScore = evaluator.lazyEvaluate(boardState);
-    if (causesAlphaBetaBreak(staticScore, alpha, beta, boardState.turn))
-    {
-        return staticScore;
-    }
-
-    updateAlphaBeta(staticScore, boardState.turn, alpha, beta);
-
-    int moveCount = 0;
-    Move moveList[220];
-    boardState.generateCaptureMoves(moveList, moveCount);
-    sortMoveList(moveList, moveCount, boardState, TranspositionCache());
-    int bestIndex = -1;
-    for (int i = 0; i < moveCount; i++)
-    {
-        Board moveBoard = boardState.newCopy();
-        moveBoard.makeMove(moveList[i]);
-        double score = quiesce(moveBoard, alpha, beta);
-        if (causesAlphaBetaBreak(score, alpha, beta, boardState.turn))
-        {
-            return score;
-        }
-
-        updateAlphaBeta(score, boardState.turn, alpha, beta);
-        bestIndex = bestMove(moveList, bestIndex, i, boardState.turn);
-    }
-
-    if (bestIndex == -1)
-    {
-        return staticScore;
-    }
-    else if ((boardState.turn && staticScore > moveList[bestIndex].score) ||
-        (!boardState.turn && staticScore < moveList[bestIndex].score))
-    {
-        return staticScore;
-    }
-    else
-    {
-        return moveList[bestIndex].score;
-    }
+    return evaluator.lazyEvaluate(evaluationBoard);
 }
 
 std::string Engine::toAlg(int val)

@@ -1,3 +1,6 @@
+#ifndef ENGINE_H
+#define ENGINE_H
+
 #include <inttypes.h>
 #include <time.h>
 #include <iostream>
@@ -22,9 +25,16 @@ public:
     Board getBoard();
     void setBoard(Board);
 
-    Move alphaBeta(const Board& boardState, int depth, double alpha, double beta);
-    Move alphaBeta(int);
+    Move alphaBeta(int depth);
     Move iterativeSearch(int milliseconds);
+
+    void updateTranspositionBestIfDeeper(const Board& searchBoard, int depth, Move newMove);
+    void updateTranspositionCutoffIfDeeper(const Board& searchBoard, int depth, Move newMove);
+    TranspositionCache getTransposition(const Board& lookupBoard);
+    void evaluateMove(const Board& evaluationBoard, Move* moveList, int index);
+    double evaluatePosition(const Board& evaluationBoard);
+    double lazyEvaluatePosition(const Board& evaluationBoard);
+    static void sortMoveList(Move*, int, const Board&, const TranspositionCache&);
 
     static std::string toAlg(int);
 private:
@@ -33,18 +43,7 @@ private:
     std::unordered_map<Board, TranspositionCache> transpositionTable;
     unsigned long transTableMax = 1024 * 1024 * 64;
 
-    void updateTranspositionBestIfDeeper(const Board& searchBoard, int depth, Move newMove);
-    void updateTranspositionCutoffIfDeeper(const Board& searchBoard, int depth, Move newMove);
     void clearTranspositionIfFull();
-    TranspositionCache getTransposition(const Board& lookupBoard);
-
-    static int chooseBetweenEqualMoves(Move* moveList, int currentIndex, int newIndex);
-    void evaluateMove(const Board& evaluationBoard, Move* moveList, int index);
-    double evaluatePosition(const Board& evaluationBoard);
-    static int bestMove(Move* moveList, int bestIndex, int currentIndex, bool turn);
-    static bool causesAlphaBetaBreak(double score, double alpha, double beta, bool turn);
-    static void sortMoveList(Move*, int, const Board&, const TranspositionCache&);
-    static void updateAlphaBeta(double newScore, bool turn, double& alpha, double& beta);
-
-    double quiesce(const Board& boardState, double alpha, double beta);
 };
+
+#endif
