@@ -2,12 +2,15 @@
 #include "MaterialEvaluator.h"
 #include "MoveSorter.h"
 
+const double MoveSorter::piecePriorities[] = { 1, 2, 6, 7, 4, 3, 5 };
+
 MoveSorter::MoveSorter(Move* moveList, int moveCount, Board boardState, TranspositionCache transposition)
 {
     this->moveList = moveList;
     this->moveCount = moveCount;
     this->boardState = boardState;
     this->transposition = transposition;
+    this->assignOrderingScores();
 }
 
 void MoveSorter::sortMoves()
@@ -20,38 +23,28 @@ void MoveSorter::sortMoves()
 
 bool MoveSorter::moveBetter(const Move& left, const Move& right)
 {
-    if (left == transposition.bestMove)
-    {
-        return true;
-    }
-    else if (left == transposition.cutoffMove && right != transposition.bestMove)
-    {
-        return true;
-    }
-    else if (right == transposition.bestMove || right == transposition.cutoffMove)
-    {
-        return false;
-    }
+    return left.score > right.score;
+}
 
-    PieceType leftVictimType = boardState.getSquareType(left.endX, left.endY);
-    PieceType rightVictimType = boardState.getSquareType(right.endX, right.endY);
-    double leftVictimValue = MaterialEvaluator::pieceValue(leftVictimType);
-    double rightVictimValue = MaterialEvaluator::pieceValue(rightVictimType);
-    if (leftVictimValue != rightVictimValue)
+void MoveSorter::assignOrderingScores()
+{
+    for (int i = 0; i < this->moveCount; i++)
     {
-        return leftVictimValue > rightVictimValue;
-    }
-    else if (leftVictimType != PieceType::Empty)
-    {
-        PieceType leftAttackerType = boardState.getSquareType(left.startX, left.startY);
-        PieceType rightAttackerType = boardState.getSquareType(right.startX, right.startY);
-        double leftAttackerValue = MaterialEvaluator::pieceValue(leftAttackerType);
-        double rightAttackerValue = MaterialEvaluator::pieceValue(rightAttackerType);
-        if (leftAttackerValue != rightAttackerValue)
+        if (this->moveList[i] == this->transposition.bestMove)
         {
-            return leftAttackerValue < rightAttackerValue;
+            this->moveList[i].score = 999;
         }
-    }
+        else if (this->moveList[i] == this->transposition.cutoffMove)
+        {
+            this->moveList[i].score = 998;
+        }
 
-    return false;
+        PieceType victimType = this->boardState.getSquareType(moveList[i].endX, moveList[i].endY);
+        double victimValue = piecePriorities[(int)victimType];
+        PieceType attackerType = boardState.getSquareType(moveList[i].startX, moveList[i].startY);
+        double attackerValue = piecePriorities[(int)attackerType];
+
+        this->moveList[i].score = victimValue * piecePriorities[(int)PieceType::King];
+        this->moveList[i].score -= attackerValue;
+    }
 }
