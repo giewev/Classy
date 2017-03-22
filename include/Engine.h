@@ -22,10 +22,6 @@ public:
     Board getBoard();
     void setBoard(Board);
 
-    Move minMax(int, const Board&);
-    Move minMax(int);
-
-    Move alphaBeta(int, const Board&, double);
     Move alphaBeta(const Board& boardState, int depth, double alpha, double beta);
     Move alphaBeta(int);
     Move iterativeSearch(int milliseconds);

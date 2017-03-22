@@ -45,58 +45,6 @@ void Engine::setBoard(Board loadBoard)
     gameBoard = loadBoard;
 }
 
-Move Engine::minMax(int depth, const Board& searchBoard)
-{
-    int moveCount = 0;
-    Move moveList[220];
-    searchBoard.generateMoveArray(moveList, moveCount);
-
-    Board newBoard;
-    double moveScore;
-    double bestScore;
-    unsigned int bestIndex = 0;
-    bestScore = 999;
-    if(searchBoard.turn)
-    {
-        bestScore = -999;
-    }
-    for(int i=0; i<moveCount; i++)
-    {
-        newBoard = searchBoard.newCopy();
-        newBoard.makeMove(moveList[i]);
-        if(depth == 1)
-        {
-            moveScore = evaluator.evaluate(newBoard);
-        }
-        else
-        {
-            moveScore = minMax(depth-1, newBoard).getScore();
-        }
-        moveList[i].setScore(moveScore);
-        if(moveScore > bestScore && searchBoard.turn)
-        {
-            bestScore = moveScore;
-            bestIndex = i;
-        }
-        else if(moveScore < bestScore && !searchBoard.turn)
-        {
-            bestScore = moveScore;
-            bestIndex = i;
-        }
-        else if(moveScore == bestScore && rand() % 2)
-        {
-            bestScore = moveScore;
-            bestIndex = i;
-        }
-    }
-    return moveList[bestIndex];
-}
-
-Move Engine::minMax(int depth)
-{
-    return(minMax(depth, gameBoard));
-}
-
 Move Engine::alphaBeta(const Board& boardState, int depth, double alpha, double beta)
 {
     TranspositionCache transposition = this->getTransposition(boardState);
