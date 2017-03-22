@@ -28,8 +28,6 @@ Move::Move(int x1, int y1, int x2, int y2)
     endY = y2;
     promotion = PieceType::Empty;
     score = 0;
-    gameOverDepth = -1;
-    scoreDepth = -1;
 }
 
 Move::Move(int x1, int y1, int x2, int y2, PieceType promote)
@@ -42,8 +40,6 @@ Move::Move(int x1, int y1, int x2, int y2, PieceType promote)
     endY = y2;
     promotion = promote;
     score = 0;
-    gameOverDepth = -1;
-    scoreDepth = -1;
 }
 
 Move::Move()
@@ -57,7 +53,14 @@ void Move::setScore(double scoreVal)
 
 void Move::setGameOverDepth(int depthVal)
 {
-    gameOverDepth = depthVal;
+    if (score > 0)
+    {
+        score = 999 - depthVal;
+    }
+    if (score < 0)
+    {
+        score = -999 + depthVal;
+    }
 }
 
 double Move::getScore()
@@ -67,7 +70,13 @@ double Move::getScore()
 
 int Move::getGameOverDepth()
 {
-    return gameOverDepth;
+    double absScore = fabs(score);
+    if (absScore > 900)
+    {
+        return 999 - absScore;
+    }
+
+    return -1;
 }
 
 bool Move::isSafe(Danger safetyData)

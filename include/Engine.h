@@ -42,7 +42,7 @@ private:
     void clearTranspositionIfFull();
     TranspositionCache getTransposition(const Board& lookupBoard);
 
-    static int chooseBetweenEqualMoves(Move* moveList, int currentIndex, int newIndex, bool turn);
+    static int chooseBetweenEqualMoves(Move* moveList, int currentIndex, int newIndex);
     void evaluateMove(const Board& evaluationBoard, Move* moveList, int index);
     double evaluatePosition(const Board& evaluationBoard);
     static int bestMove(Move* moveList, int bestIndex, int currentIndex, bool turn);

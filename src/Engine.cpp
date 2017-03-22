@@ -123,9 +123,9 @@ Move Engine::alphaBeta(const Board& boardState, int depth, double alpha, double 
     if(moveCount == 0)
     {
         returnedMove = Move();
+        returnedMove.setScore(evaluator.evaluate(boardState));
         returnedMove.setGameOverDepth(0);
 
-        returnedMove.setScore(evaluator.evaluate(boardState));
         if (returnedMove.score == 1000)
         {
             returnedMove.setScore(0);
@@ -142,7 +142,7 @@ Move Engine::alphaBeta(const Board& boardState, int depth, double alpha, double 
 
         if(depth == 1)
         {
-            if (moveList[i].isCapture(boardState) && fabs(alpha) != 999 && fabs(beta) != 999)
+            if (moveList[i].isCapture(boardState))
             {
                 moveList[i].score = quiesce(newBoard, alpha, beta);
             }
@@ -202,40 +202,9 @@ Move Engine::iterativeSearch(int milliseconds)
     return bestMove;
 }
 
-int Engine::chooseBetweenEqualMoves(Move* moveList, int bestIndex, int newIndex, bool turn)
+int Engine::chooseBetweenEqualMoves(Move* moveList, int bestIndex, int newIndex)
 {
-    int modifier = -1;
-    if(turn)
-    {
-        modifier = 1;
-    }
-
-    int bestDepth = moveList[bestIndex].getGameOverDepth();
-    //Good result
-    if(moveList[newIndex].score == 999 * modifier)
-    {
-        if(moveList[newIndex].getGameOverDepth() < bestDepth)
-        {
-            return newIndex;
-        }
-        else
-        {
-            return bestIndex;
-        }
-    }
-    //Bad result
-    else if(moveList[newIndex].score == -999 * modifier)
-    {
-        if(moveList[newIndex].getGameOverDepth() > bestDepth)
-        {
-            return newIndex;
-        }
-        else
-        {
-            return bestIndex;
-        }
-    }
-    else if(rand() % 2)
+    if(rand() % 2)
     {
         return newIndex;
     }
@@ -254,7 +223,6 @@ void Engine::evaluateMove(const Board& evaluationBoard, Move* moveList, int inde
     }
     else
     {
-        moveList[index].setGameOverDepth(1);
         moveList[index].setScore(0);
     }
 
@@ -299,7 +267,7 @@ int Engine::bestMove(Move* moveList, int bestIndex, int currentIndex, bool turn)
 
     if(moveList[currentIndex].score == moveList[bestIndex].score)
     {
-        return chooseBetweenEqualMoves(moveList, bestIndex, currentIndex, turn);
+        return chooseBetweenEqualMoves(moveList, bestIndex, currentIndex);
     }
 
     return bestIndex;
@@ -307,8 +275,8 @@ int Engine::bestMove(Move* moveList, int bestIndex, int currentIndex, bool turn)
 
 bool Engine::causesAlphaBetaBreak(double score, double alpha, double beta, bool turn)
 {
-    return (turn && score >= beta) ||
-            (!turn && score <= alpha);
+    return (turn && score > beta) ||
+            (!turn && score < alpha);
 }
 
 void Engine::updateAlphaBeta(double score, bool turn, double& alpha, double& beta)

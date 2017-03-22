@@ -8,14 +8,11 @@ class Board;
 
 struct Move
 {
+public:
     int startX, startY;
     int endX, endY;
     PieceType promotion;
     double score;
-    int gameOverDepth;
-    int scoreDepth;
-
-public:
 
     Move();
     Move(int, int, int, int);
