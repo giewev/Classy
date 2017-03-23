@@ -1041,8 +1041,8 @@ bool Board::operator==(const Board &other) const
     }
 
     return this->turn == other.turn &&
-        this->EPdata == other.EPdata &&
-        this->castlingRights == other.castlingRights;
+           this->EPdata == other.EPdata &&
+           this->castlingRights == other.castlingRights;
 }
 
 size_t Board::getHashCode() const
