@@ -16,9 +16,10 @@ MoveSorter::MoveSorter(Move* moveList, int moveCount, Board boardState, Transpos
 void MoveSorter::sortMoves()
 {
     std::sort(this->moveList, this->moveList + this->moveCount,
-        [this] (const Move& left, const Move& right) {
-            return this->moveBetter(left, right);
-        });
+              [this] (const Move& left, const Move& right)
+    {
+        return this->moveBetter(left, right);
+    });
 }
 
 bool MoveSorter::moveBetter(const Move& left, const Move& right)
