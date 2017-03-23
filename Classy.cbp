@@ -15,6 +15,7 @@
 				<Compiler>
 					<Add option="-std=c++11" />
 					<Add option="-g" />
+					<Add option="-pthread" />
 					<Add directory="include" />
 				</Compiler>
 			</Target>
@@ -39,6 +40,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/AlphaBetaSearcher.h" />
 		<Unit filename="include/ArgumentParser.h" />
 		<Unit filename="include/Bitwise.h" />
 		<Unit filename="include/Board.h" />
@@ -57,6 +59,7 @@
 		<Unit filename="include/StandAlones.h" />
 		<Unit filename="include/TranspositionCache.h" />
 		<Unit filename="include/ZobristHasher.h" />
+		<Unit filename="src/AlphaBetaSearcher.cpp" />
 		<Unit filename="src/ArgumentParser.cpp" />
 		<Unit filename="src/Board.cpp" />
 		<Unit filename="src/Classy.cpp" />
