@@ -144,7 +144,7 @@ void ZobristHasher::toggleCastlingRights(bool color, bool side)
 
     if (side)
     {
-    castlingIndex++;
+        castlingIndex++;
     }
 
     this->hashValue ^= castlingHashCodes[castlingIndex];
@@ -167,7 +167,7 @@ void ZobristHasher::updateEnPassant(Board prevBoard, Move nextMove)
     }
 
     if (prevBoard.getSquareType(nextMove.startX, nextMove.startY) == PieceType::Pawn &&
-        abs(nextMove.endY - nextMove.startY) == 2)
+            abs(nextMove.endY - nextMove.startY) == 2)
     {
         this->toggleEnPassant(nextMove.startY);
     }
@@ -192,7 +192,7 @@ void ZobristHasher::updateCastling(Board prevBoard, Move nextMove)
     {
         bool rookColor = prevBoard.getSquareColor(nextMove.startX, nextMove.startY);
         if ((nextMove.startY == 0 && rookColor == true) ||
-            (nextMove.startY == 7 && rookColor == false))
+                (nextMove.startY == 7 && rookColor == false))
         {
             if (nextMove.startX == 0 && prevBoard.getCastlingRights(rookColor, false))
             {
@@ -223,8 +223,8 @@ void ZobristHasher::updatePieces(Board prevBoard, Move nextMove)
     {
         Piece prevEP = prevBoard.getEP();
         if (prevEP.type != PieceType::Empty &&
-            nextMove.startY == prevEP.yPos &&
-            nextMove.endX == prevEP.xPos)
+                nextMove.startY == prevEP.yPos &&
+                nextMove.endX == prevEP.xPos)
         {
             this->togglePiece(prevEP.xPos, prevEP.yPos, PieceType::Pawn, prevEP.color);
         }

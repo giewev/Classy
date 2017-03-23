@@ -4,17 +4,17 @@
 
 struct TranspositionCache
 {
-    public:
-        int bestDepth;
-        Move bestMove;
+public:
+    int bestDepth;
+    Move bestMove;
 
-        int cutoffDepth;
-        Move cutoffMove;
+    int cutoffDepth;
+    Move cutoffMove;
 
-        TranspositionCache();
-        TranspositionCache(int bestDepth, Move newMove, int cutoffDepth, Move cutoffMove);
-    protected:
-    private:
+    TranspositionCache();
+    TranspositionCache(int bestDepth, Move newMove, int cutoffDepth, Move cutoffMove);
+protected:
+private:
 };
 
 #endif // TRANSPOSITIONCACHE_H
