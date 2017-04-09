@@ -180,3 +180,10 @@ void Engine::exportTransTable(std::string path)
     cereal::BinaryOutputArchive archive(outputStream);
     archive(this->transpositionTable);
 }
+
+void Engine::importTransTable(std::string path)
+{
+    std::ifstream inputStream(path, std::ios::binary);
+    cereal::BinaryInputArchive archive(inputStream);
+    archive(this->transpositionTable);
+}

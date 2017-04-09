@@ -35,6 +35,7 @@ public:
     double evaluatePosition(const Board& evaluationBoard);
     double lazyEvaluatePosition(const Board& evaluationBoard);
     void exportTransTable(std::string path);
+    void importTransTable(std::string path);
 
     static void sortMoveList(Move*, int, const Board&, const TranspositionCache&);
     static std::string toAlg(int);
