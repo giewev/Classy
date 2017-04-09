@@ -67,6 +67,12 @@ public:
     void setCastlingRights(bool, bool, bool);
     void setCastlingRights(char);
     static void throwIfOutOfBounds(int x, int y);
+
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(turn, allPieces, pieces, castlingRights, kingCoordinates, EPdata, moveCounter, halfMoveCounter, lastMoveCapture, hasher);
+    }
 private:
     char castlingRights;
     int kingCoordinates;

@@ -18,7 +18,6 @@ public:
     Move(int, int, int, int);
     Move(int, int, int, int, PieceType);
 
-    //void setEnPassent(bool);
     void setScore(double);
     void setGameOverDepth(int);
 
@@ -35,6 +34,12 @@ public:
     bool isSafe(Danger);
     std::string basicAlg();
     bool isCapture(const Board&);
+
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(startX, startY, endX, endY, promotion, score);
+    }
 };
 
 #endif

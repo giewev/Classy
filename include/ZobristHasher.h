@@ -16,6 +16,12 @@ public:
     void load(Board);
     void update(Board, Move);
 
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(hashValue, whitePieceHashCodes, blackPieceHashCodes, castlingHashCodes, enPassantHashCodes, turnHashCode);
+    }
+
 protected:
 private:
     static std::mt19937_64 hashGenerator;

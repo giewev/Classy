@@ -1049,4 +1049,3 @@ size_t Board::getHashCode() const
 {
     return this->hasher.hashValue;
 }
-

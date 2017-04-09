@@ -13,6 +13,13 @@ public:
 
     TranspositionCache();
     TranspositionCache(int bestDepth, Move newMove, int cutoffDepth, Move cutoffMove);
+
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(bestDepth, bestMove, cutoffDepth, cutoffMove);
+    }
+
 protected:
 private:
 };

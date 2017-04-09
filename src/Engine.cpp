@@ -17,6 +17,10 @@
 #include <algorithm>
 #include <string.h>
 #include <strings.h>
+#include <fstream>
+#include <cereal/types/unordered_map.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/archives/binary.hpp>
 
 using namespace std;
 
@@ -168,4 +172,11 @@ void Engine::clearTranspositionIfFull()
 TranspositionCache Engine::getTransposition(const Board& lookupBoard)
 {
     return this->transpositionTable[lookupBoard];
+}
+
+void Engine::exportTransTable(std::string path)
+{
+    std::ofstream outputStream(path, std::ios::binary);
+    cereal::BinaryOutputArchive archive(outputStream);
+    archive(this->transpositionTable);
 }
