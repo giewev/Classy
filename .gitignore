@@ -41,3 +41,6 @@ bin/**
 # Test Results
 bench.txt
 *.log.txt
+
+# Classy Files
+*.trans

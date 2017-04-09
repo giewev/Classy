@@ -258,6 +258,42 @@ void semiCenterPawnMask_test()
     assert(bitwise::countBits(board.pieces[PieceType::Pawn] & blackSemiCenter) == 6);
 }
 
+void saveAndLoadEmptyTransTable_test()
+{
+    Engine engine = Engine();
+    engine.exportTransTable("dump.trans");
+    engine.importTransTable("dump.trans");
+}
+
+void loadingEmptyTransTableClearsEntries_test()
+{
+    std::string startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
+
+    Board board = Board();
+    board.loadFEN(startingFEN);
+    Engine engine = Engine(board);
+    engine.exportTransTable("dump.trans");
+    engine.updateTranspositionBestIfDeeper(board, 5, Move(1,1,2,2));
+    engine.importTransTable("dump.trans");
+    assert(engine.getTransposition(board).bestDepth == -1);
+}
+
+void loadingTranspositionTableLoadsEntries_test()
+{
+    std::string startingFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w";
+
+    Board board = Board();
+    board.loadFEN(startingFEN);
+    Engine originalEngine = Engine(board);
+    originalEngine.updateTranspositionBestIfDeeper(board, 5, Move(1,1,2,2));
+    originalEngine.exportTransTable("dump.trans");
+
+    Engine futureEngine = Engine(board);
+    futureEngine.importTransTable("dump.trans");
+    assert(futureEngine.getTransposition(board).bestDepth == 5);
+    assert(futureEngine.getTransposition(board).bestMove == Move(1,1,2,2));
+}
+
 void runAllTests()
 {
     loadStartingPosition_test();
@@ -273,4 +309,7 @@ void runAllTests()
     zobristConsistancy_test();
     centerPawnMask_test();
     semiCenterPawnMask_test();
+    saveAndLoadEmptyTransTable_test();
+    loadingEmptyTransTableClearsEntries_test();
+    loadingTranspositionTableLoadsEntries_test();
 }
